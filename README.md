@@ -1,6 +1,6 @@
-# Laravel Vue 3 Template
+# Laravel React18 Template
 
-A modern full-stack boilerplate combining **Laravel 12**, **Vue 3**, **Inertia.js**, and **Vuetify 3**.  
+A modern full-stack boilerplate combining **Laravel 12**, **React 18**, **Inertia.js**, and **MUI7**.  
 Built for rapid development with clean architecture, SOLID principles, and the Repository Design Pattern.
 
 ---
@@ -8,8 +8,8 @@ Built for rapid development with clean architecture, SOLID principles, and the R
 ## 🚀 Features
 
 -   Laravel 12 (PHP 8.2)
--   Vue 3 + Inertia.js (SPA architecture)
--   Vuetify 3 for beautiful Material Design components
+-   React 18 + Inertia.js (SPA architecture)
+-   MUI7 for beautiful Material Design components
 -   Vite for fast frontend builds
 -   Repository pattern for clean separation of concerns
 -   SOLID principles for maintainable code
@@ -255,11 +255,11 @@ php artisan make:api-controller Product --model=Product
 │       └── FetchServices/          # Fetch services (index & show)
 │
 ├── resources/
-│   └── js/                         # Vue 3 + Inertia frontend
+│   └── js/                         # React 18 + Inertia frontend
 │       ├── Components/
-│       │   ├── Customs/            # Customized Vuetify components
+│       │   ├── Customs/            # Customized MUI7 components
 │       │   ├── Errors/             # Error display components
-│       │   ├── Pages/              # Vue module pages
+│       │   ├── Pages/              # React module pages
 │       │   └── Utilities/          # Reusable utility components
 │       ├── Layouts/                # Application layout (e.g., blank, main)
 │       └── Pages/                  # Laravel + Inertia page components
@@ -282,11 +282,15 @@ php artisan make:api-controller Product --model=Product
 * PHP ^8.2
 
 ### Frontend
-* Vue ^3.5.13
-* Vuetify ^3.8.3
-* @inertiajs/vue3 ^2.0.8
-* Vite
-* @mdi/font ^7.4.47
+* "@emotion/react": "^11.14.0"
+* "@emotion/styled": "^11.14.1"
+* "@fontsource/roboto": "^5.2.10"
+* "@inertiajs/react": "^2.0.8"
+* "@mui/icons-material": "^7.3.11"
+* "@mui/lab": "^7.0.0"
+* "@mui/material": "^7.3.11"
+* "react": "^18.3.1"
+* "react-dom": "^18.3.1"
 
 ## 📦 Production Build
 ```bash
