@@ -1,25 +1,37 @@
 import { CBox } from "@/Components";
-import { Typography } from "@mui/material";
+import { Typography, Breadcrumbs, Link } from "@mui/material";
+import UserGroupContent from "@/Components/Pages/UserGroup/UserGroupContent";
+
+import { Head, usePage, router } from "@inertiajs/react";
 
 const UserGroups = ({ flash, errors }) => {
+    const page = usePage();
+    const appName = page.props.appName || "Laravel React App";
+
     return (
-        <CBox
-            sx={{
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-                justifyContent: "center",
-                height: "80vh",
-            }}
-        >
-            <Typography variant="h3" gutterBottom>
-                User Groups Page
-            </Typography>
-            <Typography variant="h6">
-                Sample user groups management page. You can implement user group
-                listing, creation, and management features here.
-            </Typography>
-        </CBox>
+        <>
+            <Head title={`User Group — ${appName}`} />
+            <CBox>
+                <Breadcrumbs aria-label="breadcrumb">
+                    {/* <Link underline="hover" color="inherit" href="/dashboard">
+                        Dashboard
+                    </Link> */}
+                    <Typography
+                        color="inherit"
+                        href="/dashboard"
+                        onClick={() => router.visit("/dashboard")}
+                        sx={{ cursor: "pointer" }}
+                    >
+                        Dashboard
+                    </Typography>
+                    <Typography sx={{ color: "text.primary" }}>
+                        User Groups
+                    </Typography>
+                </Breadcrumbs>
+
+                <UserGroupContent flash={flash} errors={errors} />
+            </CBox>
+        </>
     );
 };
 
