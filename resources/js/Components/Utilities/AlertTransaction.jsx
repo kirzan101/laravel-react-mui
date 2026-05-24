@@ -1,4 +1,4 @@
-import { CAlertSuccess, CAlertError } from "@/Components";
+import { CAlertSuccess, CAlertError, CAlertMessage } from "@/Components";
 
 const AlertTransaction = ({ flash }) => {
     return (

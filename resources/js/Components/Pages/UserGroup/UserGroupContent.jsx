@@ -9,6 +9,7 @@ import { useEffect, useState } from "react";
 const UserGroupContent = ({ flash, errors }) => {
     const [search, setSearch] = useState("");
     const [debouncedSearch, setDebouncedSearch] = useState("");
+    const [refreshKey, setRefreshKey] = useState(0);
 
     useEffect(() => {
         const timer = setTimeout(() => {
@@ -17,6 +18,10 @@ const UserGroupContent = ({ flash, errors }) => {
 
         return () => clearTimeout(timer);
     }, [search]);
+
+    useEffect(() => {
+        if (flash) setRefreshKey((k) => k + 1);
+    }, [flash]);
 
     return (
         <CBoxContent>
@@ -65,6 +70,7 @@ const UserGroupContent = ({ flash, errors }) => {
             <TableUserGroup
                 flash={flash}
                 errors={errors}
+                refreshKey={refreshKey}
                 search={debouncedSearch}
             />
         </CBoxContent>

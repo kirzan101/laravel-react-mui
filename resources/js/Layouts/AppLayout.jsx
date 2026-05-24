@@ -135,7 +135,7 @@ const AppLayout = ({ children }) => {
     const handleDrawerClose = () => setOpen(false);
 
     return (
-        <Box sx={{ display: "flex" }}>
+        <Box sx={{ display: "flex", width: "100%" }}>
             <CssBaseline />
 
             {/* ================= APP BAR ================= */}
@@ -227,7 +227,13 @@ const AppLayout = ({ children }) => {
             </Drawer>
 
             {/* ================= MAIN CONTENT ================= */}
-            <Main open={open} isMobile={isMobile}>
+            <Main
+                sx={{
+                    width: open ? `calc(100% - ${drawerWidth}px)` : "100%",
+                }}
+                open={open}
+                isMobile={isMobile}
+            >
                 <DrawerHeader />
 
                 <Fade in={true} timeout={500}>

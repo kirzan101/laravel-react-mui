@@ -55,14 +55,15 @@ const CDataGrid = ({
 
     useEffect(() => {
         fetchData();
-    }, [fetchData]);
+    }, [
+        paginationModel,
+        sortModel,
+        queryParams.search,
+        queryParams.refreshKey,
+    ]);
 
     return (
         <DataGrid
-            sx={{
-                width: "100%",
-                overflowX: "auto",
-            }}
             rows={rows}
             columns={columns}
             rowCount={rowCount}
@@ -75,6 +76,7 @@ const CDataGrid = ({
             onSortModelChange={setSortModel}
             pageSizeOptions={[10, 25, 50, 100]}
             disableRowSelectionOnClick
+            disableColumnFilter
             {...props}
         />
     );

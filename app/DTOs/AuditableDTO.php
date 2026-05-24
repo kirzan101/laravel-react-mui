@@ -5,9 +5,9 @@ namespace App\DTOs;
 abstract class AuditableDTO extends BaseDTO
 {
     public function __construct(
+        ?int $id = null,
         public ?int $created_by = null,
         public ?int $updated_by = null,
-        ?int $id = null,
     ) {
         parent::__construct($id);
     }

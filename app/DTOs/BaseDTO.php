@@ -68,37 +68,40 @@ abstract class BaseDTO
     }
 
     /**
-     * Create a new instance of the DTO using data from a model and an optional array.
+     * Create a DTO instance from a model with optional override data.
      *
-     * Values in the provided array take precedence over the model's attributes.
-     * If a field is missing in both, the constructor default is used.
+     * Values from the provided data array take precedence over model attributes.
+     * If neither contains a value, the constructor default value is used.
      */
     public static function fromModel(Model $model, array $data = []): static
     {
         $reflection = new ReflectionClass(static::class);
 
+        $args = [];
+
+        foreach ($reflection->getConstructor()->getParameters() as $param) {
+            $name = $param->getName();
+
+            // 1. from override data
+            if (array_key_exists($name, $data) && $data[$name] !== null) {
+                $args[$name] = $data[$name];
+                continue;
+            }
+
+            // 2. from model
+            if ($model->getAttribute($name) !== null) {
+                $args[$name] = $model->getAttribute($name);
+                continue;
+            }
+
+            // 3. default
+            $args[$name] = $param->isDefaultValueAvailable()
+                ? $param->getDefaultValue()
+                : null;
+        }
+
         return $reflection->newInstanceArgs(
-            array_map(
-                function ($param) use ($data, $model) {
-                    $name = $param->getName();
-
-                    // 1. From data (highest priority)
-                    if (array_key_exists($name, $data) && $data[$name] !== null) {
-                        return $data[$name];
-                    }
-
-                    // 2. From model (if attribute exists)
-                    if ($model->getAttribute($name) !== null) {
-                        return $model->getAttribute($name);
-                    }
-
-                    // 3. Fallback to default
-                    return $param->isDefaultValueAvailable()
-                        ? $param->getDefaultValue()
-                        : null;
-                },
-                $reflection->getConstructor()->getParameters()
-            )
+            array_values($args)
         );
     }
 

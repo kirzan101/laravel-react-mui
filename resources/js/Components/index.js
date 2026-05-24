@@ -28,6 +28,7 @@
 export { default as CAlert } from "./Customs/Alerts/CAlert";
 export { default as CAlertError } from "./Customs/Alerts/CAlertError";
 export { default as CAlertSuccess } from "./Customs/Alerts/CAlertSuccess";
+export { default as CAlertMessage } from "./Customs/Alerts/CAlertMessage";
 
 // Boxes
 export { default as CBox } from "./Customs/Boxes/CBox";

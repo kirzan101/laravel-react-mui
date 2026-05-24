@@ -2,8 +2,6 @@ import { createTheme } from "@mui/material/styles";
 import { light, dark } from "./Themes/DefaultTheme";
 
 const buildPalette = (theme) => {
-    const isDark = theme.mode === "dark";
-
     return {
         mode: theme.mode,
 
@@ -12,10 +10,7 @@ const buildPalette = (theme) => {
         accent: { main: theme.colors.accent },
         error: { main: theme.colors.error },
 
-        // Custom palette entry for text fields
         textField: { main: theme.colors.textField },
-
-        // Custom palette entry for close button text
         closeText: { main: theme.colors.closeText },
 
         background: {
@@ -29,9 +24,12 @@ const buildPalette = (theme) => {
     };
 };
 
-export const getTheme = (mode = "light") =>
-    createTheme({
-        palette: buildPalette(mode === "dark" ? dark : light),
+export const getTheme = (mode = "light") => {
+    const isDark = mode === "dark";
+    const themeConfig = isDark ? dark : light;
+
+    return createTheme({
+        palette: buildPalette(themeConfig),
 
         gradients: {
             primary: "linear-gradient(135deg, #0B1C3A 0%, #142C55 100%)",
@@ -82,12 +80,44 @@ export const getTheme = (mode = "light") =>
                     variant: "outlined",
                 },
             },
+
+            // =====================================================
+            // ✅ DARK MODE ONLY OVERRIDES (DataGrid + Inputs fix)
+            // =====================================================
+            ...(isDark && {
+                MuiCheckbox: {
+                    styleOverrides: {
+                        root: {
+                            color: themeConfig.colors.textField,
+
+                            "&.Mui-checked": {
+                                color: themeConfig.colors.textField,
+                            },
+
+                            "&.MuiCheckbox-indeterminate": {
+                                color: themeConfig.colors.textField,
+                            },
+                        },
+                    },
+                },
+
+                MuiOutlinedInput: {
+                    styleOverrides: {
+                        root: {
+                            "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                                borderColor: themeConfig.colors.textField,
+                            },
+                        },
+                    },
+                },
+            }),
         },
 
         transitions: {
             duration: {
-                enteringScreen: 400, // global default for entering
-                leavingScreen: 300, // global default for leaving
+                enteringScreen: 400,
+                leavingScreen: 300,
             },
         },
     });
+};

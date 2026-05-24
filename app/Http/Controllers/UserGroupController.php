@@ -104,7 +104,7 @@ class UserGroupController extends Controller
                 'message' => 'You do not have permission to update user group.'
             ]);
         }
-
+        
         $userGroupDTO = UserGroupDTO::fromArray($request->all());
         $updateResult = $this->userGroup->updateUserGroup($userGroupDTO, $id);
 

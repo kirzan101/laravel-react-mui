@@ -57,8 +57,8 @@ class UserGroupService implements UserGroupInterface
     /**
      * Update an existing user group in the database.
      *
+     * @param UserGroupDTO $userGroupDTO
      * @param integer $userGroupId
-     * @param array $request
      * @return ModelResponse
      */
     public function updateUserGroup(UserGroupDTO $userGroupDTO, int $userGroupId): ModelResponse
