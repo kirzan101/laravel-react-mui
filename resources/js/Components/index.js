@@ -44,7 +44,7 @@ export { default as CButtonSubmit } from "./Customs/Buttons/CButtonSubmit";
 // Cards
 export { default as CCard } from "./Customs/Cards/CCard";
 export { default as CCardContent } from "./Customs/Cards/CCardContent";
-export { default as CCardAction } from "./Customs/Cards/CCardAction";
+export { default as CCardActions } from "./Customs/Cards/CCardActions";
 
 // Containers
 export { default as CContainer } from "./Customs/Containers/CContainer";
@@ -52,12 +52,20 @@ export { default as CContainer } from "./Customs/Containers/CContainer";
 // Data Grids
 export { default as CDataGrid } from "./Customs/DataGrids/CDataGrid";
 
+// Fabs
+export { default as CFabSubmit } from "./Customs/Fabs/CFabSubmit";
+
 // Grids
 export { default as CFormGrid } from "./Customs/Grids/CFormGrid";
 export { default as CFormRow } from "./Customs/Grids/CFormRow";
 
 // Modals
 export { default as CModal } from "./Customs/Modals/CModal";
+export { default as CModalFull } from "./Customs/Modals/CModalFull";
+
+// Switches
+export { default as CSwitch } from "./Customs/Switches/CSwitch";
+export { default as CSwitchLabeled } from "./Customs/Switches/CSwitchLabeled";
 
 // TextFields
 export { default as CTextField } from "./Customs/TextFields/CTextField";

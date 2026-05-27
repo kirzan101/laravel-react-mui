@@ -130,11 +130,11 @@ class RolePermissionService implements RolePermissionInterface
                 $defaultPermissionIds = $this->fetch->indexQuery(Permission::class)->pluck('id')->toArray();
 
                 $rolePermissionsData = [];
-                foreach ($permissionIds as $permissionId) {
+                foreach ($defaultPermissionIds as $permissionId) {
                     $rolePermissionsData[] = [
                         'role_id' => $roleId,
                         'permission_id' => $permissionId,
-                        'is_active' => in_array($permissionId, $defaultPermissionIds), // Set is_active to true if the permission is in the default permissions, otherwise false
+                        'is_active' => in_array($permissionId, $permissionIds), // Set is_active to true if the permission is in the provided permission IDs, otherwise false
                     ];
                 }
 
@@ -156,14 +156,15 @@ class RolePermissionService implements RolePermissionInterface
 
     /**
      * Update multiple role permissions in the database.
-     * 
-     * This method is used to update multiple permissions for a role. It takes an array of permission IDs and a role ID, and updates the is_active field for each role permission associated with the given role ID based on whether the permission ID is in the provided array of permission IDs.
+     *
+     * This method is used to update the active status of multiple role permissions for a given role. It takes an array of permission IDs and a role ID, and updates the is_active field of the role permissions associated with the given role ID based on whether their permission ID is in the provided array of permission IDs.
      *
      * Process Overview:
      * - Fetch all role permissions for the given role ID from the database.
-     * - Iterate over the fetched role permissions and update the is_active field based on whether the permission ID is in the provided array of permission IDs.
+     * - Deactivate all role permissions for the given role ID by setting their is_active field to false.
+     * - Update the is_active field to true for the role permissions whose permission ID is in the provided array of permission IDs.
      * - Return a CollectionResponse with the updated role permissions.
-     * 
+     *
      * @param array $permissionIds
      * @param int $roleId
      * @return CollectionResponse
@@ -177,11 +178,16 @@ class RolePermissionService implements RolePermissionInterface
                     ->where('role_id', $roleId)
                     ->get();
 
-                // Update the is_active field for each role permission based on whether its permission_id is in the provided permissionIds array
-                foreach ($rolePermissions as $rolePermission) {
-                    $isActive = in_array($rolePermission->permission_id, $permissionIds);
-                    $this->base->update($rolePermission, ['is_active' => $isActive]);
-                }
+                // deactivate all permissions first
+                $this->fetch->indexQuery(RolePermission::class)
+                    ->where('role_id', $roleId)
+                    ->update(['is_active' => false]);
+
+                // Then update the selected permissions to active
+                $this->fetch->indexQuery(RolePermission::class)
+                    ->where('role_id', $roleId)
+                    ->whereIn('permission_id', $permissionIds)
+                    ->update(['is_active' => true]);
 
                 return CollectionResponse::success(200, Helper::SUCCESS, 'Role permissions updated successfully!', $rolePermissions);
             });

@@ -55,7 +55,7 @@ class RoleFormRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => ['required', 'string', 'max:255', new UniqueIgnoringSoftDeletes('roles', 'name', $this->id)],
+            'name' => ['required', 'string', 'max:255', new UniqueIgnoringSoftDeletes(Role::class, 'name', $this->id)],
             'description' => ['nullable', 'string'],
             'is_active' => ['required', 'boolean'],
             'permissionIds' => ['required', 'array'],

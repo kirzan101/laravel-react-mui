@@ -27,6 +27,7 @@ import LogoutIcon from "@mui/icons-material/Logout";
 import DashboardIcon from "@mui/icons-material/Dashboard";
 import GroupsIcon from "@mui/icons-material/Groups";
 import SettingsIcon from "@mui/icons-material/Settings";
+import RoleIcon from "@mui/icons-material/VerifiedUser";
 
 import { ThemeButton } from "@/Components";
 import { router, usePage } from "@inertiajs/react";
@@ -217,6 +218,8 @@ const AppLayout = ({ children }) => {
                         icon={GroupsIcon}
                         label="User Groups"
                     />
+
+                    <SidebarItem href="/roles" icon={RoleIcon} label="Roles" />
 
                     <SidebarItem
                         href="/settings"

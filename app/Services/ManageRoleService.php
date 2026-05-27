@@ -101,12 +101,12 @@ class ManageRoleService implements ManageRoleInterface
                 if (!$manageRoleDTO->is_active) {
                     $deleteProfileRolesResponse = $this->profileRole->deleteProfileRolesByRoleId($roleId);
                     $this->ensureSuccess($deleteProfileRolesResponse->toArray(), 'Failed to delete profile roles associated with the role.');
+                } else { // if role is activated, update the role permissions associated with the role
+
+                    // Then update the selected permissions to active
+                    $rolePermissionResponse = $this->rolePermission->updateMultipleRolePermissions($manageRoleDTO->permissionIds, $roleId);
+                    $this->ensureSuccess($rolePermissionResponse->toArray(), 'Failed to sync permissions to role.');
                 }
-
-                // Sync permissions to the role
-                $rolePermissionResponse = $this->rolePermission->updateMultipleRolePermissions($manageRoleDTO->permissionIds, $roleId);
-                $this->ensureSuccess($rolePermissionResponse->toArray(), 'Failed to sync permissions to role.');
-
                 return ModelResponse::success(200, Helper::SUCCESS, 'Role updated successfully!', $role, $roleId);
             });
         } catch (\Throwable $th) {

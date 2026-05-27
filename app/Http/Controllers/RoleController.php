@@ -84,7 +84,7 @@ class RoleController extends Controller
 
         return Inertia::render('System/Roles', [
             'permissions' => $permissions,
-            'user_groups' => $userGroups,
+            'userGroups' => $userGroups,
             'moduleLists' => $moduleLists,
             'can' => $this->getModulePermissions(new Role()),
         ]);
