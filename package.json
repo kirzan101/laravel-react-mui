@@ -18,9 +18,9 @@
         "@emotion/styled": "^11.14.1",
         "@fontsource/roboto": "^5.2.10",
         "@inertiajs/react": "^2.0.8",
-        "@mui/icons-material": "^7.3.11",
-        "@mui/lab": "^7.0.0",
-        "@mui/material": "^7.3.11",
+        "@mui/icons-material": "^9.1.1",
+        "@mui/lab": "^9.0.0-beta.5",
+        "@mui/material": "^9.1.1",
         "@mui/x-data-grid": "^9.3.0",
         "react": "^18.3.1",
         "react-dom": "^18.3.1"

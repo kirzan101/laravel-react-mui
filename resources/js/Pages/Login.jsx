@@ -71,7 +71,12 @@ const Login = ({ flash, errors }) => {
                         p: 4,
                     }}
                 >
-                    <Box textAlign="center" maxWidth={500}>
+                    <Box
+                        sx={{
+                            textAlign: "center",
+                            maxWidth: 500,
+                        }}
+                    >
                         <Typography variant="h3" fontWeight="bold">
                             Laravel React App
                         </Typography>
@@ -99,7 +104,13 @@ const Login = ({ flash, errors }) => {
                         p: 4,
                     }}
                 >
-                    <Box width="100%" maxWidth={400} textAlign="center">
+                    <Box
+                        sx={{
+                            width: "100%",
+                            maxWidth: 400,
+                            textAlign: "center",
+                        }}
+                    >
                         <Typography variant="h4" fontWeight="bold">
                             Welcome!
                         </Typography>

@@ -1,13 +1,7 @@
 import Switch from "@mui/material/Switch";
 
-const CSwitch = (props) => {
-    return (
-        <Switch
-            color="primary"
-            inputProps={{ "aria-label": "controlled" }}
-            {...props}
-        />
-    );
+const CSwitch = ({ slotProps, ...props }) => {
+    return <Switch color="primary" slotProps={slotProps} {...props} />;
 };
 
 export default CSwitch;

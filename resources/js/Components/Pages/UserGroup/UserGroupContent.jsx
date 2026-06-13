@@ -25,12 +25,16 @@ const UserGroupContent = ({ flash, errors }) => {
 
     return (
         <CBoxContent>
-            <Grid container alignItems="center" spacing={2} sx={{ mb: 2 }}>
+            <Grid
+                container
+                spacing={2}
+                sx={{ mb: 2, display: "flex", alignItems: "center" }}
+            >
                 {/* Left: Title + Button */}
                 <Grid
-                    size={{ xs: 12, md: 6 }}
                     display="flex"
-                    alignItems="center"
+                    size={{ xs: 12, md: 6 }}
+                    sx={{ alignItems: "center" }}
                 >
                     <Typography variant="h4">User Groups</Typography>
 
@@ -45,9 +49,11 @@ const UserGroupContent = ({ flash, errors }) => {
                 <Grid
                     size={{ xs: 12, md: 6 }}
                     display="flex"
-                    justifyContent={{
-                        xs: "flex-start",
-                        md: "flex-end",
+                    sx={{
+                        justifyContent: {
+                            xs: "flex-start",
+                            md: "flex-end",
+                        },
                     }}
                 >
                     <CSearchField

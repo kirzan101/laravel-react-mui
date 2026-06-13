@@ -8,24 +8,45 @@ import {
     CFabSubmit,
     CButtonEdit,
 } from "@/Components";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import FormRole from "./Forms/FormRole";
 import TablePermissionList from "../Tables/TablePermissionList";
 import { Box, Grid, Typography } from "@mui/material";
 import { router } from "@inertiajs/react";
 
-const Edit = ({ role, flash, errors, sx, permissions, moduleLists, can }) => {
+const EditRole = ({
+    role,
+    flash,
+    errors,
+    sx,
+    permissions,
+    moduleLists,
+    can,
+}) => {
     const [open, setOpen] = useState(false);
     const [btnDisabled, setBtnDisabled] = useState(false);
 
     const [form, setForm] = useState({
-        id: role?.id || null,
-        name: role?.name || "",
-        is_active: role?.is_active ?? true,
-        description: role?.description || "",
-        permissionIds: role?.rolePermissions?.map((perm) => perm.id) || [],
+        id: null,
+        name: "",
+        is_active: true,
+        description: "",
+        permissionIds: [],
     });
+
+    // update form value when role props change
+    useEffect(() => {
+        if (!role) return;
+
+        setForm({
+            id: role?.id || null,
+            name: role?.name || "",
+            is_active: role?.is_active ?? true,
+            description: role?.description || "",
+            permissionIds: role?.rolePermissions?.map((perm) => perm.id) || [],
+        });
+    }, [role]);
 
     const handlePermissionsChange = (permissions) => {
         setForm((prev) => ({
@@ -165,4 +186,4 @@ const Edit = ({ role, flash, errors, sx, permissions, moduleLists, can }) => {
     );
 };
 
-export default Edit;
+export default EditRole;

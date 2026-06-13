@@ -1,5 +1,5 @@
 import { CModal, CButtonEdit, CButtonClose, CButtonSubmit } from "@/Components";
-import { useState } from "react";
+import { userEffect, useState } from "react";
 
 import FormUserGroup from "./Forms/FormUserGroup";
 import { Box } from "@mui/material";
@@ -10,14 +10,28 @@ const EditUserGroup = ({ userGroup, flash, errors, sx }) => {
     const [btnDisabled, setBtnDisabled] = useState(false);
 
     const [form, setForm] = useState({
-        name: userGroup?.name || "",
-        code: userGroup?.code || "",
-        description: userGroup?.description || "",
+        id: null,
+        name: "",
+        code: "",
+        description: "",
     });
+
+    // update form value when userGroup props change
+    useEffect(() => {
+        if (!userGroup) return;
+
+        setForm({
+            id: userGroup?.id || null,
+            name: userGroup?.name || "",
+            code: userGroup?.code || "",
+            description: userGroup?.description || "",
+        });
+    }, [userGroup]);
 
     // reset form value to initial state
     const handleResetForm = () => {
         setForm({
+            id: userGroup?.id || null,
             name: userGroup?.name || "",
             code: userGroup?.code || "",
             description: userGroup?.description || "",
