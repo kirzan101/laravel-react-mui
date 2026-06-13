@@ -40,3 +40,11 @@ Route::middleware(['auth'])->group(function () {
     // Route::resource('profiles', \App\Http\Controllers\ProfileController::class)->only(['index', 'store', 'update']);
     Route::resource('roles', \App\Http\Controllers\RoleController::class)->only(['index', 'store', 'update', 'destroy']);
 });
+
+// Catch-all route for Inertia (must be defined last)
+Route::get('{any}', function () {
+    return Inertia::render('Error', [
+        'code' => 404,
+        'message' => 'The page you are looking for could not be found.',
+    ]);
+})->where('any', '.*');

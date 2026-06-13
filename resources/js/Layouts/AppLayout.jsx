@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import { useState } from "react";
 import {
     Box,
@@ -34,6 +34,7 @@ import { router, usePage } from "@inertiajs/react";
 
 import ProfileNav from "./Components/ProfileNav";
 import SidebarItem from "./Components/SidebarItem";
+import GlobalSnackbar from "../Components/Utilities/GlobalSnackbar";
 
 const drawerWidth = 260;
 
@@ -134,6 +135,38 @@ const AppLayout = ({ children }) => {
 
     const handleDrawerOpen = () => setOpen(true);
     const handleDrawerClose = () => setOpen(false);
+
+    // Snackbar logic
+    const snackRef = useRef();
+
+    // Listen for flash messages from Inertia and show snackbar
+    const { flash } = usePage().props;
+    useEffect(() => {
+        if (flash?.success) {
+            snackRef.current?.show(flash.success, "success");
+        }
+
+        if (flash?.error) {
+            snackRef.current?.show(flash.error, "error");
+        }
+
+        if (flash?.info) {
+            snackRef.current?.show(flash.info, "info");
+        }
+
+        if (flash?.warning) {
+            snackRef.current?.show(flash.warning, "warning");
+        }
+    }, [flash]);
+
+    // validation errors from backend (via Inertia props)
+    const { errors } = usePage().props;
+    useEffect(() => {
+        if (Object.keys(errors || {}).length > 0) {
+            snackRef.current?.show("Validation error occurred", "error");
+        }
+    }, [errors]);
+    // End of Snackbar logic
 
     return (
         <Box sx={{ display: "flex", width: "100%" }}>
@@ -242,6 +275,8 @@ const AppLayout = ({ children }) => {
                 <Fade in={true} timeout={500}>
                     <Box>{children}</Box>
                 </Fade>
+
+                <GlobalSnackbar ref={snackRef} />
             </Main>
 
             <Box

@@ -49,9 +49,11 @@ class HandleInertiaRequests extends Middleware
             'appDeveloper' => env('APP_DEVELOPER', 'Developer'),
             'flash' => function () use ($request) {
                 return [
-                    'message' => $request->session()->get('message'),
+                    // 'message' => $request->session()->get('message'), // ambiguous, use specific keys for different types of messages    
                     'success' => $request->session()->get('success'),
                     'error' => $request->session()->get('error'),
+                    'info' => $request->session()->get('info'),
+                    'warning' => $request->session()->get('warning'),
                 ];
             },
             'auth' => Auth::check() ? [

@@ -11,6 +11,7 @@ use Illuminate\Validation\ValidationException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Symfony\Component\HttpFoundation\Response as SymfonyResponse;
 use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class Handler extends ExceptionHandler
 {
@@ -55,5 +56,17 @@ class Handler extends ExceptionHandler
             'code' => $status,
             'message' => $message,
         ])->toResponse($request);
+    }
+
+    public function register(): void
+    {
+        $this->renderable(function (NotFoundHttpException $e, $request) {
+            if ($request->header('X-Inertia')) {
+                return Inertia::render('Error', [
+                    'code' => 404,
+                    'message' => 'Page Not Found',
+                ])->toResponse($request)->setStatusCode(404);
+            }
+        });
     }
 }

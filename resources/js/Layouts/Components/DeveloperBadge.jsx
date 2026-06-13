@@ -1,5 +1,6 @@
 import LaptopTwoToneIcon from "@mui/icons-material/LaptopTwoTone";
 import { Tooltip } from "@mui/material";
+import { useTheme } from "@mui/material/styles";
 
 const DeveloperBadge = ({ user }) => {
     const consideredDeveloper = [
@@ -24,12 +25,15 @@ const DeveloperBadge = ({ user }) => {
         return null; // Don't show badge if not a developer or if they're an admin
     }
 
+    const theme = useTheme();
+    const isDark = theme.palette.mode === "dark";
+
     return (
         <Tooltip title="Developer" placement="right">
             <LaptopTwoToneIcon
                 sx={{
                     fontSize: "1rem",
-                    color: "lightblue",
+                    color: isDark ? "lightblue" : "primary.main",
                     ml: 0.5,
                     mb: 0.5,
                     verticalAlign: "middle",
