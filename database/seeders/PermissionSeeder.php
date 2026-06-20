@@ -18,7 +18,7 @@ class PermissionSeeder extends Seeder
     {
         $permissions = [
             [
-                'module' => 'profiles',
+                'module' => 'users',
                 'icon' => 'mdi-account',
                 'types' => ['create', 'view', 'update'],
             ],

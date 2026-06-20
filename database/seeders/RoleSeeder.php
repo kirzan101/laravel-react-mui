@@ -21,7 +21,7 @@ class RoleSeeder extends Seeder
                 'description' => 'Admin role',
                 'user_group_id' => 1, // Assuming Admin user group has ID 1
                 'permissions' => [
-                    'profiles' => [
+                    'users' => [
                         'create',
                         'view',
                         'update',
@@ -46,7 +46,7 @@ class RoleSeeder extends Seeder
                 'description' => 'Programmer role',
                 'user_group_id' => 1, // Assuming Admin user group has ID 1
                 'permissions' => [
-                    'profiles' => [
+                    'users' => [
                         'create',
                         'view',
                         'update',
@@ -71,7 +71,7 @@ class RoleSeeder extends Seeder
                 'description' => 'System Analyst role',
                 'user_group_id' => 1, // Assuming Admin user group has ID 1
                 'permissions' => [
-                    'profiles' => [
+                    'users' => [
                         'view',
                     ],
                     'user_groups' => [
@@ -87,7 +87,7 @@ class RoleSeeder extends Seeder
                 'description' => 'Tester role',
                 'user_group_id' => 1, // Assuming Admin user group has ID 1
                 'permissions' => [
-                    'profiles' => [
+                    'users' => [
                         'view',
                         'create',
                     ],
@@ -114,7 +114,7 @@ class RoleSeeder extends Seeder
             ]);
 
             if ($role) {
-                $permissionModules = array_keys($roleData['permissions']); // will be ['profiles', 'user_groups', 'roles']
+                $permissionModules = array_keys($roleData['permissions']); // will be ['users', 'user_groups', 'roles']
                 $providedPermissions = $permissionLists->whereIn('module', $permissionModules);
 
                 $rolePermissionData = [];
@@ -122,7 +122,7 @@ class RoleSeeder extends Seeder
                     $isActive = false; // Default to false  
 
                     // Check if the permission's type is in the provided permissions for its module
-                    // e.g., if the permission is for 'profiles' and its type is 'create', check if 'create' is in $roleData['permissions']['profiles']
+                    // e.g., if the permission is for 'users' and its type is 'create', check if 'create' is in $roleData['permissions']['users']
                     if (in_array($permission->type, $roleData['permissions'][$permission->module])) {
                         $isActive = $permission->is_active; // Use the is_active value from the permission
                     }
