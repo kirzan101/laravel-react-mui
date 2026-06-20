@@ -63,6 +63,9 @@ export { default as CFormRow } from "./Customs/Grids/CFormRow";
 export { default as CModal } from "./Customs/Modals/CModal";
 export { default as CModalFull } from "./Customs/Modals/CModalFull";
 
+// Selects
+export { default as CSelect } from "./Customs/Selects/CSelect";
+
 // Switches
 export { default as CSwitch } from "./Customs/Switches/CSwitch";
 export { default as CSwitchLabeled } from "./Customs/Switches/CSwitchLabeled";

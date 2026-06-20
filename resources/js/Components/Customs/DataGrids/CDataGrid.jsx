@@ -81,6 +81,11 @@ const CDataGrid = ({
                 borderRadius: 4,
                 boxShadow: 3,
                 p: 1,
+                "& .MuiDataGrid-cell": {
+                    whiteSpace: "nowrap",
+                    overflow: "hidden",
+                    textOverflow: "ellipsis",
+                },
             }}
             {...props}
         />

@@ -35,9 +35,8 @@ Route::middleware(['auth'])->group(function () {
     });
 
 
-    // Route::get('user-groups', [\App\Http\Controllers\UserGroupController::class, 'index']);
+    Route::resource('users', \App\Http\Controllers\UserController::class)->only(['index', 'store', 'update']);
     Route::resource('user-groups', \App\Http\Controllers\UserGroupController::class)->only(['index', 'store', 'update', 'destroy']);
-    // Route::resource('profiles', \App\Http\Controllers\ProfileController::class)->only(['index', 'store', 'update']);
     Route::resource('roles', \App\Http\Controllers\RoleController::class)->only(['index', 'store', 'update', 'destroy']);
 });
 

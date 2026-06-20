@@ -9,42 +9,18 @@ use App\Interfaces\FetchInterfaces\RoleFetchInterface;
 use App\Interfaces\FetchInterfaces\UserGroupFetchInterface;
 use App\Interfaces\ManageAccountInterface;
 use App\Models\User;
-use App\Traits\ReturnModulePermissionTrait;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Gate;
 use Inertia\Inertia;
 
 class UserController extends Controller
 {
-    use ReturnModulePermissionTrait;
-
     public function __construct(
         private UserGroupFetchInterface $userGroupFetch,
         private RoleFetchInterface $roleFetch,
         private ManageAccountInterface $manageAccount,
         private ActivityLogInterface $activityLog
     ) {}
-
-    /**
-     * Returns the permissions for the current user profile for the given model.
-     *
-     * @param Model $model The Eloquent model instance representing the target module (used to determine the table name).
-     *
-     * @return array An array of permission types (e.g., ['view', 'update', 'delete']) for the specified module.
-     */
-    protected function getModulePermissions(Model $model): array
-    {
-        $profileId = Auth::user()?->profile?->id;
-
-        if (!$profileId) {
-            return [];
-        }
-
-        return $this->returnPermissions($model, $profileId);
-    }
 
     /**
      * Display a listing of the resource.

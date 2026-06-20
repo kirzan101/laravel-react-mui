@@ -1,0 +1,93 @@
+import { CModal, CButtonAdd, CButtonClose, CButtonSubmit } from "@/Components";
+import { useState } from "react";
+
+import FormUser from "./Forms/FormUser";
+import { Box } from "@mui/material";
+import { router } from "@inertiajs/react";
+
+const AddUser = ({ flash, errors, userGroups, accountTypes, can, sx }) => {
+    const [open, setOpen] = useState(false);
+    const [btnDisabled, setBtnDisabled] = useState(false);
+
+    const initialForm = {
+        username: "",
+        email: "",
+        first_name: "",
+        middle_name: "",
+        last_name: "",
+        nickname: "",
+        type: "",
+        position: "",
+        contact_numbers: [],
+        user_group_id: "",
+        role_ids: [],
+    };
+
+    const [form, setForm] = useState(initialForm);
+
+    const handleResetForm = () => {
+        setForm({ ...initialForm }); // safer, if ever mutate nested object in form, it won't affect the initialForm value
+    };
+
+    const handleSubmit = (event) => {
+        event.preventDefault();
+
+        // submission here
+        router.post("/users", form, {
+            forceFormData: true,
+            onSuccess: ({ props }) => {
+                setOpen(false);
+
+                // reset form value
+                handleResetForm();
+            },
+            onError: () => {
+                // emits("notification", "Some fields has an error.", "error");
+                // add snackbar here
+            },
+            onBefore: () => {
+                setBtnDisabled(true);
+            },
+            onFinish: () => {
+                setBtnDisabled(false);
+            },
+        });
+    };
+
+    return (
+        <>
+            <CButtonAdd sx={sx} onClick={() => setOpen(true)} />
+
+            <CModal
+                title="Add User"
+                width={750}
+                open={open}
+                onClose={() => setOpen(false)}
+            >
+                <form onSubmit={handleSubmit}>
+                    <FormUser
+                        form={form}
+                        setForm={setForm}
+                        errors={errors}
+                        userGroups={userGroups}
+                        accountTypes={accountTypes}
+                        can={can}
+                    />
+
+                    <Box
+                        sx={{
+                            display: "flex",
+                            justifyContent: "flex-end",
+                            mt: 2,
+                        }}
+                    >
+                        <CButtonClose onClick={() => setOpen(false)} />
+                        <CButtonSubmit sx={{ ml: 1 }} loading={btnDisabled} />
+                    </Box>
+                </form>
+            </CModal>
+        </>
+    );
+};
+
+export default AddUser;

@@ -10,17 +10,12 @@ use App\Interfaces\ModuleInterface;
 use App\Models\Module;
 use App\Traits\ActivityLoggerTrait;
 use App\Traits\ReturnMessageTrait;
-use App\Traits\ReturnModulePermissionTrait;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
 use Inertia\Inertia;
 
 class ModuleController extends Controller
 {
-    use ReturnModulePermissionTrait,
-        ReturnMessageTrait,
+    use ReturnMessageTrait,
         ActivityLoggerTrait;
 
     public function __construct(
@@ -29,24 +24,6 @@ class ModuleController extends Controller
     ) {}
 
     const MODULE_NAME = 'modules';
-
-    /**
-     * Returns the permissions for the current user profile for the given model.
-     *
-     * @param Model $model The Eloquent model instance representing the target module (used to determine the table name).
-     *
-     * @return array An array of permission types (e.g., ['view', 'update', 'delete']) for the specified module.
-     */
-    protected function getModulePermissions(Model $model): array
-    {
-        $profileId = Auth::user()?->profile?->id;
-
-        if (!$profileId) {
-            return [];
-        }
-
-        return $this->returnPermissions($model, $profileId);
-    }
 
     /**
      * Display a listing of the resource.
