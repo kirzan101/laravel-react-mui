@@ -166,7 +166,14 @@ const TablePermissionList = ({
                 Permissions
             </Typography>
 
-            <TableContainer component={Paper}>
+            <TableContainer
+                sx={{
+                    borderRadius: 4,
+                    boxShadow: 3,
+                    p: 2,
+                }}
+                component={Paper}
+            >
                 <Table size="small">
                     <TableHead>
                         <TableRow>

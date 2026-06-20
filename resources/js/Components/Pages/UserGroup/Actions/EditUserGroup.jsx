@@ -78,7 +78,7 @@ const EditUserGroup = ({ userGroup, flash, errors, sx }) => {
 
             <CModal
                 title={`Editing ${userGroup.name}`}
-                width={650}
+                width={450}
                 open={open}
                 onClose={() => setOpen(false)}
             >

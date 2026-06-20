@@ -127,7 +127,7 @@ const EditRole = ({
                             <Typography variant="h6" sx={{ mb: 2 }}>
                                 Role Details
                             </Typography>
-                            <CCard title="Role Details">
+                            <CCard>
                                 <CCardContent>
                                     <Typography
                                         gutterBottom
@@ -136,7 +136,7 @@ const EditRole = ({
                                             fontSize: 14,
                                         }}
                                     >
-                                        Fill in the form to add a new role.
+                                        Fill in the form to edit the role.
                                     </Typography>
                                     <FormRole
                                         form={form}

@@ -71,7 +71,14 @@ const AddRole = ({ flash, errors, sx, permissions, moduleLists, can }) => {
 
     return (
         <>
-            <CButtonAdd sx={sx} onClick={() => setOpen(true)} />
+            <CButtonAdd
+                sx={{
+                    display: "inline-flex",
+                    width: "auto", // 👈 critical
+                    ...sx,
+                }}
+                onClick={() => setOpen(true)}
+            />
 
             <CModalFull
                 title="Add Role"
@@ -96,7 +103,7 @@ const AddRole = ({ flash, errors, sx, permissions, moduleLists, can }) => {
                             <Typography variant="h6" sx={{ mb: 2 }}>
                                 Role Details
                             </Typography>
-                            <CCard title="Role Details">
+                            <CCard>
                                 <CCardContent>
                                     <Typography
                                         gutterBottom

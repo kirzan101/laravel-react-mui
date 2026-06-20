@@ -276,22 +276,27 @@ const AppLayout = ({ children }) => {
                     <Box>{children}</Box>
                 </Fade>
 
+                <Box
+                    sx={{
+                        position: "fixed",
+                        bottom: 0,
+                        left: 0,
+                        right: 0,
+                        backgroundColor: "inherit",
+                        p: 1,
+                        textAlign: "center",
+                        borderTop: "1px solid",
+                        borderColor: "divider",
+                        fontSize: "0.875rem",
+                        color: "text.secondary",
+                    }}
+                >
+                    {appDeveloper} {new Date().getFullYear()} &copy; — v
+                    {appVersion}
+                </Box>
+
                 <GlobalSnackbar ref={snackRef} />
             </Main>
-
-            <Box
-                sx={{
-                    position: "fixed",
-                    bottom: 0,
-                    left: 0,
-                    right: 0,
-                    backgroundColor: "inherit",
-                    p: 1,
-                    textAlign: "center",
-                }}
-            >
-                {appDeveloper} {new Date().getFullYear()} &copy; — v{appVersion}
-            </Box>
         </Box>
     );
 };

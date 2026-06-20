@@ -28,8 +28,8 @@ const CEmptyState = ({
                     src={image}
                     alt={title}
                     sx={{
-                        width: 300,
-                        height: 300,
+                        width: 250,
+                        height: 250,
                         mb: 2,
                         objectFit: "contain",
                     }}

@@ -77,6 +77,11 @@ const CDataGrid = ({
             pageSizeOptions={[10, 25, 50, 100]}
             disableRowSelectionOnClick
             disableColumnFilter
+            sx={{
+                borderRadius: 4,
+                boxShadow: 3,
+                p: 1,
+            }}
             {...props}
         />
     );

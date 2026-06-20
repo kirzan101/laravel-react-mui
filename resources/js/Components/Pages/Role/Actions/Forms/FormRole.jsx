@@ -12,7 +12,7 @@ const FormRole = ({ form, setForm, errors = {}, permissions, moduleLists }) => {
 
     return (
         <CFormRow>
-            <CFormGrid size={{ xs: 12, md: 6 }}>
+            <CFormGrid size={{ xs: 12 }}>
                 <CTextField
                     label="Name"
                     id="name"
@@ -23,19 +23,8 @@ const FormRole = ({ form, setForm, errors = {}, permissions, moduleLists }) => {
                     helperText={errors.name}
                 />
             </CFormGrid>
-            <CFormGrid size={{ xs: 12, md: 6 }}>
-                <CSwitchLabeled
-                    label="Active"
-                    checked={form.is_active}
-                    onChange={(e) =>
-                        setForm((prev) => ({
-                            ...prev,
-                            is_active: e.target.checked,
-                        }))
-                    }
-                />
-            </CFormGrid>
-            <CFormGrid>
+
+            <CFormGrid size={{ xs: 12 }}>
                 <CTextField
                     label="Description"
                     id="description"
@@ -46,6 +35,19 @@ const FormRole = ({ form, setForm, errors = {}, permissions, moduleLists }) => {
                     helperText={errors.description}
                     multiline
                     rows={4}
+                />
+            </CFormGrid>
+
+            <CFormGrid size={{ xs: 12 }}>
+                <CSwitchLabeled
+                    label="Active"
+                    checked={form.is_active}
+                    onChange={(e) =>
+                        setForm((prev) => ({
+                            ...prev,
+                            is_active: e.target.checked,
+                        }))
+                    }
                 />
             </CFormGrid>
         </CFormRow>

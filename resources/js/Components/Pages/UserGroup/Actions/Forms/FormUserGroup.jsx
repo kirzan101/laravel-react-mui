@@ -12,7 +12,7 @@ const FormUserGroup = ({ form, setForm, errors = {} }) => {
 
     return (
         <CFormRow>
-            <CFormGrid size={{ xs: 12, md: 6 }}>
+            <CFormGrid size={{ xs: 12 }}>
                 <CTextField
                     label="Name"
                     id="name"
@@ -23,7 +23,7 @@ const FormUserGroup = ({ form, setForm, errors = {} }) => {
                     helperText={errors.name}
                 />
             </CFormGrid>
-            <CFormGrid size={{ xs: 12, md: 6 }}>
+            <CFormGrid size={{ xs: 12 }}>
                 <CTextField
                     label="Code"
                     id="code"
@@ -34,7 +34,7 @@ const FormUserGroup = ({ form, setForm, errors = {} }) => {
                     helperText={errors.code}
                 />
             </CFormGrid>
-            <CFormGrid>
+            <CFormGrid size={{ xs: 12 }}>
                 <CTextField
                     label="Description"
                     id="description"

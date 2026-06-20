@@ -35,22 +35,24 @@ const RoleContent = ({
             <Grid
                 container
                 spacing={2}
-                sx={{
-                    mb: 2,
-                    display: "flex",
-                    alignItems: "center",
-                }}
+                sx={{ mb: 2, display: "flex", alignItems: "center" }}
             >
                 {/* Left: Title + Button */}
                 <Grid
-                    display="flex"
                     size={{ xs: 12, md: 6 }}
-                    sx={{ alignItems: "center" }}
+                    sx={{
+                        display: "flex",
+                        alignItems: "center",
+                        gap: 2,
+                    }}
                 >
                     <Typography variant="h4">Roles</Typography>
 
                     <AddRole
-                        sx={{ ml: 2 }}
+                        sx={{
+                            display: "inline-flex",
+                            ml: { xs: "auto", md: 0 },
+                        }}
                         flash={flash}
                         errors={errors}
                         permissions={permissions}
