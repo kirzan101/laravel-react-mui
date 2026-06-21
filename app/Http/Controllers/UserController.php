@@ -2,7 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\DTOs\AccountDTO;
+use App\DTOs\ActivityLogDTO;
+use App\DTOs\ProfileDTO;
+use App\DTOs\UserDTO;
 use App\Helpers\Helper;
+use App\Http\Requests\UserFormRequest;
 use App\Http\Resources\IndexResource\UserGroupIndexResource;
 use App\Interfaces\ActivityLogInterface;
 use App\Interfaces\FetchInterfaces\RoleFetchInterface;
@@ -50,5 +55,86 @@ class UserController extends Controller
             'account_types' => Helper::ACCOUNT_TYPES,
             'can' => $this->getModulePermissions(new User()),
         ]);
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     */
+    public function store(UserFormRequest $request)
+    {
+        $userDTO = UserDTO::fromArray($request->all());
+        $profileDTO = ProfileDTO::fromArray($request->all());
+
+        $accountDTO = new AccountDTO(
+            user: $userDTO,
+            profile: $profileDTO,
+            user_group_id: $request->input('user_group_id'),
+            role_ids: $request->input('role_ids', []),
+        );
+
+        $registerResult = $this->manageAccount->register($accountDTO);
+
+        if ($registerResult->status === Helper::ERROR) {
+            return Inertia::render('Error', [
+                'code' => $registerResult->code,
+                'message' => $registerResult->message
+            ]);
+        }
+
+        // Log the activity
+        $activityLogData = ActivityLogDTO::fromArray([
+            'module' => 'users',
+            'description' => $registerResult->message,
+            'status' => $registerResult->status,
+            'type' => 'create',
+            'properties' => $request->toArray(),
+        ]);
+        $this->activityLog->storeActivityLog($activityLogData);
+
+        return redirect()->back()->with($registerResult->status, $registerResult->message);
+    }
+
+    /**
+     * Update the specified resource in storage.
+     */
+    public function update(UserFormRequest $request, int $id)
+    {
+        // Additional validation for profile_id since it's required for updating a user
+        $request->validate([
+            'profile_id' => 'required|integer|exists:profiles,id',
+        ]);
+
+        $userDTO = UserDTO::fromArray($request->all());
+        $profileDTO = ProfileDTO::fromArray($request->all());
+        $profileDTO = $profileDTO->withUser($id);
+
+        $accountDTO = new AccountDTO(
+            user: $userDTO,
+            profile: $profileDTO,
+            user_group_id: $request->input('user_group_id'),
+            role_ids: $request->input('role_ids', []),
+        );
+
+        $profileId = $request->input('profile_id');
+        $updateResult = $this->manageAccount->updateUserProfile($accountDTO, $profileId);
+
+        if ($updateResult->status === Helper::ERROR) {
+            return Inertia::render('Error', [
+                'code' => $updateResult->code,
+                'message' => $updateResult->message
+            ]);
+        }
+
+        // Log the activity
+        $activityLogData = ActivityLogDTO::fromArray([
+            'module' => 'profiles',
+            'description' => $updateResult->message,
+            'status' => $updateResult->status,
+            'type' => 'update',
+            'properties' => $request->toArray(),
+        ]);
+        $this->activityLog->storeActivityLog($activityLogData);
+
+        return redirect()->back()->with($updateResult->status, $updateResult->message);
     }
 }

@@ -5,7 +5,14 @@ import AddUser from "./Actions/AddUser";
 import TableUser from "./Tables/TableUser";
 import { useEffect, useState } from "react";
 
-const UserContent = ({ flash, errors, userGroups, accountTypes, can }) => {
+const UserContent = ({
+    flash,
+    errors,
+    userGroups,
+    accountTypes,
+    roles,
+    can,
+}) => {
     const [search, setSearch] = useState("");
     const [debouncedSearch, setDebouncedSearch] = useState("");
     const [refreshKey, setRefreshKey] = useState(0);
@@ -49,6 +56,7 @@ const UserContent = ({ flash, errors, userGroups, accountTypes, can }) => {
                         errors={errors}
                         userGroups={userGroups}
                         accountTypes={accountTypes}
+                        roles={roles}
                         can={can}
                     />
                 </Grid>
@@ -85,6 +93,7 @@ const UserContent = ({ flash, errors, userGroups, accountTypes, can }) => {
                 search={debouncedSearch}
                 userGroups={userGroups}
                 accountTypes={accountTypes}
+                roles={roles}
                 can={can}
             />
         </CBoxContent>

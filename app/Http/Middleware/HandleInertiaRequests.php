@@ -7,6 +7,7 @@ use App\Models\Module;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\DB;
 use Inertia\Middleware;
 
 class HandleInertiaRequests extends Middleware
@@ -40,7 +41,10 @@ class HandleInertiaRequests extends Middleware
     public function share(Request $request): array
     {
         $modules = Cache::rememberForever('active_modules', function () {
-            return Module::where('is_active', true)->select('id', 'name', 'icon', 'route')->get();
+            return Module::where('is_active', true)
+                ->select('name', 'icon', 'route', 'order', 'base_name')
+                ->get()
+                ->toArray();
         });
 
         return array_merge(parent::share($request), [
@@ -67,10 +71,49 @@ class HandleInertiaRequests extends Middleware
                     'isAdmin' => (bool) Auth::user()->is_admin,
                     'isFirstLogin' => (bool) Auth::user()->is_first_login,
                     'type' => Auth::user()->profile?->type,
+                    'accessibleModules' => $this->getAccessibleModules(),
                 ],
             ] : null,
             'token' => Auth::check() ? Auth::user()->api_token : null,
             'modules' => $modules
         ]);
+    }
+
+    /**
+     * Get the list of modules that the authenticated user has access to based on their permissions.
+     *
+     * This method checks the user's profile and retrieves all active permissions associated with that profile's roles.
+     * It then extracts the unique module names from those permissions and caches the result for 30 minutes.
+     *
+     * @return array List of module names that the user has access to (e.g. ['profiles', 'user_management']).
+     *               Returns an empty array if the user is not authenticated or has no permissions.
+     */
+    protected function getAccessibleModules()
+    {
+        if (!Auth::check()) {
+            return [];
+        }
+
+        $user = Auth::user();
+        $profileId = $user->profile?->id;
+
+        return Cache::remember(
+            "user.modules.$profileId",
+            now()->addMinutes(30),
+            function () use ($profileId) {
+                return DB::table('profile_roles as pr')
+                    ->join('roles as r', 'r.id', '=', 'pr.role_id')
+                    ->join('role_permissions as rp', 'rp.role_id', '=', 'r.id')
+                    ->join('permissions as p', 'p.id', '=', 'rp.permission_id')
+                    ->where('pr.profile_id', $profileId)
+                    ->where('r.is_active', true)
+                    ->where('rp.is_active', true)
+                    ->where('p.is_active', true)
+                    ->distinct()
+                    ->pluck('p.module')
+                    ->values()
+                    ->toArray();
+            }
+        );
     }
 }

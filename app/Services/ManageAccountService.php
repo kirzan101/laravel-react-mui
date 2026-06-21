@@ -49,7 +49,7 @@ class ManageAccountService implements ManageAccountInterface
     /**
      * Register a new user with profile.
      *
-     * @param array $request
+     * @param AccountDTO $accountDTO
      * @return ModelResponse
      * @throws \Throwable
      */

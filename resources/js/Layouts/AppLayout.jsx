@@ -24,10 +24,8 @@ import {
 import MenuIcon from "@mui/icons-material/Menu";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import LogoutIcon from "@mui/icons-material/Logout";
-import DashboardIcon from "@mui/icons-material/Dashboard";
-import GroupsIcon from "@mui/icons-material/Groups";
-import SettingsIcon from "@mui/icons-material/Settings";
-import RoleIcon from "@mui/icons-material/VerifiedUser";
+
+import { iconMap } from "@/Utilities/icons";
 
 import { ThemeButton } from "@/Components";
 import { router, usePage } from "@inertiajs/react";
@@ -110,6 +108,19 @@ const AppLayout = ({ children }) => {
     const appName = page.props.appName || "Laravel React App";
     const appDeveloper = page.props.appDeveloper || "Developer";
     const appVersion = page.props.appVersion || "1.0.0";
+
+    // Modules for sidebar - from Inertia props (shared via HandleInertiaRequests middleware)
+    const modules = page.props.modules || [];
+    const accessibleModules = page.props.auth?.user?.accessibleModules || [];
+
+    const moduleLists = modules
+        .filter((module) => accessibleModules.includes(module.base_name)) // Filter modules based on user permissions
+        .sort((a, b) => a.order - b.order)
+        .map((module) => ({
+            name: module.name,
+            icon: module.icon,
+            route: module.route,
+        }));
 
     // Responsive drawer behavior
     const isMobile = useMediaQuery(theme.breakpoints.down("md"));
@@ -242,23 +253,20 @@ const AppLayout = ({ children }) => {
                 <List>
                     <SidebarItem
                         href="/dashboard"
-                        icon={DashboardIcon}
+                        icon={iconMap.DashboardIcon}
                         label="Dashboard"
                     />
 
-                    <SidebarItem
-                        href="/user-groups"
-                        icon={GroupsIcon}
-                        label="User Groups"
-                    />
-
-                    <SidebarItem href="/roles" icon={RoleIcon} label="Roles" />
-
-                    <SidebarItem
-                        href="/settings"
-                        icon={SettingsIcon}
-                        label="Settings"
-                    />
+                    {moduleLists.map((module) => (
+                        <SidebarItem
+                            key={module.name}
+                            href={`${module.route}`}
+                            icon={
+                                iconMap[module.icon] || iconMap.ViewModuleIcon
+                            }
+                            label={module.name.replace(/-/g, " ")}
+                        />
+                    ))}
                 </List>
             </Drawer>
 

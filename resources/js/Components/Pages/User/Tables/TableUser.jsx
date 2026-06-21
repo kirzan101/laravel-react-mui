@@ -10,6 +10,7 @@ const TableUser = ({
     refreshKey,
     userGroups,
     accountTypes,
+    roles,
     can,
 }) => {
     const columns = [
@@ -26,6 +27,7 @@ const TableUser = ({
                         errors={errors}
                         userGroups={userGroups}
                         accountTypes={accountTypes}
+                        roles={roles}
                         can={can}
                     />
                 );

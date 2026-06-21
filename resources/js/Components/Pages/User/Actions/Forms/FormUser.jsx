@@ -1,5 +1,11 @@
-import { CTextField, CFormGrid, CFormRow, CSelect } from "@/Components";
-import { Grid, Typography } from "@mui/material";
+import {
+    CTextField,
+    CFormGrid,
+    CFormRow,
+    CSelect,
+    CSelectMultiple,
+} from "@/Components";
+import { Autocomplete, Grid, Typography } from "@mui/material";
 import { useState } from "react";
 
 const FormUser = ({
@@ -8,6 +14,7 @@ const FormUser = ({
     errors = {},
     userGroups,
     accountTypes,
+    roles,
     can,
 }) => {
     const handleChange = (field) => (e) => {
@@ -92,6 +99,85 @@ const FormUser = ({
                     onChange={handleChange("position")}
                     error={!!errors.position}
                     helperText={errors.position}
+                />
+            </CFormGrid>
+
+            <CFormGrid size={{ xs: 12, sm: 12 }}>
+                <Autocomplete
+                    multiple
+                    freeSolo
+                    size="small"
+                    options={[]}
+                    value={form.contact_numbers}
+                    onChange={(_, value) =>
+                        setForm((prev) => ({
+                            ...prev,
+                            contact_numbers: value,
+                        }))
+                    }
+                    renderInput={(params) => (
+                        <CTextField
+                            {...params}
+                            label="Contact Numbers"
+                            error={!!errors.contact_numbers}
+                            helperText={errors.contact_numbers}
+                        />
+                    )}
+                />
+            </CFormGrid>
+
+            <CFormGrid size={{ xs: 12, sm: 6 }}>
+                <CSelect
+                    label="User Group"
+                    id="user_group_id"
+                    name="user_group_id"
+                    value={form.user_group_id}
+                    onChange={handleChange("user_group_id")}
+                    error={!!errors.user_group_id}
+                    helperText={errors.user_group_id}
+                    options={userGroups.map((group) => ({
+                        value: group.id,
+                        label: group.name,
+                    }))}
+                />
+            </CFormGrid>
+
+            <CFormGrid size={{ xs: 12, sm: 6 }}>
+                <CSelectMultiple
+                    label="Roles"
+                    name="role_ids"
+                    value={form.role_ids}
+                    onChange={handleChange("role_ids")}
+                    error={!!errors.role_ids}
+                    helperText={errors.role_ids}
+                    options={roles.map((role) => ({
+                        value: role.id,
+                        label: role.name,
+                    }))}
+                />
+            </CFormGrid>
+
+            <CFormGrid size={{ xs: 12, sm: 6 }}>
+                <CTextField
+                    label="Username"
+                    id="username"
+                    name="username"
+                    value={form.username}
+                    onChange={handleChange("username")}
+                    error={!!errors.username}
+                    helperText={errors.username}
+                />
+            </CFormGrid>
+
+            <CFormGrid size={{ xs: 12, sm: 6 }}>
+                <CTextField
+                    label="Email"
+                    id="email"
+                    name="email"
+                    value={form.email}
+                    onChange={handleChange("email")}
+                    error={!!errors.email}
+                    helperText={errors.email}
                 />
             </CFormGrid>
         </CFormRow>

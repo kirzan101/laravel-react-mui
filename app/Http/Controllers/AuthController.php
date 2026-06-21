@@ -7,16 +7,19 @@ use App\Helpers\ErrorHelper;
 use App\Helpers\Helper;
 use App\Http\Requests\System\ChangePasswordFormRequest;
 use App\Interfaces\AuthInterface;
+use App\Interfaces\CurrentUserInterface;
 use App\Interfaces\ManageAccountInterface;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
 use Inertia\Inertia;
 
 class AuthController extends Controller
 {
     public function __construct(
         private AuthInterface $auth,
-        private ManageAccountInterface $manageAccount
+        private ManageAccountInterface $manageAccount,
+        private CurrentUserInterface $currentUser
     ) {}
 
     /**
@@ -43,6 +46,12 @@ class AuthController extends Controller
             return back()->withErrors([
                 'error' => $loginResult->message,
             ]);
+        }
+
+        // clear accessible modules cache on successful login
+        $profileId = $this->currentUser->getProfileId();
+        if ($profileId) {
+            Cache::forget("user.modules.$profileId");
         }
 
         return redirect()->intended();

@@ -11,6 +11,7 @@ const EditUser = ({
     errors,
     userGroups,
     accountTypes,
+    roles,
     can,
     sx,
 }) => {
@@ -67,6 +68,9 @@ const EditUser = ({
     const handleSubmit = (event) => {
         event.preventDefault();
 
+        // Add profileId to the form data
+        form.profile_id = user.id; // user here is profile, not user model
+
         // submission here
         router.post(
             `/users/${user.id}`,
@@ -115,6 +119,7 @@ const EditUser = ({
                         errors={errors}
                         userGroups={userGroups}
                         accountTypes={accountTypes}
+                        roles={roles}
                         can={can}
                     />
 

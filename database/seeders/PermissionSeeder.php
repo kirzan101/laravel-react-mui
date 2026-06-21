@@ -19,23 +19,27 @@ class PermissionSeeder extends Seeder
         $permissions = [
             [
                 'module' => 'users',
-                'icon' => 'mdi-account',
+                'icon' => 'PeopleIcon',
                 'types' => ['create', 'view', 'update'],
+                'order' => 1,
             ],
             [
                 'module' => 'user_groups',
-                'icon' => 'mdi-account-group',
+                'icon' => 'GroupsIcon',
                 'types' => ['create', 'view', 'update'],
+                'order' => 2,
             ],
             [
                 'module' => 'roles',
-                'icon' => 'mdi-shield-account',
+                'icon' => 'RoleIcon',
                 'types' => ['create', 'view', 'update'],
+                'order' => 3,
             ],
             [
                 'module' => 'modules',
-                'icon' => 'mdi-view-dashboard',
+                'icon' => 'ViewModuleIcon',
                 'types' => ['create', 'view', 'update'],
+                'order' => 4,
             ],
         ];
 
@@ -63,7 +67,9 @@ class PermissionSeeder extends Seeder
                 'name' => Str::title(str_replace('_', ' ', $permission['module'])),
                 'icon' => $permission['icon'],
                 'category' => Helper::MODULE_CATEGORY_SYSTEM,
-                'route' => '/' . str_replace('_', '-', $permission['module'])
+                'route' => '/' . str_replace('_', '-', $permission['module']),
+                'order' => $permission['order'],
+                'base_name' => $permission['module'],
             ]);
         }
     }

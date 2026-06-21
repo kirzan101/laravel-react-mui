@@ -5,7 +5,15 @@ import FormUser from "./Forms/FormUser";
 import { Box } from "@mui/material";
 import { router } from "@inertiajs/react";
 
-const AddUser = ({ flash, errors, userGroups, accountTypes, can, sx }) => {
+const AddUser = ({
+    flash,
+    errors,
+    userGroups,
+    accountTypes,
+    roles,
+    can,
+    sx,
+}) => {
     const [open, setOpen] = useState(false);
     const [btnDisabled, setBtnDisabled] = useState(false);
 
@@ -71,6 +79,7 @@ const AddUser = ({ flash, errors, userGroups, accountTypes, can, sx }) => {
                         errors={errors}
                         userGroups={userGroups}
                         accountTypes={accountTypes}
+                        roles={roles}
                         can={can}
                     />
 

@@ -33,6 +33,8 @@ class Module extends Model
         'icon',
         'route',
         'category',
+        'order',
+        'base_name', // format name same as the module name in permissions table. e.g "User Groups" => "user_groups"
         'is_active',
     ];
 }

@@ -18,6 +18,7 @@ use App\Traits\EnsureDataTrait;
 use App\Traits\EnsureSuccessTrait;
 use Illuminate\Support\Facades\DB;
 use App\Models\Module;
+use Illuminate\Support\Str;
 
 class ModuleService implements ModuleInterface
 {
@@ -46,6 +47,17 @@ class ModuleService implements ModuleInterface
         try {
             return DB::transaction(function () use ($moduleDTO) {
 
+                // Ensure that the order is set, if not, default to 0
+                if (empty($moduleDTO->order)) {
+                    $moduleDTO = $moduleDTO->withOrder(0);
+                }
+
+                // Ensure that the base_name is set, if not, generate it from the name
+                if (empty($moduleDTO->base_name) && !empty($moduleDTO->name)) {
+                    $base_name = strtolower(Str::plural(Str::snake($moduleDTO->name))); // ensure plural and snake case. e.g "User Group" => "user_groups"
+                    $moduleDTO = $moduleDTO->withBaseName($base_name);
+                }
+
                 $moduleData = $moduleDTO->toArray();
                 $module = $this->base->store(Module::class, $moduleData);
 
@@ -71,6 +83,12 @@ class ModuleService implements ModuleInterface
                 $module = $this->fetch->showQuery(Module::class, $moduleId)->firstOrFail();
 
                 $moduleDTO = ModuleDTO::fromModel($module, $moduleDTO->toArray());
+
+                // Ensure that the base_name is set, if not, generate it from the name
+                if (empty($moduleDTO->base_name) && !empty($moduleDTO->name)) {
+                    $base_name = strtolower(Str::plural(Str::snake($moduleDTO->name))); // ensure plural and snake case. e.g "User Group" => "user_groups"
+                    $moduleDTO = $moduleDTO->withBaseName($base_name);
+                }
 
                 $moduleData = $moduleDTO->toArray();
                 $module = $this->base->update($module, $moduleData);

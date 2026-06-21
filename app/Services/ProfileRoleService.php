@@ -159,9 +159,12 @@ class ProfileRoleService implements ProfileRoleInterface
                     ->where('profile_id', $profileId)
                     ->pluck('id');
 
-                $deletedRows = $this->base->deleteMultiple(ProfileRole::class, $existingProfileRoles->toArray());
-                if ($deletedRows === 0) {
-                    throw new \Exception('Failed to delete existing profile roles.');
+                // Only attempt to delete if there are existing profile roles
+                if ($existingProfileRoles->isNotEmpty()) {
+                    $deletedRows = $this->base->deleteMultiple(ProfileRole::class, $existingProfileRoles->toArray());
+                    if ($deletedRows === 0) {
+                        throw new \Exception('Failed to delete existing profile roles.');
+                    }
                 }
 
                 $storeNewRoleResponse = $this->storeMultipleProfileRoles($profileId, $roleIds);

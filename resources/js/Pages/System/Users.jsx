@@ -4,7 +4,7 @@ import UserContent from "@/Components/Pages/User/UserContent";
 
 import { Head, usePage, router } from "@inertiajs/react";
 
-const Users = ({ flash, errors, user_groups, account_types, can }) => {
+const Users = ({ flash, errors, user_groups, account_types, roles, can }) => {
     const page = usePage();
     const appName = page.props.appName || "Laravel React App";
 
@@ -34,6 +34,7 @@ const Users = ({ flash, errors, user_groups, account_types, can }) => {
                     errors={errors}
                     userGroups={user_groups}
                     accountTypes={account_types}
+                    roles={roles}
                     can={can}
                 />
             </CBox>

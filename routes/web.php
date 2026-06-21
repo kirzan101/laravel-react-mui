@@ -34,7 +34,6 @@ Route::middleware(['auth'])->group(function () {
         return Inertia::render('Home');
     });
 
-
     Route::resource('users', \App\Http\Controllers\UserController::class)->only(['index', 'store', 'update']);
     Route::resource('user-groups', \App\Http\Controllers\UserGroupController::class)->only(['index', 'store', 'update', 'destroy']);
     Route::resource('roles', \App\Http\Controllers\RoleController::class)->only(['index', 'store', 'update', 'destroy']);

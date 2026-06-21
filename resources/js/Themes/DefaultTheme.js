@@ -27,7 +27,7 @@ const dark = {
         error: "#F44336",
         searchBg: "#252525",
         textField: "#214a88",
-        closeText: "#214a88",
+        closeText: "#fff",
         text: {
             primary: "#fff",
             secondary: "rgba(255,255,255,0.7)",
