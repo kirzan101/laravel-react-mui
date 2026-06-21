@@ -64,6 +64,7 @@ class ModuleFormRequest extends FormRequest
             'icon' => ['nullable', 'string', 'max:255'],
             'route' => ['nullable', 'string', 'max:255'],
             'category' => ['nullable', 'string', 'max:255'],
+            'order' => ['required', 'integer'],
             'is_active' => ['required', 'boolean'],
         ];
     }

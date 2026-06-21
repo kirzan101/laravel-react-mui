@@ -39,6 +39,12 @@ class RoleSeeder extends Seeder
                         'update',
                         'delete',
                     ],
+                    'modules' => [
+                        'create',
+                        'view',
+                        'update',
+                        'delete',
+                    ],
                 ], // Example permissions
             ],
             [
@@ -64,6 +70,12 @@ class RoleSeeder extends Seeder
                         'update',
                         'delete',
                     ],
+                    'modules' => [
+                        'create',
+                        'view',
+                        'update',
+                        'delete',
+                    ],
                 ], // Example permissions
             ],
             [
@@ -80,6 +92,7 @@ class RoleSeeder extends Seeder
                     'roles' => [
                         'view',
                     ],
+                    'modules' => [],
                 ], // Example permissions
             ],
             [
@@ -99,6 +112,7 @@ class RoleSeeder extends Seeder
                         'view',
                         'create',
                     ],
+                    'modules' => [],
                 ], // Example permissions
             ],
         ];

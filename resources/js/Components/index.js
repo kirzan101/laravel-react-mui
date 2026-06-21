@@ -66,6 +66,7 @@ export { default as CModalFull } from "./Customs/Modals/CModalFull";
 // Selects
 export { default as CSelect } from "./Customs/Selects/CSelect";
 export { default as CSelectMultiple } from "./Customs/Selects/CSelectMultiple";
+export { default as CSelectIcon } from "./Customs/Selects/CSelectIcon";
 
 // Switches
 export { default as CSwitch } from "./Customs/Switches/CSwitch";
