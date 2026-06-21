@@ -27,6 +27,7 @@ class GenerateModulePermissions extends Command
             $originalModelName = $this->argument('model');
 
             $modelName = Helper::getModuleName($originalModelName);
+            $moduleName = ucwords(str_replace('_', ' ', $modelName)); // add space between words and capitalize. 
 
             //if no arguments are provided, default to all permissions
             if (
@@ -76,10 +77,12 @@ class GenerateModulePermissions extends Command
 
             // Create the module entry
             Module::create([
-                'name' => $modelName,
-                'icon' => 'mdi-home',
+                'name' => $moduleName,
+                'icon' => 'DashboardIcon', // default icon, can be updated later
                 'route' => '/' . Str::kebab($modelName),
                 'category' => Helper::MODULE_CATEGORY_SYSTEM,
+                'order' => Module::max('order') + 1,
+                'base_name' => $modelName,
             ]);
         });
 

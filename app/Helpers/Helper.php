@@ -117,8 +117,8 @@ class Helper
     /**
      * Get the module name from the request and convert it to snake_case.
      *
-     * @param array $request
-     * @return string
+     * @param string|null $originalModuleName
+     * @return string|null
      */
     public static function getModuleName(?string $originalModuleName): ?string
     {
