@@ -37,7 +37,7 @@ Route::middleware(['auth'])->group(function () {
     Route::resource('users', \App\Http\Controllers\UserController::class)->only(['index', 'store', 'update']);
     Route::resource('user-groups', \App\Http\Controllers\UserGroupController::class)->only(['index', 'store', 'update', 'destroy']);
     Route::resource('roles', \App\Http\Controllers\RoleController::class)->only(['index', 'store', 'update', 'destroy']);
-    Route::resource('modules', \App\Http\Controllers\ModuleController::class)->only(['index', 'store', 'update', 'destroy']);
+    // Route::resource('modules', \App\Http\Controllers\ModuleController::class)->only(['index', 'store', 'update', 'destroy']);
 });
 
 // Catch-all route for Inertia (must be defined last)

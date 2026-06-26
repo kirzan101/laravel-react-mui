@@ -77,6 +77,8 @@ const CDataGrid = ({
             pageSizeOptions={[10, 25, 50, 100]}
             disableRowSelectionOnClick
             disableColumnFilter
+            density="compact"
+            rowHeight={60}
             sx={{
                 borderRadius: 4,
                 boxShadow: 3,

@@ -4,7 +4,7 @@ import { Head, usePage, router } from "@inertiajs/react";
 
 import ModuleContent from "@/Components/Pages/Module/ModuleContent";
 
-const Modules = ({ flash, errors, can }) => {
+const Modules = ({ flash, errors, can, categories }) => {
     const page = usePage();
     const appName = page.props.appName || "Laravel React App";
 
@@ -26,7 +26,7 @@ const Modules = ({ flash, errors, can }) => {
                     </Typography>
                 </Breadcrumbs>
 
-                <ModuleContent flash={flash} errors={errors} can={can} />
+                <ModuleContent flash={flash} errors={errors} can={can} categories={categories} />
             </CBox>
         </>
     );

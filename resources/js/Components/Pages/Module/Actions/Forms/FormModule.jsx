@@ -10,7 +10,7 @@ import { useState } from "react";
 
 import { iconMap } from "@/Utilities/icons";
 
-const FormModule = ({ form, setForm, errors = {} }) => {
+const FormModule = ({ form, setForm, errors = {}, categories }) => {
     const handleChange = (field) => (e) => {
         setForm((prev) => ({
             ...prev,
@@ -62,7 +62,7 @@ const FormModule = ({ form, setForm, errors = {} }) => {
             </CFormGrid>
 
             <CFormGrid size={{ xs: 12 }}>
-                <CTextField
+                <CSelect
                     label="Category"
                     id="category"
                     name="category"
@@ -70,6 +70,10 @@ const FormModule = ({ form, setForm, errors = {} }) => {
                     onChange={handleChange("category")}
                     error={!!errors.category}
                     helperText={errors.category}
+                    options={categories.map((category) => ({
+                        value: category,
+                        label: category,
+                    }))}
                 />
             </CFormGrid>
 

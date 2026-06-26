@@ -6,7 +6,7 @@ import AlertTransaction from "@/Components/Utilities/AlertTransaction";
 import TableUserGroup from "./Tables/TableUserGroup";
 import { useEffect, useState } from "react";
 
-const UserGroupContent = ({ flash, errors }) => {
+const UserGroupContent = ({ flash, errors, can, userGroupTypes }) => {
     const [search, setSearch] = useState("");
     const [debouncedSearch, setDebouncedSearch] = useState("");
     const [refreshKey, setRefreshKey] = useState(0);
@@ -48,6 +48,8 @@ const UserGroupContent = ({ flash, errors }) => {
                         }}
                         flash={flash}
                         errors={errors}
+                        can={can}
+                        userGroupTypes={userGroupTypes}
                     />
                 </Grid>
 
@@ -82,6 +84,8 @@ const UserGroupContent = ({ flash, errors }) => {
             <TableUserGroup
                 flash={flash}
                 errors={errors}
+                can={can}
+                userGroupTypes={userGroupTypes}
                 refreshKey={refreshKey}
                 search={debouncedSearch}
             />

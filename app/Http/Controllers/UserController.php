@@ -45,7 +45,10 @@ class UserController extends Controller
         });
 
         $roles = Cache::remember('roles_list', 60, function () {
-            $result = $this->roleFetch->indexRoles();
+            $request = [
+                'is_active' => true,
+            ];
+            $result = $this->roleFetch->indexRoles($request);
             return $result->data ?? [];
         });
 

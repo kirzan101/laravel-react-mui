@@ -1,11 +1,12 @@
 import { CModal, CButtonEdit, CButtonClose, CButtonSubmit } from "@/Components";
 import { useEffect, userEffect, useState } from "react";
 
+import EditLabel from "@/Components/Utilities/EditLabel";
 import FormModule from "./Forms/FormModule";
 import { Box } from "@mui/material";
 import { router } from "@inertiajs/react";
 
-const EditModule = ({ module, flash, errors, sx }) => {
+const EditModule = ({ module, flash, errors, can, categories, sx }) => {
     const [open, setOpen] = useState(false);
     const [btnDisabled, setBtnDisabled] = useState(false);
 
@@ -51,7 +52,7 @@ const EditModule = ({ module, flash, errors, sx }) => {
 
         // submission here
         router.post(
-            `/user-groups/${module.id}`,
+            `/modules/${module.id}`,
             {
                 _method: "PUT",
                 forceFormData: true,
@@ -78,11 +79,17 @@ const EditModule = ({ module, flash, errors, sx }) => {
         );
     };
 
+    const canUpdateModule = can.includes("update-modules");
+
     return (
         <>
-            <CButtonEdit sx={sx} onClick={() => setOpen(true)}>
-                {module.name}
-            </CButtonEdit>
+            {canUpdateModule ? (
+                <CButtonEdit sx={sx} onClick={() => setOpen(true)}>
+                    {module.name}
+                </CButtonEdit>
+            ) : (
+                <EditLabel label={module.name} />
+            )}
 
             <CModal
                 title={`Editing ${module.name}`}
@@ -91,7 +98,12 @@ const EditModule = ({ module, flash, errors, sx }) => {
                 onClose={() => setOpen(false)}
             >
                 <form onSubmit={handleSubmit}>
-                    <FormModule form={form} setForm={setForm} errors={errors} />
+                    <FormModule
+                        form={form}
+                        setForm={setForm}
+                        errors={errors}
+                        categories={categories}
+                    />
 
                     <Box
                         sx={{

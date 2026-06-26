@@ -111,6 +111,26 @@ export const getTheme = (mode = "light") => {
                     },
                 },
             }),
+
+            // =====================================================
+            // ✅ OVERRIDES FOR DATAGRID (FOCUS + HOVER)
+            // =====================================================
+            MuiDataGrid: {
+                styleOverrides: {
+                    root: {
+                        "& .MuiDataGrid-cell:focus, & .MuiDataGrid-cell:focus-within":
+                            {
+                                outline: "none",
+                                boxShadow: "none",
+                            },
+                        "& .MuiDataGrid-columnHeader:focus, & .MuiDataGrid-columnHeader:focus-within":
+                            {
+                                outline: "none",
+                                boxShadow: "none",
+                            },
+                    },
+                },
+            },
         },
 
         transitions: {

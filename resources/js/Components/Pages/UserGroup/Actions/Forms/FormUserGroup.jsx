@@ -1,8 +1,8 @@
-import { CTextField, CFormGrid, CFormRow } from "@/Components";
+import { CTextField, CFormGrid, CFormRow, CSelect } from "@/Components";
 import { Grid } from "@mui/material";
 import { useState } from "react";
 
-const FormUserGroup = ({ form, setForm, errors = {} }) => {
+const FormUserGroup = ({ form, setForm, errors = {}, userGroupTypes }) => {
     const handleChange = (field) => (e) => {
         setForm((prev) => ({
             ...prev,
@@ -24,7 +24,7 @@ const FormUserGroup = ({ form, setForm, errors = {} }) => {
                 />
             </CFormGrid>
             <CFormGrid size={{ xs: 12 }}>
-                <CTextField
+                <CSelect
                     label="Code"
                     id="code"
                     name="code"
@@ -32,6 +32,10 @@ const FormUserGroup = ({ form, setForm, errors = {} }) => {
                     onChange={handleChange("code")}
                     error={!!errors.code}
                     helperText={errors.code}
+                    options={userGroupTypes.map((type) => ({
+                        value: type,
+                        label: type,
+                    }))}
                 />
             </CFormGrid>
             <CFormGrid size={{ xs: 12 }}>

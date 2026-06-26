@@ -5,7 +5,7 @@ import FormUserGroup from "./Forms/FormUserGroup";
 import { Box } from "@mui/material";
 import { router } from "@inertiajs/react";
 
-const AddUserGroup = ({ flash, errors, sx }) => {
+const AddUserGroup = ({ flash, errors, can, userGroupTypes, sx }) => {
     const [open, setOpen] = useState(false);
     const [btnDisabled, setBtnDisabled] = useState(false);
 
@@ -49,9 +49,11 @@ const AddUserGroup = ({ flash, errors, sx }) => {
         });
     };
 
+    const canCreate = can.includes("create-user_groups");
+
     return (
         <>
-            <CButtonAdd sx={sx} onClick={() => setOpen(true)} />
+            {canCreate && <CButtonAdd sx={sx} onClick={() => setOpen(true)} />}
 
             <CModal
                 title="Add User Group"
@@ -64,6 +66,7 @@ const AddUserGroup = ({ flash, errors, sx }) => {
                         form={form}
                         setForm={setForm}
                         errors={errors}
+                        userGroupTypes={userGroupTypes}
                     />
 
                     <Box

@@ -4,7 +4,7 @@ import UserGroupContent from "@/Components/Pages/UserGroup/UserGroupContent";
 
 import { Head, usePage, router } from "@inertiajs/react";
 
-const UserGroups = ({ flash, errors }) => {
+const UserGroups = ({ flash, errors, can, user_group_types }) => {
     const page = usePage();
     const appName = page.props.appName || "Laravel React App";
 
@@ -29,7 +29,12 @@ const UserGroups = ({ flash, errors }) => {
                     </Typography>
                 </Breadcrumbs>
 
-                <UserGroupContent flash={flash} errors={errors} />
+                <UserGroupContent
+                    flash={flash}
+                    errors={errors}
+                    can={can}
+                    userGroupTypes={user_group_types}
+                />
             </CBox>
         </>
     );

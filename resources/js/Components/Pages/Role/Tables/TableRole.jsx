@@ -17,15 +17,33 @@ const TableRole = ({
         {
             field: "name",
             headerName: "Name",
-            width: 400,
+            width: 300,
             renderCell: (params) => {
                 return (
-                    <EditRole role={params.row} flash={flash} errors={errors} permissions={permissions} moduleLists={moduleLists} can={can} />
+                    <EditRole
+                        role={params.row}
+                        flash={flash}
+                        errors={errors}
+                        permissions={permissions}
+                        moduleLists={moduleLists}
+                        can={can}
+                        sx={{
+                            minHeight: 28,
+                            py: 0,
+                            m: 0,
+                        }}
+                    />
                 );
             },
         },
-        { field: "is_active", headerName: "Is Active", width: 200 },
-        { field: "description", headerName: "Description", width: 300 },
+        {
+            field: "is_active",
+            headerName: "Is Active",
+            width: 150,
+            sortable: false,
+            renderCell: (params) => (params.row.is_active ? "Yes" : "No"),
+        },
+        { field: "description", headerName: "Description", flex: 1 },
     ];
 
     return (

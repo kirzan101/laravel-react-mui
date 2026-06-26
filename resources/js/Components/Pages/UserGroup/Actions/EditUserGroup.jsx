@@ -1,11 +1,19 @@
 import { CModal, CButtonEdit, CButtonClose, CButtonSubmit } from "@/Components";
 import { useEffect, userEffect, useState } from "react";
 
+import EditLabel from "@/Components/Utilities/EditLabel";
 import FormUserGroup from "./Forms/FormUserGroup";
 import { Box } from "@mui/material";
 import { router } from "@inertiajs/react";
 
-const EditUserGroup = ({ userGroup, flash, errors, sx }) => {
+const EditUserGroup = ({
+    userGroup,
+    flash,
+    errors,
+    can,
+    sx,
+    userGroupTypes,
+}) => {
     const [open, setOpen] = useState(false);
     const [btnDisabled, setBtnDisabled] = useState(false);
 
@@ -70,11 +78,18 @@ const EditUserGroup = ({ userGroup, flash, errors, sx }) => {
         );
     };
 
+    // check if user has permission to update user group
+    const canUpdate = can.includes("update-user_groups");
+
     return (
         <>
-            <CButtonEdit sx={sx} onClick={() => setOpen(true)}>
-                {userGroup.name}
-            </CButtonEdit>
+            {canUpdate ? (
+                <CButtonEdit sx={sx} onClick={() => setOpen(true)}>
+                    {userGroup.name}
+                </CButtonEdit>
+            ) : (
+                <EditLabel label={userGroup.name} />
+            )}
 
             <CModal
                 title={`Editing ${userGroup.name}`}
@@ -87,6 +102,7 @@ const EditUserGroup = ({ userGroup, flash, errors, sx }) => {
                         form={form}
                         setForm={setForm}
                         errors={errors}
+                        userGroupTypes={userGroupTypes}
                     />
 
                     <Box

@@ -29,6 +29,11 @@ const TableUser = ({
                         accountTypes={accountTypes}
                         roles={roles}
                         can={can}
+                        sx={{
+                            minHeight: 28,
+                            py: 0,
+                            m: 0,
+                        }}
                     />
                 );
             },

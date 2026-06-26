@@ -35,12 +35,12 @@ class PermissionSeeder extends Seeder
                 'types' => ['create', 'view', 'update'],
                 'order' => 3,
             ],
-            [
-                'module' => 'modules',
-                'icon' => 'ViewModuleIcon',
-                'types' => ['create', 'view', 'update'],
-                'order' => 4,
-            ],
+            // [
+            //     'module' => 'modules',
+            //     'icon' => 'ViewModuleIcon',
+            //     'types' => ['create', 'view', 'update'],
+            //     'order' => 4,
+            // ],
         ];
 
         $accessTypes = ['create', 'view', 'update', 'delete'];

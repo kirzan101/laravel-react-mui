@@ -69,16 +69,21 @@ const AddRole = ({ flash, errors, sx, permissions, moduleLists, can }) => {
         });
     };
 
+    // check if user has permission to create roles
+    const canCreateRole = can.includes("create-roles");
+
     return (
         <>
-            <CButtonAdd
-                sx={{
-                    display: "inline-flex",
-                    width: "auto", // 👈 critical
-                    ...sx,
-                }}
-                onClick={() => setOpen(true)}
-            />
+            {canCreateRole && (
+                <CButtonAdd
+                    sx={{
+                        display: "inline-flex",
+                        width: "auto", // 👈 critical
+                        ...sx,
+                    }}
+                    onClick={() => setOpen(true)}
+                />
+            )}
 
             <CModalFull
                 title="Add Role"

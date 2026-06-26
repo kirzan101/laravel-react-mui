@@ -38,6 +38,12 @@ class RoleFetchService extends BaseFetchService implements RoleFetchInterface
                 $query->with($resourceClass::$relations ?? []);
             }
 
+            // is_active filter
+            if (isset($request['is_active']) && !empty($request['is_active'])) {
+                $isActive = filter_var($request['is_active'], FILTER_VALIDATE_BOOLEAN);
+                $query->where('is_active', $isActive);
+            }
+
             //Search filter
             if (isset($request['search']) && !empty($request['search'])) {
                 $search = $request['search'];

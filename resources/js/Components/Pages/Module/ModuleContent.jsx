@@ -6,7 +6,7 @@ import AlertTransaction from "@/Components/Utilities/AlertTransaction";
 import TableModule from "./Tables/TableModule";
 import { useEffect, useState } from "react";
 
-const ModuleContent = ({ flash, errors }) => {
+const ModuleContent = ({ flash, errors, can, categories }) => {
     const [search, setSearch] = useState("");
     const [debouncedSearch, setDebouncedSearch] = useState("");
     const [refreshKey, setRefreshKey] = useState(0);
@@ -48,6 +48,8 @@ const ModuleContent = ({ flash, errors }) => {
                         }}
                         flash={flash}
                         errors={errors}
+                        can={can}
+                        categories={categories}
                     />
                 </Grid>
 
@@ -82,6 +84,8 @@ const ModuleContent = ({ flash, errors }) => {
             <TableModule
                 flash={flash}
                 errors={errors}
+                can={can}
+                categories={categories}
                 refreshKey={refreshKey}
                 search={debouncedSearch}
             />

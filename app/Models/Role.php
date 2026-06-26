@@ -6,9 +6,33 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Support\Facades\Cache;
 
 class Role extends Model
 {
+    protected static function booted()
+    {
+        static::saved(fn($role) => $role->clearRoleCache());
+        static::deleted(fn($role) => $role->clearRoleCache());
+    }
+
+    /**
+     * Clear the role cache for the current role.
+     *
+     * This method clears the cache for all profiles that have this role.
+     */
+    public function clearRoleCache()
+    {
+        $this->loadMissing('profileRoles.profile');
+
+        foreach ($this->profileRoles as $profileRole) {
+            $profile = $profileRole->profile;
+            if ($profile) {
+                Cache::forget("user.modules.{$profile->id}"); // cache from handleInertiaRequests
+            }
+        }
+    }
+
     protected $fillable = [
         'name',
         'description',

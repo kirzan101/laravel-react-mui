@@ -10,6 +10,7 @@ import {
 } from "@/Components";
 import { useEffect, useState } from "react";
 
+import EditLabel from "@/Components/Utilities/EditLabel";
 import FormRole from "./Forms/FormRole";
 import TablePermissionList from "../Tables/TablePermissionList";
 import { Box, Grid, Typography } from "@mui/material";
@@ -98,11 +99,18 @@ const EditRole = ({
         );
     };
 
+    // check if user has permission to update roles
+    const canUpdateRole = can.includes("update-roles");
+
     return (
         <>
-            <CButtonEdit sx={sx} onClick={() => setOpen(true)}>
-                {role.name}
-            </CButtonEdit>
+            {canUpdateRole ? (
+                <CButtonEdit sx={sx} onClick={() => setOpen(true)}>
+                    {role.name}
+                </CButtonEdit>
+            ) : (
+                <EditLabel label={role.name} />
+            )}
 
             <CModalFull
                 title="Edit Role"

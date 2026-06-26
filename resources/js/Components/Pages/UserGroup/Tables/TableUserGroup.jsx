@@ -3,7 +3,14 @@ import { CDataGrid } from "@/Components";
 import EditUserGroup from "../Actions/EditUserGroup";
 import { autocompleteClasses } from "@mui/material";
 
-const TableUserGroup = ({ flash, errors, search, refreshKey }) => {
+const TableUserGroup = ({
+    flash,
+    errors,
+    search,
+    refreshKey,
+    can,
+    userGroupTypes,
+}) => {
     const columns = [
         { field: "id", headerName: "ID", width: 70 },
         {
@@ -16,12 +23,19 @@ const TableUserGroup = ({ flash, errors, search, refreshKey }) => {
                         userGroup={params.row}
                         flash={flash}
                         errors={errors}
+                        can={can}
+                        userGroupTypes={userGroupTypes}
+                        sx={{
+                            minHeight: 28,
+                            py: 0,
+                            m: 0,
+                        }}
                     />
                 );
             },
         },
         { field: "code", headerName: "Code", width: 200 },
-        { field: "description", headerName: "Description", width: 300 },
+        { field: "description", headerName: "Description", flex: 1 },
     ];
 
     return (

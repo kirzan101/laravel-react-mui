@@ -1,6 +1,7 @@
 import { CModal, CButtonEdit, CButtonClose, CButtonSubmit } from "@/Components";
 import { useEffect, userEffect, useState } from "react";
 
+import EditLabel from "@/Components/Utilities/EditLabel";
 import FormUser from "./Forms/FormUser";
 import { Box } from "@mui/material";
 import { router } from "@inertiajs/react";
@@ -100,11 +101,18 @@ const EditUser = ({
         );
     };
 
+    // check if user has permission to update user
+    const canUpdate = can.includes("update-users");
+
     return (
         <>
-            <CButtonEdit sx={sx} onClick={() => setOpen(true)}>
-                {user.name}
-            </CButtonEdit>
+            {canUpdate ? (
+                <CButtonEdit sx={sx} onClick={() => setOpen(true)}>
+                    {user.name}
+                </CButtonEdit>
+            ) : (
+                <EditLabel label={user.name} />
+            )}
 
             <CModal
                 title={`Editing ${user.name}`}

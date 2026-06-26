@@ -5,7 +5,7 @@ import FormModule from "./Forms/FormModule";
 import { Box } from "@mui/material";
 import { router } from "@inertiajs/react";
 
-const AddModule = ({ flash, errors, sx }) => {
+const AddModule = ({ flash, errors, can, categories, sx }) => {
     const [open, setOpen] = useState(false);
     const [btnDisabled, setBtnDisabled] = useState(false);
 
@@ -50,9 +50,14 @@ const AddModule = ({ flash, errors, sx }) => {
         });
     };
 
+    // check if user has permission to create module
+    const canCreateModule = can.includes("create-modules");
+
     return (
         <>
-            <CButtonAdd sx={sx} onClick={() => setOpen(true)} />
+            {canCreateModule && (
+                <CButtonAdd sx={sx} onClick={() => setOpen(true)} />
+            )}
 
             <CModal
                 title="Add Module"
@@ -61,7 +66,7 @@ const AddModule = ({ flash, errors, sx }) => {
                 onClose={() => setOpen(false)}
             >
                 <form onSubmit={handleSubmit}>
-                    <FormModule form={form} setForm={setForm} errors={errors} />
+                    <FormModule form={form} setForm={setForm} errors={errors} categories={categories} />
 
                     <Box
                         sx={{

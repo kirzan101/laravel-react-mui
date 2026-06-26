@@ -62,9 +62,12 @@ const AddUser = ({
         });
     };
 
+    // check if user has permission to add user
+    const canCreate = can.includes("create-users");
+
     return (
         <>
-            <CButtonAdd sx={sx} onClick={() => setOpen(true)} />
+            {canCreate && <CButtonAdd sx={sx} onClick={() => setOpen(true)} />}
 
             <CModal
                 title="Add User"
