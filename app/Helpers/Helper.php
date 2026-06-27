@@ -179,8 +179,8 @@ class Helper
      * module categories
      */
     const MODULE_CATEGORIES = [
-        'System',
+        'settings',
         // Add more categories as needed
     ];
-    const MODULE_CATEGORY_SYSTEM = 'System';
+    const MODULE_CATEGORY_SETTINGS = 'settings';
 }

@@ -80,7 +80,7 @@ class GenerateModulePermissions extends Command
                 'name' => $moduleName,
                 'icon' => 'DashboardIcon', // default icon, can be updated later
                 'route' => '/' . Str::kebab($modelName),
-                'category' => Helper::MODULE_CATEGORY_SYSTEM,
+                'category' => null, // default to null, can be updated later
                 'order' => Module::max('order') + 1,
                 'base_name' => $modelName,
             ]);

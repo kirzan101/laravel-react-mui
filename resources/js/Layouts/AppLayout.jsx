@@ -121,10 +121,16 @@ const AppLayout = ({ children }) => {
             name: module.name,
             icon: module.icon,
             route: module.route,
+            category: module.category,
         }));
 
     // Modules that are not categorized (no category field)
-    const uncategorizedModules = modules.filter((module) => !module.category);
+    const uncategorizedModules = moduleLists.filter(
+        (module) => !module.category,
+    );
+    const settingsModules = moduleLists.filter(
+        (module) => module.category === "settings",
+    );
 
     // Responsive drawer behavior
     const isMobile = useMediaQuery(theme.breakpoints.down("md"));
@@ -272,11 +278,13 @@ const AppLayout = ({ children }) => {
                         />
                     ))}
 
-                    <SidebarItem
-                        href="/settings"
-                        icon={iconMap.SettingsIcon}
-                        label="Settings"
-                    />
+                    {settingsModules.length > 0 && (
+                        <SidebarItem
+                            href="/settings"
+                            icon={iconMap.SettingsIcon}
+                            label="Settings"
+                        />
+                    )}
                 </List>
             </Drawer>
 

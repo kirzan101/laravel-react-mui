@@ -29,14 +29,14 @@ class PermissionSeeder extends Seeder
                 'icon' => 'GroupsIcon',
                 'types' => ['create', 'view', 'update'],
                 'order' => 2,
-                'category' => Helper::MODULE_CATEGORY_SYSTEM,
+                'category' => Helper::MODULE_CATEGORY_SETTINGS,
             ],
             [
                 'module' => 'roles',
                 'icon' => 'RoleIcon',
                 'types' => ['create', 'view', 'update'],
                 'order' => 3,
-                'category' => Helper::MODULE_CATEGORY_SYSTEM,
+                'category' => Helper::MODULE_CATEGORY_SETTINGS,
             ],
             // [
             //     'module' => 'modules',

@@ -25,6 +25,13 @@ class SettingsController extends Controller
      */
     public function index()
     {
+        if (!$this->hasViewPermission($this->getCan())) {
+            return Inertia::render('Error', [
+                'code' => 403,
+                'message' => 'You do not have permission to view this page.'
+            ]);
+        }
+
         [
             'permissions' => $permissions,
             'moduleLists' => $moduleLists,
@@ -53,6 +60,21 @@ class SettingsController extends Controller
         $combinedCan = array_merge($userGroupCan, $roleCan);
 
         return $combinedCan;
+    }
+
+    /**
+     * Check if the user has any 'view' permissions.
+     *
+     * @param array $cans
+     * @return bool
+     */
+    protected function hasViewPermission(array $cans): bool
+    {
+        // convert to collect for easier searching
+        // must have at least one permission that contains 'view' in its name
+        return collect($cans)->contains(function ($permission) {
+            return str_contains($permission, 'view');
+        });
     }
 
     /**
