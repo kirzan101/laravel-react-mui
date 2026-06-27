@@ -79,7 +79,7 @@ const UserGroupContent = ({ flash, errors, can, userGroupTypes }) => {
             </Grid>
 
             {/* Display flash messages if they exist */}
-            {flash && <AlertTransaction flash={flash} />}
+            {flash && flash.error && <AlertTransaction flash={flash} />}
 
             <TableUserGroup
                 flash={flash}

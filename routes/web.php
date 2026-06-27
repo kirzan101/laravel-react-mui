@@ -18,14 +18,6 @@ Route::middleware(['auth'])->group(function () {
     Route::put('/reset-password/{userId}', [\App\Http\Controllers\System\AuthController::class, 'resetPassword'])->name('reset-password');
     Route::put('/set-user-status/{userId}', [\App\Http\Controllers\System\AuthController::class, 'setUserStatus'])->name('set-user-status');
 
-    // Route::get('/errors', function () {
-    //     return Inertia::render('Error', [
-    //         'code' => 500,
-    //         'message' => 'Page not found'
-    //     ]);
-    // });
-
-
     Route::get('/', function () {
         return Inertia::render('Home');
     });
@@ -34,9 +26,7 @@ Route::middleware(['auth'])->group(function () {
         return Inertia::render('Home');
     });
 
-    Route::get('/settings', function () {
-        return Inertia::render('System/Settings');
-    })->name('settings');
+    Route::get('/settings', [\App\Http\Controllers\System\SettingsController::class, 'index'])->name('settings.index');
 
     Route::resource('users', \App\Http\Controllers\System\UserController::class)->only(['index', 'store', 'update']);
     Route::resource('user-groups', \App\Http\Controllers\System\UserGroupController::class)->only(['index', 'store', 'update', 'destroy']);

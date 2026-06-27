@@ -34,7 +34,7 @@ import ProfileNav from "./Components/ProfileNav";
 import SidebarItem from "./Components/SidebarItem";
 import GlobalSnackbar from "../Components/Utilities/GlobalSnackbar";
 
-const drawerWidth = 260;
+const drawerWidth = 245;
 
 /* ================= APP BAR ================= */
 const AppBar = styled(MuiAppBar, {
@@ -113,6 +113,7 @@ const AppLayout = ({ children }) => {
     const modules = page.props.modules || [];
     const accessibleModules = page.props.auth?.user?.accessibleModules || [];
 
+    // All modules that the user has access to, sorted by order
     const moduleLists = modules
         .filter((module) => accessibleModules.includes(module.base_name)) // Filter modules based on user permissions
         .sort((a, b) => a.order - b.order)
@@ -121,6 +122,9 @@ const AppLayout = ({ children }) => {
             icon: module.icon,
             route: module.route,
         }));
+
+    // Modules that are not categorized (no category field)
+    const uncategorizedModules = modules.filter((module) => !module.category);
 
     // Responsive drawer behavior
     const isMobile = useMediaQuery(theme.breakpoints.down("md"));
@@ -257,7 +261,7 @@ const AppLayout = ({ children }) => {
                         label="Dashboard"
                     />
 
-                    {moduleLists.map((module) => (
+                    {uncategorizedModules.map((module) => (
                         <SidebarItem
                             key={module.name}
                             href={`${module.route}`}
@@ -267,6 +271,12 @@ const AppLayout = ({ children }) => {
                             label={module.name.replace(/-/g, " ")}
                         />
                     ))}
+
+                    <SidebarItem
+                        href="/settings"
+                        icon={iconMap.SettingsIcon}
+                        label="Settings"
+                    />
                 </List>
             </Drawer>
 

@@ -4,6 +4,7 @@ import { CButtonAdd, CTextField } from "@/Components";
 import AddUser from "./Actions/AddUser";
 import TableUser from "./Tables/TableUser";
 import { useEffect, useState } from "react";
+import AlertTransaction from "@/Components/Utilities/AlertTransaction";
 
 const UserContent = ({
     flash,
@@ -85,6 +86,9 @@ const UserContent = ({
                     />
                 </Grid>
             </Grid>
+
+            {/* Display flash messages if they exist */}
+            {flash && flash.error && <AlertTransaction flash={flash} />}
 
             <TableUser
                 flash={flash}

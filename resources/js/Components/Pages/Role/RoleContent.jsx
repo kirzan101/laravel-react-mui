@@ -87,7 +87,7 @@ const RoleContent = ({
             </Grid>
 
             {/* Display flash messages if they exist */}
-            {flash && <AlertTransaction flash={flash} />}
+            {flash && flash.error && <AlertTransaction flash={flash} />}
 
             <TableRole
                 flash={flash}

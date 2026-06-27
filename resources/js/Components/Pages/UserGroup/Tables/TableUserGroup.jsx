@@ -16,7 +16,6 @@ const TableUserGroup = ({
         {
             field: "name",
             headerName: "Name",
-            width: 400,
             renderCell: (params) => {
                 return (
                     <EditUserGroup
@@ -33,8 +32,9 @@ const TableUserGroup = ({
                     />
                 );
             },
+            flex: 1,
         },
-        { field: "code", headerName: "Code", width: 200 },
+        { field: "code", headerName: "Code", width: 150 },
         { field: "description", headerName: "Description", flex: 1 },
     ];
 

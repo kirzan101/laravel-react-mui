@@ -22,18 +22,21 @@ class PermissionSeeder extends Seeder
                 'icon' => 'PeopleIcon',
                 'types' => ['create', 'view', 'update'],
                 'order' => 1,
+                'category' => null,
             ],
             [
                 'module' => 'user_groups',
                 'icon' => 'GroupsIcon',
                 'types' => ['create', 'view', 'update'],
                 'order' => 2,
+                'category' => Helper::MODULE_CATEGORY_SYSTEM,
             ],
             [
                 'module' => 'roles',
                 'icon' => 'RoleIcon',
                 'types' => ['create', 'view', 'update'],
                 'order' => 3,
+                'category' => Helper::MODULE_CATEGORY_SYSTEM,
             ],
             // [
             //     'module' => 'modules',
@@ -66,7 +69,7 @@ class PermissionSeeder extends Seeder
             Module::create([
                 'name' => Str::title(str_replace('_', ' ', $permission['module'])),
                 'icon' => $permission['icon'],
-                'category' => Helper::MODULE_CATEGORY_SYSTEM,
+                'category' => $permission['category'],
                 'route' => '/' . str_replace('_', '-', $permission['module']),
                 'order' => $permission['order'],
                 'base_name' => $permission['module'],

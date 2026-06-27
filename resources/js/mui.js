@@ -1,5 +1,6 @@
 import { createTheme } from "@mui/material/styles";
 import { light, dark } from "./Themes/DefaultTheme";
+import { lighten } from "@mui/material/styles";
 
 const buildPalette = (theme) => {
     return {
@@ -131,6 +132,74 @@ export const getTheme = (mode = "light") => {
                     },
                 },
             },
+
+            // =====================================================
+            // ✅ START OVERRIDES FOR TABS (LEFT SIDEBAR)
+            // =====================================================
+            MuiTabs: {
+                styleOverrides: {
+                    root: ({ theme }) => ({
+                        borderRight: `1px solid ${theme.palette.divider}`,
+                        minWidth: 220,
+                        paddingRight: theme.spacing(1),
+
+                        "& .MuiTabs-indicator": {
+                            display: "none",
+                        },
+                    }),
+                },
+            },
+
+            MuiTab: {
+                styleOverrides: {
+                    root: ({ theme }) => ({
+                        justifyContent: "flex-start",
+                        alignItems: "center",
+                        textAlign: "left",
+                        textTransform: "none",
+
+                        minHeight: 52,
+                        gap: theme.spacing(1.5),
+
+                        margin: theme.spacing(0.5, 1),
+                        padding: theme.spacing(1.5, 2),
+
+                        borderRadius: theme.shape.borderRadius * 2,
+
+                        color: theme.palette.text.primary,
+
+                        transition: theme.transitions.create(
+                            ["background-color", "color"],
+                            {
+                                duration: theme.transitions.duration.shortest,
+                            },
+                        ),
+
+                        "& .MuiSvgIcon-root": {
+                            fontSize: 22,
+                        },
+
+                        "&.Mui-selected": {
+                            backgroundColor: theme.palette.primary.main,
+                            color: theme.palette.primary.contrastText,
+
+                            "& .MuiSvgIcon-root": {
+                                color: theme.palette.primary.contrastText,
+                            },
+                        },
+
+                        "&:hover": {
+                            backgroundColor: lighten(
+                                theme.palette.primary.main,
+                                0.2,
+                            ),
+                        },
+                    }),
+                },
+            },
+            // =====================================================
+            // ✅ END OVERRIDES FOR TABS (LEFT SIDEBAR)
+            // =====================================================
         },
 
         transitions: {

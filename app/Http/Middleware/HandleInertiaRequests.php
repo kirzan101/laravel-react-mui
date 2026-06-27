@@ -42,7 +42,7 @@ class HandleInertiaRequests extends Middleware
     {
         $modules = Cache::rememberForever('active_modules', function () {
             return Module::where('is_active', true)
-                ->select('name', 'icon', 'route', 'order', 'base_name')
+                ->select('name', 'icon', 'route', 'category', 'order', 'base_name')
                 ->get()
                 ->toArray();
         });
