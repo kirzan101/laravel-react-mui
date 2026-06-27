@@ -5,7 +5,6 @@ namespace App\Http\Controllers\System;
 use App\Helpers\Helper;
 use App\Http\Controllers\Controller;
 use App\Interfaces\FetchInterfaces\PermissionFetchInterface;
-use App\Interfaces\FetchInterfaces\UserGroupFetchInterface;
 use App\Traits\ActivityLoggerTrait;
 use App\Traits\ReturnMessageTrait;
 use Illuminate\Http\Request;
@@ -19,7 +18,6 @@ class SettingsController extends Controller
 
     public function __construct(
         private PermissionFetchInterface $permissionFetch,
-        private UserGroupFetchInterface $userGroupFetch,
     ) {}
 
     /**
@@ -29,7 +27,6 @@ class SettingsController extends Controller
     {
         [
             'permissions' => $permissions,
-            'userGroups' => $userGroups,
             'moduleLists' => $moduleLists,
         ] = $this->getCacheData();
 
@@ -37,7 +34,6 @@ class SettingsController extends Controller
             'can' => $this->getCan(),
             'userGroupTypes' => Helper::USER_GROUP_CODE_TYPES,      // user group props
             'permissions' => $permissions,                          // role props
-            'userGroups' => $userGroups,                            // role props
             'moduleLists' => $moduleLists,                          // role props
         ]);
     }
@@ -72,18 +68,12 @@ class SettingsController extends Controller
             return $result->data ?? []; // Only return 'data' part
         });
 
-        $userGroups = Cache::remember('user_group_fetch_list', 60, function () {
-            $result = $this->userGroupFetch->indexUserGroups();
-            return $result->data ?? [];
-        });
-
         $moduleLists = Cache::remember('module_lists', 60, function () {
             return Helper::getModuleList();
         });
 
         return [
             'permissions' => $permissions,
-            'userGroups' => $userGroups,
             'moduleLists' => $moduleLists,
         ];
     }

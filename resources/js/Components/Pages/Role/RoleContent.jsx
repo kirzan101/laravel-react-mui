@@ -10,7 +10,6 @@ const RoleContent = ({
     flash,
     errors,
     permissions,
-    userGroups,
     moduleLists,
     can,
 }) => {

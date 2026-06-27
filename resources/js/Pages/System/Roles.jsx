@@ -8,7 +8,6 @@ const Roles = ({
     flash,
     errors,
     permissions,
-    userGroups,
     moduleLists,
     can,
 }) => {
@@ -40,7 +39,6 @@ const Roles = ({
                     flash={flash}
                     errors={errors}
                     permissions={permissions}
-                    userGroups={userGroups}
                     moduleLists={moduleLists}
                     can={can}
                 />

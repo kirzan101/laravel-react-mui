@@ -14,7 +14,6 @@ const SettingContent = ({
     can,
     userGroupTypes,
     permissions,
-    userGroups,
     moduleLists,
 }) => {
     const [value, setValue] = useState(0);
@@ -50,7 +49,6 @@ const SettingContent = ({
                     flash={showMessages ? flash : null}
                     errors={showMessages ? errors : null}
                     permissions={permissions}
-                    userGroups={userGroups}
                     moduleLists={moduleLists}
                     can={can}
                 />

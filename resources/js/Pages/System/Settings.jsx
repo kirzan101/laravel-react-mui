@@ -10,7 +10,6 @@ const Settings = ({
     can,
     userGroupTypes,
     permissions,
-    userGroups,
     moduleLists,
 }) => {
     const page = usePage();
@@ -43,7 +42,6 @@ const Settings = ({
                     can={can}
                     userGroupTypes={userGroupTypes}
                     permissions={permissions}
-                    userGroups={userGroups}
                     moduleLists={moduleLists}
                 />
             </CBox>

@@ -8,7 +8,6 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\RoleFormRequest;
 use App\Interfaces\ActivityLogInterface;
 use App\Interfaces\FetchInterfaces\PermissionFetchInterface;
-use App\Interfaces\FetchInterfaces\UserGroupFetchInterface;
 use App\Interfaces\ManageRoleInterface;
 use App\Models\Role;
 use App\Traits\ActivityLoggerTrait;
@@ -24,7 +23,6 @@ class RoleController extends Controller
 
     public function __construct(
         private PermissionFetchInterface $permissionFetch,
-        private UserGroupFetchInterface $userGroupFetch,
         private ManageRoleInterface $manageRole,
         private ActivityLogInterface $activityLog
     ) {}
@@ -49,18 +47,12 @@ class RoleController extends Controller
             return $result->data ?? []; // Only return 'data' part
         });
 
-        $userGroups = Cache::remember('user_group_fetch_list', 60, function () {
-            $result = $this->userGroupFetch->indexUserGroups();
-            return $result->data ?? [];
-        });
-
         $moduleLists = Cache::remember('module_lists', 60, function () {
             return Helper::getModuleList();
         });
 
         return Inertia::render('System/Roles', [
             'permissions' => $permissions,
-            'userGroups' => $userGroups,
             'moduleLists' => $moduleLists,
             'can' => $this->getModulePermissions(new Role()),
         ]);
