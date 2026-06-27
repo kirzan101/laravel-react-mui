@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\API;
+namespace App\Http\Controllers\API\System;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\ProfileResource;
@@ -18,9 +18,9 @@ class ProfileApiController extends Controller
     {
         // Set default pagination and sorting
         $request->merge([
-            'per_page' => $request->get('per_page', 10),
-            'sort_by' => $request->get('sort_by', 'id'),
-            'sort' => $request->get('sort', 'desc'),
+            'per_page' => $request->input('per_page', 10),
+            'sort_by' => $request->input('sort_by', 'id'),
+            'sort' => $request->input('sort', 'desc'),
         ]);
 
         $results = $this->profileFetch->indexProfiles($request->toArray(), true, ProfileResource::class);

@@ -1,10 +1,11 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\System;
 
 use App\DTOs\ChangePasswordDTO;
 use App\Helpers\ErrorHelper;
 use App\Helpers\Helper;
+use App\Http\Controllers\Controller;
 use App\Http\Requests\System\ChangePasswordFormRequest;
 use App\Interfaces\AuthInterface;
 use App\Interfaces\CurrentUserInterface;

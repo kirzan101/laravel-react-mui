@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\System;
 
 use App\DTOs\AccountDTO;
 use App\DTOs\ActivityLogDTO;
@@ -17,6 +17,7 @@ use App\Models\User;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Gate;
 use Inertia\Inertia;
+use App\Http\Controllers\Controller;
 
 class UserController extends Controller
 {

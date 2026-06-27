@@ -8,15 +8,15 @@ use Inertia\Inertia;
 // });
 
 Route::middleware(['guest'])->group(function () {
-    Route::get('/login', [\App\Http\Controllers\AuthController::class, 'index'])->name('login');
+    Route::get('/login', [\App\Http\Controllers\System\AuthController::class, 'index'])->name('login');
 });
 
-Route::post('/login', [\App\Http\Controllers\AuthController::class, 'login']);
+Route::post('/login', [\App\Http\Controllers\System\AuthController::class, 'login']);
 Route::middleware(['auth'])->group(function () {
-    Route::post('/logout', [\App\Http\Controllers\AuthController::class, 'logout']);
-    Route::put('/change-password', [\App\Http\Controllers\AuthController::class, 'changePassword'])->name('change-password');
-    Route::put('/reset-password/{userId}', [\App\Http\Controllers\AuthController::class, 'resetPassword'])->name('reset-password');
-    Route::put('/set-user-status/{userId}', [\App\Http\Controllers\AuthController::class, 'setUserStatus'])->name('set-user-status');
+    Route::post('/logout', [\App\Http\Controllers\System\AuthController::class, 'logout']);
+    Route::put('/change-password', [\App\Http\Controllers\System\AuthController::class, 'changePassword'])->name('change-password');
+    Route::put('/reset-password/{userId}', [\App\Http\Controllers\System\AuthController::class, 'resetPassword'])->name('reset-password');
+    Route::put('/set-user-status/{userId}', [\App\Http\Controllers\System\AuthController::class, 'setUserStatus'])->name('set-user-status');
 
     // Route::get('/errors', function () {
     //     return Inertia::render('Error', [
@@ -34,10 +34,13 @@ Route::middleware(['auth'])->group(function () {
         return Inertia::render('Home');
     });
 
-    Route::resource('users', \App\Http\Controllers\UserController::class)->only(['index', 'store', 'update']);
-    Route::resource('user-groups', \App\Http\Controllers\UserGroupController::class)->only(['index', 'store', 'update', 'destroy']);
-    Route::resource('roles', \App\Http\Controllers\RoleController::class)->only(['index', 'store', 'update', 'destroy']);
-    // Route::resource('modules', \App\Http\Controllers\ModuleController::class)->only(['index', 'store', 'update', 'destroy']);
+    Route::get('/settings', function () {
+        return Inertia::render('System/Settings');
+    })->name('settings');
+
+    Route::resource('users', \App\Http\Controllers\System\UserController::class)->only(['index', 'store', 'update']);
+    Route::resource('user-groups', \App\Http\Controllers\System\UserGroupController::class)->only(['index', 'store', 'update', 'destroy']);
+    Route::resource('roles', \App\Http\Controllers\System\RoleController::class)->only(['index', 'store', 'update', 'destroy']);
 });
 
 // Catch-all route for Inertia (must be defined last)

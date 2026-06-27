@@ -1,9 +1,10 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\System;
 
 use App\DTOs\ModuleDTO;
 use App\Helpers\Helper;
+use App\Http\Controllers\Controller;
 use App\Http\Requests\ModuleFormRequest;
 use App\Interfaces\ActivityLogInterface;
 use App\Interfaces\ModuleInterface;

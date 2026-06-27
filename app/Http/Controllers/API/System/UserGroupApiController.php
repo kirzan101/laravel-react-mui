@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\API;
+namespace App\Http\Controllers\API\System;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\IndexResource\UserGroupIndexResource;
@@ -19,9 +19,9 @@ class UserGroupApiController extends Controller
     {
         // Set default pagination and sorting
         $request->merge([
-            'per_page' => $request->get('per_page', 10),
-            'sort_by' => $request->get('sort_by', 'id'),
-            'sort' => $request->get('sort', 'desc'),
+            'per_page' => $request->input('per_page', 10),
+            'sort_by' => $request->input('sort_by', 'id'),
+            'sort' => $request->input('sort', 'desc'),
         ]);
 
         $results = $this->userGroupFetch->indexUserGroups($request->toArray(), true, UserGroupResource::class);
@@ -53,9 +53,9 @@ class UserGroupApiController extends Controller
     {
         // Set default pagination and sorting
         $request->merge([
-            'per_page' => $request->get('per_page', 50),
-            'sort_by' => $request->get('sort_by', 'name'),
-            'sort' => $request->get('sort', 'asc'),
+            'per_page' => $request->input('per_page', 50),
+            'sort_by' => $request->input('sort_by', 'name'),
+            'sort' => $request->input('sort', 'asc'),
         ]);
 
         $results = $this->userGroupFetch->indexUserGroups($request->toArray(), true, UserGroupIndexResource::class);

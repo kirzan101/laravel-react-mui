@@ -1,9 +1,10 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\System;
 
 use App\DTOs\ManageRoleDTO;
 use App\Helpers\Helper;
+use App\Http\Controllers\Controller;
 use App\Http\Requests\RoleFormRequest;
 use App\Interfaces\ActivityLogInterface;
 use App\Interfaces\FetchInterfaces\PermissionFetchInterface;

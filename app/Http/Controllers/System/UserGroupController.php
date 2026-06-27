@@ -1,10 +1,11 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\System;
 
 use App\DTOs\UserGroupDTO;
 use App\Helpers\ErrorHelper;
 use App\Helpers\Helper;
+use App\Http\Controllers\Controller;
 use App\Http\Requests\UserGroupFormRequest;
 use App\Interfaces\FetchInterfaces\PermissionFetchInterface;
 use App\Interfaces\FetchInterfaces\UserGroupFetchInterface;
