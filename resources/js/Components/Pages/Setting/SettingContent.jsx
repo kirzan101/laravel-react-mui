@@ -60,11 +60,12 @@ const SettingContent = ({
 
     return (
         <CBoxContent>
-            <Box sx={{ display: "flex" }}>
+            <Box sx={{ display: "flex", width: "100%" }}>
                 <Tabs
                     orientation="vertical"
                     value={value}
                     onChange={handleTabChange}
+                    sx={{ flexShrink: 0 }}
                 >
                     {tabs.map((tab, index) => {
                         const Icon = iconMap[tab.icon];
@@ -80,7 +81,15 @@ const SettingContent = ({
                     })}
                 </Tabs>
 
-                <Box sx={{ flex: 1, pl: 3 }}>{tabs[value].component}</Box>
+                <Box
+                    sx={{
+                        flex: 1,
+                        minWidth: 0, // <-- important
+                        pl: 3,
+                    }}
+                >
+                    {tabs[value].component}
+                </Box>
             </Box>
         </CBoxContent>
     );
