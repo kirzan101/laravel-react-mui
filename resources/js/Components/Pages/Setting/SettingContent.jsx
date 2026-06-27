@@ -28,14 +28,22 @@ const SettingContent = ({
         setShowMessages(false);
     };
 
+    const defaultFlash = {
+        success: null,
+        error: null,
+        info: null,
+        warning: null,
+    };
+    const defaultErrors = {};
+
     const tabs = [
         {
             label: "User groups",
             icon: "GroupsIcon",
             component: (
                 <UserGroupContent
-                    flash={showMessages ? flash : null}
-                    errors={showMessages ? errors : null}
+                    flash={showMessages ? flash : defaultFlash}
+                    errors={showMessages ? errors : defaultErrors}
                     can={can}
                     userGroupTypes={userGroupTypes}
                 />
@@ -46,8 +54,8 @@ const SettingContent = ({
             icon: "RoleIcon",
             component: (
                 <RoleContent
-                    flash={showMessages ? flash : null}
-                    errors={showMessages ? errors : null}
+                    flash={showMessages ? flash : defaultFlash}
+                    errors={showMessages ? errors : defaultErrors}
                     permissions={permissions}
                     moduleLists={moduleLists}
                     can={can}
