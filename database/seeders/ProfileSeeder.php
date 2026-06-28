@@ -39,6 +39,7 @@ class ProfileSeeder extends Seeder
                 'updated_by' => null,
                 'role' => 'Admin',
                 'user_group_code' => 'ADMIN',
+                'is_first_login' => false,
             ],
             [
                 'avatar' => null,
@@ -59,6 +60,7 @@ class ProfileSeeder extends Seeder
                 'updated_by' => null,
                 'role' => 'System Analyst',
                 'user_group_code' => 'USER',
+                'is_first_login' => false,
             ],
             [
                 'avatar' => '/images/samples/lalatina.png',
@@ -79,6 +81,7 @@ class ProfileSeeder extends Seeder
                 'updated_by' => null,
                 'role' => 'System Administrator',
                 'user_group_code' => 'USER',
+                'is_first_login' => false,
             ]
         ];
 
@@ -89,6 +92,7 @@ class ProfileSeeder extends Seeder
                 'password' => $user['password'],
                 'is_admin' => $user['is_admin'],
                 'status' => $user['status'],
+                'is_first_login' => $user['is_first_login'] ?? true,
             ]);
 
             $createdProfile = Profile::create([

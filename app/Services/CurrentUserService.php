@@ -74,6 +74,23 @@ class CurrentUserService implements CurrentUserInterface
         return $user->id;
     }
 
+    /**
+     * Check if the authenticated user is on their first login.
+     *
+     * @return bool
+     */
+    public function isFirstLogin(): bool
+    {
+        $user = $this->getUser();
+
+        // For non-local environments, fail if missing
+        if (!$user) {
+            throw new RuntimeException('Authenticated user or profile not found.');
+        }
+
+        return $user->is_first_login;
+    }
+
 
     #methods start
     /**

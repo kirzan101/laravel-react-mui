@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Data\ModelResponse;
 use App\DTOs\AccountDTO;
 use App\DTOs\ChangePasswordDTO;
+use App\DTOs\FirstLoginChangePasswordDTO;
 use App\DTOs\ProfileDTO;
 use App\DTOs\ProfileUserGroupDTO;
 use App\DTOs\UserDTO;
@@ -302,6 +303,59 @@ class ManageAccountService implements ManageAccountInterface
         }
     }
 
+    /**
+     * Update first login password
+     *
+     * @param FirstLoginChangePasswordDTO $firstLoginChangePasswordDTO
+     * @return ModelResponse
+     */
+    public function firstLoginChangePassword(FirstLoginChangePasswordDTO $firstLoginChangePasswordDTO): ModelResponse
+    {
+        try {
+            // Get the profile by profile ID
+            $profile = $this->fetch
+                ->showQuery(Profile::class, $firstLoginChangePasswordDTO->profile_id)
+                ->with('user')
+                ->firstOrFail();
+
+            $user = $profile->user;
+
+            if (!$user) {
+                throw new RuntimeException('User associated with the profile not found.');
+            }
+
+            // Update user password
+            $user = $this->base->update($user, [
+                'is_first_login' => false,
+                'password' => bcrypt($firstLoginChangePasswordDTO->password), // Access DTO property
+            ]);
+
+            if (!$user) {
+                throw new RuntimeException('User password update failed!');
+            }
+
+            // update profile updated_at and updated_by
+            $profile = $this->base->update($profile, [
+                'updated_at' => now(),
+                'updated_by' => $this->currentUser->getProfileId(),
+            ]);
+
+            if (!$profile) {
+                throw new RuntimeException('Profile update failed!');
+            }
+
+            return ModelResponse::success(
+                200,
+                Helper::SUCCESS,
+                'Password changed successfully!',
+                $profile,
+                $profile->id
+            );
+        } catch (\Throwable $th) {
+            $code = $this->httpCode($th);
+            return ModelResponse::error($code, Helper::ERROR, $th->getMessage());
+        }
+    }
 
     /**
      * check if the inputed password is correct

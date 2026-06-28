@@ -17,4 +17,11 @@ interface CurrentUserInterface
      * @return integer
      */
     public function getUserId(): ?int;
+
+    /**
+     * Check if the authenticated user is on their first login.
+     *
+     * @return bool
+     */
+    public function isFirstLogin(): bool;
 }

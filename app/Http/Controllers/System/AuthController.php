@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\System;
 
 use App\DTOs\ChangePasswordDTO;
+use App\DTOs\FirstLoginChangePasswordDTO;
 use App\Helpers\ErrorHelper;
 use App\Helpers\Helper;
 use App\Http\Controllers\Controller;
@@ -94,7 +95,7 @@ class AuthController extends Controller
         $changePasswordDTO = ChangePasswordDTO::fromArray($request->toArray());
 
         // Call service
-        $changePasswordResult = $this->manageAccount->changeUserProfilePassword($changePasswordDTO, $profileId);
+        $changePasswordResult = $this->manageAccount->changeUserProfilePassword($changePasswordDTO);
 
         // Normalize error message for production
         $productionErrorMessage = ErrorHelper::productionErrorMessage($changePasswordResult->code, $changePasswordResult->message);
@@ -153,5 +154,50 @@ class AuthController extends Controller
 
         // Success → redirect back with flash message
         return redirect()->back()->with($statusResult->status, $statusResult->message);
+    }
+
+    /**
+     * Show the first login page.
+     */
+    public function firstLogin()
+    {
+        // redirect to dashboard if user is not on first login
+        if (!$this->currentUser->isFirstLogin()) {
+            return redirect()->route('dashboard');
+        }
+
+        return Inertia::render('FirstLogin');
+    }
+
+    /**
+     * Handle the first login password change.
+     */
+    public function firstLoginChangePassword(Request $request)
+    {
+        // Validate the request
+        $request->validate([
+            'password' => 'required|string|min:8|max:50|confirmed', // this validation combine password + password_confirmation in one rule
+        ]);
+
+        // Build the DTO from the request
+        $firstLoginChangePasswordDTO = FirstLoginChangePasswordDTO::fromArray($request->toArray());
+        $firstLoginChangePasswordDTO = $firstLoginChangePasswordDTO->withProfile($this->currentUser->getProfileId());
+
+        // Call service
+        $changePasswordResult = $this->manageAccount->firstLoginChangePassword($firstLoginChangePasswordDTO);
+
+        // Normalize error message for production
+        $productionErrorMessage = ErrorHelper::productionErrorMessage($changePasswordResult->code, $changePasswordResult->message);
+
+        // Handle error
+        if ($changePasswordResult->status === Helper::ERROR) {
+            return Inertia::render('Error', [
+                'code'    => $changePasswordResult->code,
+                'message' => $productionErrorMessage,
+            ]);
+        }
+
+        // Success → redirect to dashboard with flash message
+        return redirect()->route('dashboard')->with($changePasswordResult->status, $changePasswordResult->message);
     }
 }

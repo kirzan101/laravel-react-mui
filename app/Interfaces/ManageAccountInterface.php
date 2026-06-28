@@ -5,6 +5,7 @@ namespace App\Interfaces;
 use App\Data\ModelResponse;
 use App\DTOs\AccountDTO;
 use App\DTOs\ChangePasswordDTO;
+use App\DTOs\FirstLoginChangePasswordDTO;
 use App\DTOs\UserDTO;
 
 interface ManageAccountInterface
@@ -50,4 +51,12 @@ interface ManageAccountInterface
      * @return ModelResponse
      */
     public function setUserActiveStatus(int $userId): ModelResponse;
+
+    /**
+     * Update first login password
+     *
+     * @param FirstLoginChangePasswordDTO $firstLoginChangePasswordDTO
+     * @return ModelResponse
+     */
+    public function firstLoginChangePassword(FirstLoginChangePasswordDTO $firstLoginChangePasswordDTO): ModelResponse;
 }
