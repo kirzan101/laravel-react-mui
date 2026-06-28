@@ -18,6 +18,9 @@ class AppServiceProvider extends ServiceProvider
             $this->app->register(TelescopeServiceProvider::class);
         }
 
+        // register the Inertia service provider
+        $this->app->bind(\App\Interfaces\UserModuleInterface::class, \App\Services\UserModuleService::class);
+
         // system services
         $this->app->bind(\App\Interfaces\BaseInterface::class, \App\Services\BaseService::class);
         $this->app->bind(\App\Interfaces\FetchInterfaces\BaseFetchInterface::class, \App\Services\FetchServices\BaseFetchService::class);

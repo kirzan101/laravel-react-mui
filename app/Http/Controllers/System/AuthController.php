@@ -49,11 +49,8 @@ class AuthController extends Controller
             ]);
         }
 
-        // clear accessible modules cache on successful login
-        $profileId = $this->currentUser->getProfileId();
-        if ($profileId) {
-            Cache::forget("user.modules.$profileId");
-        }
+        // Set a global version for permissions caching if it doesn't exist
+        Cache::add("permissions.version.global", 1, now()->addYears(10));
 
         return redirect()->intended();
     }
@@ -63,6 +60,12 @@ class AuthController extends Controller
      */
     public function logout()
     {
+        // Clear the user's profile permissions version cache on logout
+        $profileId = $this->currentUser->getProfileId();
+        if ($profileId) {
+            Cache::forget("permissions.version.$profileId");
+        }
+
         $logoutResult = $this->auth->logout();
 
         if ($logoutResult->code != 200) {

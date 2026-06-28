@@ -31,6 +31,10 @@ class HandleInertiaRequests extends Middleware
         return parent::version($request);
     }
 
+    public function __construct(
+    protected \App\Interfaces\UserModuleInterface $userModule
+    ) {}
+
     /**
      * Define the props that are shared by default.
      *
@@ -47,6 +51,13 @@ class HandleInertiaRequests extends Middleware
                 ->toArray();
         });
 
+        $auth = Auth::check()
+            ? \App\Models\User::with('profile')->find(Auth::id())
+            : null;
+
+        $profile = $auth?->profile;
+        $profileId = $auth?->profile?->id;
+
         return array_merge(parent::share($request), [
             'appVersion' => env('APP_VERSION', '1.0.0'),
             'appName' => env('APP_NAME', 'Laravel'),
@@ -62,58 +73,20 @@ class HandleInertiaRequests extends Middleware
             },
             'auth' => Auth::check() ? [
                 'user' => [
-                    'avatar' => Auth::user()->profile?->avatar,
-                    'username' => Auth::user()->username,
-                    'name' => Auth::user()->profile?->getFullName(),
-                    'initials' => Auth::user()->profile?->getInitials(),
-                    'email' => Auth::user()->email,
-                    'position' => Auth::user()->profile?->position,
-                    'isAdmin' => (bool) Auth::user()->is_admin,
-                    'isFirstLogin' => (bool) Auth::user()->is_first_login,
-                    'type' => Auth::user()->profile?->type,
-                    'accessibleModules' => $this->getAccessibleModules(),
+                    'avatar' => $profile?->avatar,
+                    'username' => $auth->username,
+                    'name' => $profile?->getFullName(),
+                    'initials' => $profile?->getInitials(),
+                    'email' => $auth->email,
+                    'position' => $profile?->position,
+                    'isAdmin' => (bool) $auth->is_admin,
+                    'isFirstLogin' => (bool) $auth->is_first_login,
+                    'type' => $profile?->type,
+                    'accessibleModules' => $this->userModule->getAccessibleModules($profileId),
                 ],
             ] : null,
-            'token' => Auth::check() ? Auth::user()->api_token : null,
+            'token' => $auth ? $auth->api_token : null,
             'modules' => $modules
         ]);
-    }
-
-    /**
-     * Get the list of modules that the authenticated user has access to based on their permissions.
-     *
-     * This method checks the user's profile and retrieves all active permissions associated with that profile's roles.
-     * It then extracts the unique module names from those permissions and caches the result for 30 minutes.
-     *
-     * @return array List of module names that the user has access to (e.g. ['profiles', 'user_management']).
-     *               Returns an empty array if the user is not authenticated or has no permissions.
-     */
-    protected function getAccessibleModules()
-    {
-        if (!Auth::check()) {
-            return [];
-        }
-
-        $user = Auth::user();
-        $profileId = $user->profile?->id;
-
-        return Cache::remember(
-            "user.modules.$profileId",
-            now()->addMinutes(30),
-            function () use ($profileId) {
-                return DB::table('profile_roles as pr')
-                    ->join('roles as r', 'r.id', '=', 'pr.role_id')
-                    ->join('role_permissions as rp', 'rp.role_id', '=', 'r.id')
-                    ->join('permissions as p', 'p.id', '=', 'rp.permission_id')
-                    ->where('pr.profile_id', $profileId)
-                    ->where('r.is_active', true)
-                    ->where('rp.is_active', true)
-                    ->where('p.is_active', true)
-                    ->distinct()
-                    ->pluck('p.module')
-                    ->values()
-                    ->toArray();
-            }
-        );
     }
 }

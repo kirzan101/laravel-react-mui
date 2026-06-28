@@ -9,6 +9,7 @@ use App\Http\Requests\RoleFormRequest;
 use App\Interfaces\ActivityLogInterface;
 use App\Interfaces\FetchInterfaces\PermissionFetchInterface;
 use App\Interfaces\ManageRoleInterface;
+use App\Interfaces\UserModuleInterface;
 use App\Models\Role;
 use App\Traits\ActivityLoggerTrait;
 use App\Traits\ReturnMessageTrait;
@@ -22,6 +23,7 @@ class RoleController extends Controller
         ActivityLoggerTrait;
 
     public function __construct(
+        private UserModuleInterface $userModule,
         private PermissionFetchInterface $permissionFetch,
         private ManageRoleInterface $manageRole,
         private ActivityLogInterface $activityLog
@@ -76,6 +78,8 @@ class RoleController extends Controller
 
         $this->logActivity($result, $request, self::MODULE_NAME, 'store');
 
+        $this->refreshCache(); // Refresh the cache after creating the role
+
         return $this->returnMessage($result);
     }
 
@@ -96,6 +100,8 @@ class RoleController extends Controller
         $result = $this->manageRole->updateRole($manageRoleDTO, $id);
 
         $this->logActivity($result, $request, self::MODULE_NAME, 'update');
+
+        $this->refreshCache(); // Refresh the cache after updating the role
 
         return $this->returnMessage($result);
     }
@@ -122,6 +128,16 @@ class RoleController extends Controller
 
         $this->logActivity($result, $request, self::MODULE_NAME, 'delete');
 
+        $this->refreshCache(); // Refresh the cache after deleting the role
+
         return $this->returnMessage($result);
+    }
+
+    /**
+     * Refresh the cache for the current user's permissions.
+     */
+    protected function refreshCache(): void
+    {
+        $this->userModule->refreshGlobalPermissionsVersion();
     }
 }

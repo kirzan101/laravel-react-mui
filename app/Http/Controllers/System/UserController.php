@@ -18,10 +18,12 @@ use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Gate;
 use Inertia\Inertia;
 use App\Http\Controllers\Controller;
+use App\Interfaces\UserModuleInterface;
 
 class UserController extends Controller
 {
     public function __construct(
+        private UserModuleInterface $userModule,
         private UserGroupFetchInterface $userGroupFetch,
         private RoleFetchInterface $roleFetch,
         private ManageAccountInterface $manageAccount,
@@ -95,6 +97,8 @@ class UserController extends Controller
         ]);
         $this->activityLog->storeActivityLog($activityLogData);
 
+        $this->refreshCache(); // Refresh the cache after creating a new user   
+
         return redirect()->back()->with($registerResult->status, $registerResult->message);
     }
 
@@ -139,6 +143,16 @@ class UserController extends Controller
         ]);
         $this->activityLog->storeActivityLog($activityLogData);
 
+        $this->refreshCache(); // Refresh the cache after updating the user
+
         return redirect()->back()->with($updateResult->status, $updateResult->message);
+    }
+
+    /**
+     * Refresh the cache for the current user's permissions.
+     */
+    protected function refreshCache(): void
+    {
+        $this->userModule->refreshGlobalPermissionsVersion();
     }
 }

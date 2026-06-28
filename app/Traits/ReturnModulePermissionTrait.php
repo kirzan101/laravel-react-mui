@@ -29,7 +29,10 @@ trait ReturnModulePermissionTrait
     {
         // Use the profile + module name as a unique cache key
         $moduleName = $model->getTable();
-        $cacheKey = "permissions:profile:{$currentProfileId}:module:{$moduleName}";
+        // $version = Cache::get("permissions.version.$currentProfileId", 1);
+        $version = Cache::get("permissions.version.global", 1);
+
+        $cacheKey = "access.profile.$currentProfileId.module.$moduleName.v$version";
 
         return Cache::remember($cacheKey, now()->addMinutes(60), function () use ($model, $currentProfileId, $moduleName) {
             // Load the profile with its associated roles and permissions
@@ -78,7 +81,9 @@ trait ReturnModulePermissionTrait
         // Ensure the module name is in snake_case format (e.g. 'user_management' instead of 'UserManagement')
         $module = Str::snake(Str::plural(Str::lower($module))); // Convert to plural snake_case (e.g. 'user_management')
 
-        $cacheKey = "permissions:profile:{$currentProfileId}:module:{$module}";
+        // $version = Cache::get("permissions.version.$currentProfileId", 1);
+        $version = Cache::get("permissions.version.global", 1);
+        $cacheKey = "access.profile.$currentProfileId.module.$module.v$version";
 
         return Cache::remember($cacheKey, now()->addMinutes(60), function () use ($module, $currentProfileId) {
             // Load the profile with its associated roles and permissions
@@ -119,6 +124,8 @@ trait ReturnModulePermissionTrait
      */
     protected function getPermissionCacheKey(int $profileId, string $module): string
     {
-        return "permissions:profile:{$profileId}:module:{$module}";
+        // $version = Cache::get("permissions.version.$profileId", 1);
+        $version = Cache::get("permissions.version.global", 1);
+        return "access.profile.$profileId.module.$module.v$version";
     }
 }
