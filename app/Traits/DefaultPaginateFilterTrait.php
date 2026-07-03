@@ -5,7 +5,7 @@ namespace App\Traits;
 /**
  * Trait DefaultPaginateFilterTrait
  *
- * Provides a method to set default filters for pagination, including per_page, sort_by, sort_direction, and current_page.
+ * Provides a method to set default filters for pagination, including per_page, sort_by, sort, and current_page.
  */
 trait DefaultPaginateFilterTrait
 {
@@ -32,9 +32,9 @@ trait DefaultPaginateFilterTrait
             ? $request['sort_by']
             : $allowedSortFields[0];
 
-        // Validate and normalize sort_direction
-        $sortDirection = strtolower($request['sort_direction'] ?? 'desc');
-        $sortDirection = in_array($sortDirection, ['asc', 'desc']) ? $sortDirection : 'desc';
+        // Validate and normalize sort direction
+        $sort = strtolower($request['sort'] ?? 'desc');
+        $sort = in_array($sort, ['asc', 'desc']) ? $sort : 'desc';
 
         $currentPage = isset($request['current_page']) && is_numeric($request['current_page']) && $request['current_page'] > 0
             ? (int) $request['current_page']
@@ -43,7 +43,7 @@ trait DefaultPaginateFilterTrait
         return [
             'per_page' => $perPage,
             'sort_by' => $sortBy,
-            'sort' => $sortDirection,
+            'sort' => $sort,
             'current_page' => $currentPage
         ];
     }

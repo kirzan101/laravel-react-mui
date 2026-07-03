@@ -31,8 +31,8 @@ const CDataGrid = ({
                     page: paginationModel.page + 1,
                     per_page: paginationModel.pageSize,
 
-                    sort_field: sortModel[0]?.field,
-                    sort_order: sortModel[0]?.sort,
+                    sort_by: sortModel[0]?.field,
+                    sort: sortModel[0]?.sort,
 
                     ...queryParams,
                 },

@@ -39,7 +39,7 @@ class UserGroupApiController extends Controller
             'last_page' => $data->lastPage(),
             'search' => $request->input('search'),
             'sort_by' => $request->input('sort_by'),
-            'sort_direction' => $request->input('sort'),
+            'sort' => $request->input('sort'),
             'code' => $code,
             'status' => $status,
             'message' => $message
