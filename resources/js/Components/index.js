@@ -84,3 +84,4 @@ export { default as EmptyLayout } from "../Layouts/EmptyLayout";
 
 // Utilities
 export { default as ThemeButton } from "./Utilities/ThemeButton";
+export { default as AvatarUpload } from "./Utilities/AvatarUpload";

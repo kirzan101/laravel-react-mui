@@ -7,6 +7,7 @@ use App\DTOs\AccountDTO;
 use App\DTOs\ChangePasswordDTO;
 use App\DTOs\FirstLoginChangePasswordDTO;
 use App\DTOs\UserDTO;
+use Illuminate\Http\UploadedFile;
 
 interface ManageAccountInterface
 {
@@ -59,4 +60,13 @@ interface ManageAccountInterface
      * @return ModelResponse
      */
     public function firstLoginChangePassword(FirstLoginChangePasswordDTO $firstLoginChangePasswordDTO): ModelResponse;
+    
+    /**
+     * Change profile avatar
+     *
+     * @param integer $profileId
+     * @param UploadedFile $file
+     * @return ModelResponse
+     */
+    public function changeProfileAvatar(int $profileId, UploadedFile $file): ModelResponse;
 }

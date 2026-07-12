@@ -18,7 +18,9 @@ use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Gate;
 use Inertia\Inertia;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\System\ChangeAvatarFormRequest;
 use App\Interfaces\UserModuleInterface;
+use Illuminate\Support\Facades\Auth;
 
 class UserController extends Controller
 {
@@ -146,6 +148,40 @@ class UserController extends Controller
         $this->refreshCache(); // Refresh the cache after updating the user
 
         return redirect()->back()->with($updateResult->status, $updateResult->message);
+    }
+
+    /**
+     * Change the avatar for the specified profile.
+     */
+    public function changeAvatar(ChangeAvatarFormRequest $request, ?int $profileId = null)
+    {
+        $file = $request->file('avatar');
+
+        // If profileId is not provided, use the authenticated user's profile ID
+        if (!$profileId) {
+            $profileId = Auth::user()->profile->id;
+        }
+
+        // Call the service to handle avatar change
+        $result = $this->manageAccount->changeProfileAvatar($profileId, $file);
+
+        if ($result->status === Helper::ERROR) {
+            return redirect()->back()->with($result->status, $result->message);
+        }
+
+        // Log the activity
+        $activityLogData = ActivityLogDTO::fromArray([
+            'module' => 'profiles',
+            'description' => $result->message,
+            'status' => $result->status,
+            'type' => 'update',
+            'properties' => ['profile_id' => $profileId],
+        ]);
+        $this->activityLog->storeActivityLog($activityLogData);
+
+        $this->refreshCache(); // Refresh the cache after changing the avatar
+
+        return redirect()->back()->with($result->status, $result->message);
     }
 
     /**

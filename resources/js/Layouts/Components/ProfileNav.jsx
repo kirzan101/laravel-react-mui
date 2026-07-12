@@ -1,6 +1,8 @@
 import { Paper, Avatar, Typography, Box } from "@mui/material";
 import AdminBadge from "./AdminBadge";
 import DeveloperBadge from "./DeveloperBadge";
+import { AvatarUpload } from "@/Components";
+import { router } from "@inertiajs/react";
 
 const ProfileNav = ({ user }) => {
     const avatarUrl = user.avatar;
@@ -8,6 +10,23 @@ const ProfileNav = ({ user }) => {
     const position = user.position || "N/A";
     const name = user.name || "Guest User";
     const isAdmin = user.isAdmin || false;
+
+    const handleAvatarChange = (blob) => {
+        router.post(
+            "/change-avatar",
+            {
+                _method: "PUT",
+                avatar: blob,
+            },
+            {
+                forceFormData: true,
+                onSuccess: () => {},
+                onError: (errors) => {
+                    console.error("Error changing avatar", errors);
+                },
+            },
+        );
+    };
 
     return (
         <Paper variant="string" square>
@@ -22,7 +41,7 @@ const ProfileNav = ({ user }) => {
             >
                 {/* AVATAR */}
                 {/* <Avatar sx={{ width: 56, height: 56 }}>LF</Avatar> */}
-                {avatarUrl ? (
+                {/* {avatarUrl ? (
                     <Avatar
                         sx={{
                             width: 56,
@@ -42,7 +61,14 @@ const ProfileNav = ({ user }) => {
                     >
                         {initials}
                     </Avatar>
-                )}
+                )} */}
+
+                <AvatarUpload
+                    avatarUrl={avatarUrl}
+                    initials={initials}
+                    size={56}
+                    onChange={handleAvatarChange}
+                />
 
                 {/* TEXT */}
                 <Box>

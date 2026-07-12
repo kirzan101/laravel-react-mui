@@ -25,8 +25,10 @@ use App\Models\Profile;
 use App\Models\User;
 use App\Traits\EnsureDataTrait;
 use App\Traits\EnsureSuccessTrait;
+use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
 use RuntimeException;
 
 class ManageAccountService implements ManageAccountInterface
@@ -348,6 +350,57 @@ class ManageAccountService implements ManageAccountInterface
                 200,
                 Helper::SUCCESS,
                 'Password changed successfully!',
+                $profile,
+                $profile->id
+            );
+        } catch (\Throwable $th) {
+            $code = $this->httpCode($th);
+            return ModelResponse::error($code, Helper::ERROR, $th->getMessage());
+        }
+    }
+
+    /**
+     * Change profile avatar
+     *
+     * @param integer $profileId
+     * @param UploadedFile $file
+     * @return ModelResponse
+     */
+    public function changeProfileAvatar(int $profileId, UploadedFile $file): ModelResponse
+    {
+        try {
+            // Get the profile by profile ID
+            $profile = $this->fetch
+                ->showQuery(Profile::class, $profileId)
+                ->firstOrFail();
+
+            // Delete the existing avatar from storage if present
+            if (!empty($profile->avatar) && Storage::disk('public')->exists($profile->avatar)) {
+                Storage::disk('public')->delete($profile->avatar);
+            }
+
+            // Store the new avatar in the avatars folder
+            $avatarPath = $file->store('avatars', 'public');
+
+            if (!$avatarPath) {
+                throw new RuntimeException('Failed to store avatar file.');
+            }
+
+            // Update profile with the new avatar path
+            $profile = $this->base->update($profile, [
+                'avatar' => $avatarPath,
+                'updated_at' => now(),
+                'updated_by' => $this->currentUser->getProfileId(),
+            ]);
+
+            if (!$profile) {
+                throw new RuntimeException('Profile avatar update failed!');
+            }
+
+            return ModelResponse::success(
+                200,
+                Helper::SUCCESS,
+                'Profile avatar updated successfully!',
                 $profile,
                 $profile->id
             );

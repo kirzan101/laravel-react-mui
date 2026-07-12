@@ -32,7 +32,7 @@ class HandleInertiaRequests extends Middleware
     }
 
     public function __construct(
-    protected \App\Interfaces\UserModuleInterface $userModule
+        protected \App\Interfaces\UserModuleInterface $userModule
     ) {}
 
     /**
@@ -73,7 +73,7 @@ class HandleInertiaRequests extends Middleware
             },
             'auth' => Auth::check() ? [
                 'user' => [
-                    'avatar' => $profile?->avatar,
+                    'avatar' => $profile?->avatar ? \Illuminate\Support\Facades\Storage::url($profile->avatar) : null,
                     'username' => $auth->username,
                     'name' => $profile?->getFullName(),
                     'initials' => $profile?->getInitials(),
