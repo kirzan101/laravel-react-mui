@@ -63,7 +63,7 @@ class ProfileSeeder extends Seeder
                 'is_first_login' => false,
             ],
             [
-                'avatar' => '/avatars/lalatina.png',
+                'avatar' => 'avatars/lalatina.png',
                 'username' => 'lalatina',
                 'email' => 'lalatina@mail.com',
                 'password' => bcrypt('lalatina'),

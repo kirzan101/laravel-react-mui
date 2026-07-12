@@ -12,9 +12,10 @@ import {
     Typography,
 } from "@mui/material";
 import PhotoCameraIcon from "@mui/icons-material/PhotoCamera";
+import VisibilityIcon from "@mui/icons-material/Visibility";
 
 const CROP_SIZE = 280;
-const OUTPUT_SIZE = 256;
+const OUTPUT_SIZE = 750; // change this if you want a different output size (in px)
 
 /**
  * AvatarUpload
@@ -36,6 +37,7 @@ const AvatarUpload = ({
     disabled = false,
 }) => {
     const [open, setOpen] = useState(false);
+    const [viewOpen, setViewOpen] = useState(false);
     const [imageSrc, setImageSrc] = useState(null);
     const [zoom, setZoom] = useState(1);
     const [minZoom, setMinZoom] = useState(1);
@@ -249,6 +251,23 @@ const AvatarUpload = ({
         setImageSrc(null);
     };
 
+    // Open view dialog if avatar exists, otherwise go straight to file picker
+    const handleTriggerClick = () => {
+        if (disabled) return;
+        triggerRef.current?.blur();
+        if (avatarUrl) {
+            setViewOpen(true);
+        } else {
+            fileInputRef.current?.click();
+        }
+    };
+
+    // Close view dialog then open file picker
+    const handleChangePhoto = () => {
+        setViewOpen(false);
+        requestAnimationFrame(() => fileInputRef.current?.click());
+    };
+
     // -------------------------------------------------------------------------
     // Render
     // -------------------------------------------------------------------------
@@ -261,11 +280,11 @@ const AvatarUpload = ({
                 role="button"
                 tabIndex={disabled ? -1 : 0}
                 aria-label="Upload avatar photo"
-                onClick={() => !disabled && fileInputRef.current?.click()}
+                onClick={handleTriggerClick}
                 onKeyDown={(e) => {
                     if (!disabled && (e.key === "Enter" || e.key === " ")) {
                         e.preventDefault();
-                        fileInputRef.current?.click();
+                        handleTriggerClick();
                     }
                 }}
                 sx={{
@@ -310,9 +329,15 @@ const AvatarUpload = ({
                         pointerEvents: "none",
                     }}
                 >
-                    <PhotoCameraIcon
-                        sx={{ color: "#fff", fontSize: size / 2.8 }}
-                    />
+                    {avatarUrl ? (
+                        <VisibilityIcon
+                            sx={{ color: "#fff", fontSize: size / 2.8 }}
+                        />
+                    ) : (
+                        <PhotoCameraIcon
+                            sx={{ color: "#fff", fontSize: size / 2.8 }}
+                        />
+                    )}
                 </Box>
             </Box>
 
@@ -323,6 +348,49 @@ const AvatarUpload = ({
                 style={{ display: "none" }}
                 onChange={handleFileChange}
             />
+
+            {/* View image dialog */}
+            <Dialog
+                open={viewOpen}
+                onClose={() => setViewOpen(false)}
+                maxWidth="xs"
+                fullWidth
+            >
+                <DialogTitle>Profile Photo</DialogTitle>
+                <DialogContent>
+                    <Box
+                        sx={{
+                            display: "flex",
+                            justifyContent: "center",
+                            py: 2,
+                        }}
+                    >
+                        <Avatar
+                            src={avatarUrl}
+                            sx={{ width: 200, height: 200 }}
+                        />
+                    </Box>
+                </DialogContent>
+                <DialogActions>
+                    <Button
+                        variant="text"
+                        onClick={() => setViewOpen(false)}
+                        sx={(theme) => ({
+                            color:
+                                theme.palette.mode === "dark"
+                                    ? "#fff"
+                                    : theme.palette.primary.main,
+                        })}
+                    >
+                        Close
+                    </Button>
+                    {!disabled && (
+                        <Button variant="contained" onClick={handleChangePhoto}>
+                            Change Photo
+                        </Button>
+                    )}
+                </DialogActions>
+            </Dialog>
 
             {/* Crop & resize dialog */}
             <Dialog open={open} onClose={handleCancel} maxWidth="xs" fullWidth>
