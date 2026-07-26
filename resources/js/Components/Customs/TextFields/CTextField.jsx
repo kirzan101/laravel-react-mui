@@ -1,7 +1,52 @@
+import { isValidElement } from "react";
 import TextField from "@mui/material/TextField";
 
-const CTextField = ({ children, ...props }) => (
-    <TextField fullWidth size="small" variant="outlined" color="textField" {...props}>
+const normalizeHelperText = (helperText) => {
+    // Don't pass booleans to MUI
+    if (typeof helperText === "boolean") {
+        return undefined;
+    }
+
+    // Allow null/undefined
+    if (helperText == null) {
+        return undefined;
+    }
+
+    // Valid primitive values
+    if (typeof helperText === "string" || typeof helperText === "number") {
+        return helperText;
+    }
+
+    // React element
+    if (isValidElement(helperText)) {
+        return helperText;
+    }
+
+    // Common validation object: { message: "..." }
+    if (
+        typeof helperText === "object" &&
+        typeof helperText.message === "string"
+    ) {
+        return helperText.message;
+    }
+
+    // Warn in development for unexpected values
+    if (process.env.NODE_ENV !== "production") {
+        console.warn("Invalid helperText:", helperText);
+    }
+
+    return undefined;
+};
+
+const CTextField = ({ children, helperText, ...props }) => (
+    <TextField
+        fullWidth
+        size="small"
+        variant="outlined"
+        color="textField"
+        helperText={normalizeHelperText(helperText)}
+        {...props}
+    >
         {children}
     </TextField>
 );
