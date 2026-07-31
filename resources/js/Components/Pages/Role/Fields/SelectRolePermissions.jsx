@@ -1,6 +1,15 @@
 import { useMemo } from "react";
-import { Alert, Box, Typography } from "@mui/material";
-import { CSelectMultiple } from "@/Components";
+import {
+    Alert,
+    Box,
+    Checkbox,
+    Divider,
+    FormControlLabel,
+    FormGroup,
+    Grid,
+    Typography,
+} from "@mui/material";
+import { CCard, CCardContent } from "@/Components";
 
 const PERMISSION_TYPE_ORDER = ["view", "create", "update", "delete"];
 
@@ -11,10 +20,12 @@ const formatLabel = (value = "") =>
         .replace(/\b\w/g, (char) => char.toUpperCase());
 
 /**
- * Multi-select field used to assign permissions to a role.
+ * Field used to assign permissions to a role.
  *
- * Replaces the previous tabular checkbox UI. Selecting/deselecting a
- * permission here simply adds/removes it from the `permissionIds` array,
+ * Permissions are grouped by their module (e.g. "User Group", "User") so
+ * every permission type (Create, Edit, View, Delete) belonging to that
+ * module is displayed together as checkboxes. Selecting/deselecting a
+ * permission simply adds/removes its id from the `permissionIds` array,
  * which the backend then translates into creating/deleting the
  * corresponding role_permission record (no `is_active` flag involved).
  */
@@ -25,10 +36,10 @@ const SelectRolePermissions = ({
     moduleLists = [],
     errors = {},
 }) => {
-    const options = useMemo(() => {
+    const groupedPermissions = useMemo(() => {
         const modules = moduleLists.map((module) => module.name || module);
 
-        return permissions
+        const activePermissions = permissions
             .filter((permission) => permission.is_active)
             .slice()
             .sort((a, b) => {
@@ -41,19 +52,37 @@ const SelectRolePermissions = ({
                     PERMISSION_TYPE_ORDER.indexOf(a.type) -
                     PERMISSION_TYPE_ORDER.indexOf(b.type)
                 );
-            })
-            .map((permission) => ({
-                value: permission.id,
-                label: `${formatLabel(permission.module)} - ${formatLabel(
-                    permission.type,
-                )}`,
-            }));
+            });
+
+        const groups = new Map();
+
+        activePermissions.forEach((permission) => {
+            const moduleKey = permission.module;
+
+            if (!groups.has(moduleKey)) {
+                groups.set(moduleKey, []);
+            }
+
+            groups.get(moduleKey).push(permission);
+        });
+
+        return Array.from(groups.entries()).map(([module, modulePermissions]) => ({
+            module,
+            label: formatLabel(module),
+            permissions: modulePermissions,
+        }));
     }, [permissions, moduleLists]);
 
-    const handleChange = (event) => {
-        const { value } = event.target;
+    const handleTogglePermission = (permissionId) => (event) => {
+        const { checked } = event.target;
 
-        onChange(typeof value === "string" ? value.split(",") : value);
+        if (checked) {
+            onChange([...selectedPermissions, permissionId]);
+        } else {
+            onChange(
+                selectedPermissions.filter((id) => id !== permissionId),
+            );
+        }
     };
 
     return (
@@ -68,18 +97,56 @@ const SelectRolePermissions = ({
                 </Alert>
             )}
 
-            <CSelectMultiple
-                name="permissionIds"
-                label="Permissions"
-                options={options}
-                value={selectedPermissions}
-                onChange={handleChange}
-                error={!!errors.permissionIds}
-                helperText={
-                    errors.permissionIds ||
-                    "Select the permissions to grant to this role."
-                }
-            />
+            <Grid container spacing={2}>
+                {groupedPermissions.map(({ module, label, permissions: modulePermissions }) => (
+                    <Grid key={module} size={{ xs: 12, sm: 6 }}>
+                        <CCard>
+                            <CCardContent>
+                                <Typography
+                                    variant="subtitle1"
+                                    sx={{ fontWeight: "bold", mb: 1 }}
+                                >
+                                    {label}
+                                </Typography>
+
+                                <Divider sx={{ mb: 1 }} />
+
+                                <FormGroup>
+                                    {modulePermissions.map((permission) => (
+                                        <FormControlLabel
+                                            key={permission.id}
+                                            control={
+                                                <Checkbox
+                                                    size="small"
+                                                    checked={selectedPermissions.includes(
+                                                        permission.id,
+                                                    )}
+                                                    onChange={handleTogglePermission(
+                                                        permission.id,
+                                                    )}
+                                                />
+                                            }
+                                            label={`${label} - ${formatLabel(
+                                                permission.type,
+                                            )}`}
+                                        />
+                                    ))}
+                                </FormGroup>
+                            </CCardContent>
+                        </CCard>
+                    </Grid>
+                ))}
+            </Grid>
+
+            {!errors?.permissionIds && (
+                <Typography
+                    variant="caption"
+                    color="text.secondary"
+                    sx={{ mt: 1, display: "block" }}
+                >
+                    Select the permissions to grant to this role.
+                </Typography>
+            )}
         </Box>
     );
 };
