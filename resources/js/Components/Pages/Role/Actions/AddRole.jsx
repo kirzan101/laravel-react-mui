@@ -12,7 +12,7 @@ import { useState } from "react";
 import FormRole from "./Forms/FormRole";
 import { Box, Divider, Fab, Grid, Table, Typography } from "@mui/material";
 import { router } from "@inertiajs/react";
-import TablePermissionList from "../Tables/TablePermissionList";
+import SelectRolePermissions from "../Fields/SelectRolePermissions";
 
 const AddRole = ({ flash, errors, sx, permissions, moduleLists, can }) => {
     const [open, setOpen] = useState(false);
@@ -139,11 +139,12 @@ const AddRole = ({ flash, errors, sx, permissions, moduleLists, can }) => {
                                 },
                             }}
                         >
-                            <TablePermissionList
+                            <SelectRolePermissions
                                 permissions={permissions}
                                 moduleLists={moduleLists}
                                 selectedPermissions={form.permissionIds}
                                 onChange={handlePermissionsChange}
+                                errors={errors}
                             />
                         </Grid>
                     </Grid>

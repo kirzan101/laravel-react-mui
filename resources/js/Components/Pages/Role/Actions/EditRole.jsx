@@ -12,7 +12,7 @@ import { useEffect, useState } from "react";
 
 import EditLabel from "@/Components/Utilities/EditLabel";
 import FormRole from "./Forms/FormRole";
-import TablePermissionList from "../Tables/TablePermissionList";
+import SelectRolePermissions from "../Fields/SelectRolePermissions";
 import { Box, Grid, Typography } from "@mui/material";
 import { router } from "@inertiajs/react";
 
@@ -45,7 +45,8 @@ const EditRole = ({
             name: role?.name || "",
             is_active: role?.is_active ?? true,
             description: role?.description || "",
-            permissionIds: role?.rolePermissions?.map((perm) => perm.id) || [],
+            permissionIds:
+                role?.rolePermissions?.map((perm) => perm.permission_id) || [],
         });
     }, [role]);
 
@@ -63,7 +64,8 @@ const EditRole = ({
             name: role?.name || "",
             is_active: role?.is_active ?? true,
             description: role?.description || "",
-            permissionIds: role?.rolePermissions?.map((perm) => perm.id) || [],
+            permissionIds:
+                role?.rolePermissions?.map((perm) => perm.permission_id) || [],
         });
     };
 
@@ -166,12 +168,12 @@ const EditRole = ({
                                 },
                             }}
                         >
-                            <TablePermissionList
-                                rolePermissions={role.rolePermissions}
+                            <SelectRolePermissions
                                 permissions={permissions}
                                 moduleLists={moduleLists}
                                 selectedPermissions={form.permissionIds}
                                 onChange={handlePermissionsChange}
+                                errors={errors}
                             />
                         </Grid>
                     </Grid>
