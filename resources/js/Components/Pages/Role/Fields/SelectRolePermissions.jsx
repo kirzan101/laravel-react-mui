@@ -99,7 +99,7 @@ const SelectRolePermissions = ({
 
             <Grid container spacing={2}>
                 {groupedPermissions.map(({ module, label, permissions: modulePermissions }) => (
-                    <Grid key={module} size={{ xs: 12, sm: 6 }}>
+                    <Grid key={module} size={{ xs: 12, sm: 4 }}>
                         <CCard>
                             <CCardContent>
                                 <Typography

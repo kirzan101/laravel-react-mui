@@ -36,7 +36,6 @@ class UserModuleService implements UserModuleInterface
                     ->join('permissions as p', 'p.id', '=', 'rp.permission_id')
                     ->where('pr.profile_id', $profileId)
                     ->where('r.is_active', true)
-                    ->where('rp.is_active', true)
                     ->where('p.is_active', true)
                     ->distinct()
                     ->pluck('p.module')
