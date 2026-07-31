@@ -1,6 +1,5 @@
-import { CContainer, CBoxContent, CSearchField } from "@/Components";
+import { CBoxContent } from "@/Components";
 import { iconMap } from "@/Utilities/icons";
-import { lighten } from "@mui/material/styles";
 
 import UserGroupContent from "@/Components/Pages/UserGroup/UserGroupContent";
 import RoleContent from "@/Components/Pages/Role/RoleContent";
@@ -8,15 +7,22 @@ import {
     Tabs,
     Tab,
     Box,
+    Drawer,
     IconButton,
-    Tooltip,
+    List,
+    ListItemButton,
+    ListItemIcon,
+    ListItemText,
+    Divider,
+    Typography,
     useTheme,
     useMediaQuery,
 } from "@mui/material";
-import ChevronRightIcon from "@mui/icons-material/ChevronRight";
-import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
+import MenuIcon from "@mui/icons-material/Menu";
 
 import { useEffect, useState } from "react";
+
+const DRAWER_WIDTH = 200;
 
 const SettingContent = ({
     flash,
@@ -27,8 +33,8 @@ const SettingContent = ({
     moduleLists,
 }) => {
     const [value, setValue] = useState(0);
-    const [showMessages, setShowMessages] = useState(true); // State to control the display of flash messages and errors
-    const [sidebarExpanded, setSidebarExpanded] = useState(false);
+    const [showMessages, setShowMessages] = useState(true);
+    const [drawerOpen, setDrawerOpen] = useState(false);
 
     const theme = useTheme();
     const isMobile = useMediaQuery(theme.breakpoints.down("md"));
@@ -40,9 +46,12 @@ const SettingContent = ({
     const handleTabChange = (event, newValue) => {
         setValue(newValue);
         setShowMessages(false);
-        if (isMobile) {
-            setSidebarExpanded(false);
-        }
+    };
+
+    const handleMobileSelect = (index) => {
+        setValue(index);
+        setShowMessages(false);
+        setDrawerOpen(false);
     };
 
     const defaultFlash = {
@@ -81,98 +90,94 @@ const SettingContent = ({
         },
     ];
 
-    const iconOnly = isMobile && !sidebarExpanded;
-    const ICON_PANEL_WIDTH = 56; // px — tight width for icon-only sidebar
-
     return (
         <CBoxContent>
-            <Box sx={{ display: "flex", width: "100%", overflow: "hidden" }}>
-                {/* Left: Navigation */}
-                <Box
-                    sx={{
-                        flexShrink: 0,
-                        display: "flex",
-                        flexDirection: "column",
-                        alignItems: "center",
-                        width: iconOnly ? ICON_PANEL_WIDTH : undefined,
-                        transition: "width 0.2s",
-                    }}
-                >
+            {/* Mobile: hamburger button + Drawer nav */}
+            {isMobile && (
+                <>
+                    <Box sx={{ mb: 1 }}>
+                        <IconButton
+                            onClick={() => setDrawerOpen(true)}
+                            aria-label="Open settings menu"
+                            size="small"
+                        >
+                            <MenuIcon />
+                        </IconButton>
+                        <Typography
+                            variant="caption"
+                            sx={{ ml: 1, color: "text.secondary" }}
+                        >
+                            {tabs[value].label}
+                        </Typography>
+                    </Box>
+
+                    <Drawer
+                        anchor="left"
+                        open={drawerOpen}
+                        onClose={() => setDrawerOpen(false)}
+                        sx={{
+                            "& .MuiDrawer-paper": {
+                                width: DRAWER_WIDTH,
+                                pt: 2,
+                            },
+                        }}
+                    >
+                        <Typography variant="subtitle2" sx={{ px: 2, pb: 1 }}>
+                            Settings
+                        </Typography>
+                        <Divider />
+                        <List>
+                            {tabs.map((tab, index) => {
+                                const Icon = iconMap[tab.icon];
+                                return (
+                                    <ListItemButton
+                                        key={index}
+                                        selected={value === index}
+                                        onClick={() =>
+                                            handleMobileSelect(index)
+                                        }
+                                    >
+                                        <ListItemIcon sx={{ minWidth: 36 }}>
+                                            <Icon fontSize="small" />
+                                        </ListItemIcon>
+                                        <ListItemText primary={tab.label} />
+                                    </ListItemButton>
+                                );
+                            })}
+                        </List>
+                    </Drawer>
+                </>
+            )}
+
+            <Box sx={{ display: "flex", width: "100%" }}>
+                {/* Desktop: inline vertical Tabs */}
+                {!isMobile && (
                     <Tabs
                         orientation="vertical"
                         value={value}
                         onChange={handleTabChange}
-                        sx={{
-                            width: "100%",
-                            "& .MuiTabs-indicator": iconOnly
-                                ? { left: 0 }
-                                : undefined,
-                        }}
+                        sx={{ flexShrink: 0 }}
                     >
                         {tabs.map((tab, index) => {
                             const Icon = iconMap[tab.icon];
-
                             return (
-                                <Tooltip
+                                <Tab
                                     key={index}
-                                    title={iconOnly ? tab.label : ""}
-                                    placement="right"
-                                    disableHoverListener={!iconOnly}
-                                    disableFocusListener={!iconOnly}
-                                    disableTouchListener={!iconOnly}
-                                >
-                                    <Tab
-                                        icon={<Icon fontSize="small" />}
-                                        iconPosition={
-                                            iconOnly ? "top" : "start"
-                                        }
-                                        label={iconOnly ? undefined : tab.label}
-                                        aria-label={tab.label}
-                                        sx={{
-                                            minWidth: iconOnly
-                                                ? ICON_PANEL_WIDTH
-                                                : undefined,
-                                            maxWidth: iconOnly
-                                                ? ICON_PANEL_WIDTH
-                                                : undefined,
-                                            px: iconOnly ? 0 : undefined,
-                                            py: iconOnly ? 1 : undefined,
-                                            minHeight: iconOnly ? 48 : undefined,
-                                        }}
-                                    />
-                                </Tooltip>
+                                    icon={<Icon />}
+                                    iconPosition="start"
+                                    label={tab.label}
+                                />
                             );
                         })}
                     </Tabs>
+                )}
 
-                    {isMobile && (
-                        <IconButton
-                            size="small"
-                            onClick={() =>
-                                setSidebarExpanded((prev) => !prev)
-                            }
-                            sx={{ mt: 1 }}
-                            aria-label={
-                                sidebarExpanded
-                                    ? "Collapse menu"
-                                    : "Expand menu"
-                            }
-                        >
-                            {sidebarExpanded ? (
-                                <ChevronLeftIcon fontSize="small" />
-                            ) : (
-                                <ChevronRightIcon fontSize="small" />
-                            )}
-                        </IconButton>
-                    )}
-                </Box>
-
-                {/* Right: Content */}
+                {/* Content */}
                 <Box
                     sx={{
                         flex: 1,
                         minWidth: 0,
-                        pl: { xs: 1, md: 3 },
+                        pl: isMobile ? 0 : 3,
                         overflow: "auto",
                     }}
                 >
