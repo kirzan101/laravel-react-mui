@@ -133,18 +133,20 @@ class RoleSeeder extends Seeder
 
                 $rolePermissionData = [];
                 foreach ($providedPermissions as $permission) {
-                    $isActive = false; // Default to false  
+                    // Only create a role_permission record (i.e. grant the permission) when
+                    // the permission's type is listed for its module in the role's permission
+                    // set and the permission itself is active. A role_permission record's
+                    // existence now represents an active assignment; there is no is_active flag.
+                    $isGranted = in_array($permission->type, $roleData['permissions'][$permission->module])
+                        && $permission->is_active;
 
-                    // Check if the permission's type is in the provided permissions for its module
-                    // e.g., if the permission is for 'users' and its type is 'create', check if 'create' is in $roleData['permissions']['users']
-                    if (in_array($permission->type, $roleData['permissions'][$permission->module])) {
-                        $isActive = $permission->is_active; // Use the is_active value from the permission
+                    if (!$isGranted) {
+                        continue;
                     }
 
                     $rolePermissionData[] = [
                         'role_id' => $role->id,
                         'permission_id' => $permission->id,
-                        'is_active' => $isActive,
                         'created_at' => now(),
                         'updated_at' => now(),
                     ];

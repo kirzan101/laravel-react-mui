@@ -15,7 +15,7 @@ trait ReturnModulePermissionTrait
      * This method retrieves permissions assigned to the specified profile
      * through its roles. It filters permissions by:
      * - Module name (derived from the given model's table)
-     * - Active role-permissions and active permissions
+     * - Roles that have the permission assigned (role_permission record exists) and active permissions
      *
      * Results are cached for 60 minutes using a profile + module-based key.
      *
@@ -48,7 +48,6 @@ trait ReturnModulePermissionTrait
                 ->filter()
                 ->map(fn($role) => $role->rolePermissions)
                 ->flatten()
-                ->filter(fn($rp) => $rp->is_active)
                 ->map(fn($rp) => $rp->permission)
                 ->filter()
                 ->filter(fn($perm) => $perm->module === $moduleName && $perm->is_active)
@@ -66,7 +65,7 @@ trait ReturnModulePermissionTrait
      *
      * This method is similar to returnPermissions but allows specifying the module name directly,
      * rather than deriving it from a model. It retrieves permissions assigned to the specified profile
-     * through its roles, filtering by active role-permissions and active permissions.
+     * through its roles, considering only permissions assigned to the role (role_permission record exists) and active permissions.
      *
      * Results are cached for 60 minutes using a profile + module-based key.
      *
@@ -99,7 +98,6 @@ trait ReturnModulePermissionTrait
                 ->filter()
                 ->map(fn($role) => $role->rolePermissions)
                 ->flatten()
-                ->filter(fn($rp) => $rp->is_active)
                 ->map(fn($rp) => $rp->permission)
                 ->filter()
                 ->filter(fn($perm) => $perm->module === $module && $perm->is_active)
