@@ -86,7 +86,8 @@ class HandleInertiaRequests extends Middleware
                 ],
             ] : null,
             'token' => $auth ? $auth->api_token : null,
-            'modules' => $modules
+            'modules' => $modules,
+            'can' => $profileId ? $this->userModule->getAllPermissions($profileId) : [],
         ]);
     }
 }

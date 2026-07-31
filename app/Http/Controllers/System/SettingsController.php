@@ -5,10 +5,13 @@ namespace App\Http\Controllers\System;
 use App\Helpers\Helper;
 use App\Http\Controllers\Controller;
 use App\Interfaces\FetchInterfaces\PermissionFetchInterface;
+use App\Models\Role;
+use App\Models\UserGroup;
 use App\Traits\ActivityLoggerTrait;
 use App\Traits\ReturnMessageTrait;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Gate;
 use Inertia\Inertia;
 
 class SettingsController extends Controller
@@ -25,7 +28,7 @@ class SettingsController extends Controller
      */
     public function index()
     {
-        if (!$this->hasViewPermission($this->getCan())) {
+        if (Gate::denies('view', new UserGroup()) && Gate::denies('view', new Role())) {
             return Inertia::render('Error', [
                 'code' => 403,
                 'message' => 'You do not have permission to view this page.'
@@ -38,43 +41,10 @@ class SettingsController extends Controller
         ] = $this->getCacheData();
 
         return Inertia::render('System/Settings', [
-            'can' => $this->getCan(),
             'userGroupTypes' => Helper::USER_GROUP_CODE_TYPES,      // user group props
             'permissions' => $permissions,                          // role props
             'moduleLists' => $moduleLists,                          // role props
         ]);
-    }
-
-    /**
-     * Get the combined permissions for various models.
-     *
-     * @return array
-     */
-    protected function getCan(): array
-    {
-        $userGroupCan = $this->getModulePermissions(new \App\Models\UserGroup());
-        $roleCan = $this->getModulePermissions(new \App\Models\Role());
-        // ... add more models as needed
-
-        // combine all permissions into a single array
-        $combinedCan = array_merge($userGroupCan, $roleCan);
-
-        return $combinedCan;
-    }
-
-    /**
-     * Check if the user has any 'view' permissions.
-     *
-     * @param array $cans
-     * @return bool
-     */
-    protected function hasViewPermission(array $cans): bool
-    {
-        // convert to collect for easier searching
-        // must have at least one permission that contains 'view' in its name
-        return collect($cans)->contains(function ($permission) {
-            return str_contains($permission, 'view');
-        });
     }
 
     /**

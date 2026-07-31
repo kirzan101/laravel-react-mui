@@ -46,6 +46,36 @@ class UserModuleService implements UserModuleInterface
     }
 
     /**
+     * Get all permissions for the given profile across every module.
+     *
+     * {@inheritdoc}
+     */
+    public function getAllPermissions(int $profileId): array
+    {
+        $version = Cache::get("permissions.version.global", 1);
+
+        return Cache::remember(
+            "user.all-permissions.$profileId.v$version",
+            now()->addMinutes(60),
+            function () use ($profileId) {
+                return DB::table('profile_roles as pr')
+                    ->join('roles as r', 'r.id', '=', 'pr.role_id')
+                    ->join('role_permissions as rp', 'rp.role_id', '=', 'r.id')
+                    ->join('permissions as p', 'p.id', '=', 'rp.permission_id')
+                    ->where('pr.profile_id', $profileId)
+                    ->where('r.is_active', true)
+                    ->where('p.is_active', true)
+                    ->distinct()
+                    ->get(['p.type', 'p.module'])
+                    ->map(fn($row) => "{$row->type}-{$row->module}")
+                    ->unique()
+                    ->values()
+                    ->toArray();
+            }
+        );
+    }
+
+    /**
      * Refresh the global permissions version.
      *
      * This method increments the global permissions version in the cache. It is used to invalidate

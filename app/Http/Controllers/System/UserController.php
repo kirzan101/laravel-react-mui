@@ -61,7 +61,6 @@ class UserController extends Controller
             'user_groups' => UserGroupIndexResource::collection($userGroups),
             'roles' => $roles,
             'account_types' => Helper::ACCOUNT_TYPES,
-            'can' => $this->getModulePermissions(new User()),
         ]);
     }
 
