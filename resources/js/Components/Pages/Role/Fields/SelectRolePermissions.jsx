@@ -85,6 +85,28 @@ const SelectRolePermissions = ({
         }
     };
 
+    const handleToggleGroup = (modulePermissions) => (event) => {
+        const { checked } = event.target;
+        const modulePermissionIds = modulePermissions.map(
+            (permission) => permission.id,
+        );
+
+        if (checked) {
+            onChange([
+                ...selectedPermissions,
+                ...modulePermissionIds.filter(
+                    (id) => !selectedPermissions.includes(id),
+                ),
+            ]);
+        } else {
+            onChange(
+                selectedPermissions.filter(
+                    (id) => !modulePermissionIds.includes(id),
+                ),
+            );
+        }
+    };
+
     return (
         <Box>
             <Typography variant="h6" sx={{ mb: 2 }}>
@@ -98,16 +120,53 @@ const SelectRolePermissions = ({
             )}
 
             <Grid container spacing={2}>
-                {groupedPermissions.map(({ module, label, permissions: modulePermissions }) => (
+                {groupedPermissions.map(({ module, label, permissions: modulePermissions }) => {
+                    const modulePermissionIds = modulePermissions.map(
+                        (permission) => permission.id,
+                    );
+                    const selectedCount = modulePermissionIds.filter((id) =>
+                        selectedPermissions.includes(id),
+                    ).length;
+                    const allSelected =
+                        modulePermissionIds.length > 0 &&
+                        selectedCount === modulePermissionIds.length;
+                    const someSelected =
+                        selectedCount > 0 && !allSelected;
+
+                    return (
                     <Grid key={module} size={{ xs: 12, sm: 4 }}>
                         <CCard>
                             <CCardContent>
-                                <Typography
-                                    variant="subtitle1"
-                                    sx={{ fontWeight: "bold", mb: 1 }}
+                                <Box
+                                    sx={{
+                                        display: "flex",
+                                        alignItems: "center",
+                                        justifyContent: "space-between",
+                                        mb: 1,
+                                    }}
                                 >
-                                    {label}
-                                </Typography>
+                                    <Typography
+                                        variant="subtitle1"
+                                        sx={{ fontWeight: "bold" }}
+                                    >
+                                        {label}
+                                    </Typography>
+
+                                    <FormControlLabel
+                                        sx={{ mr: 0 }}
+                                        control={
+                                            <Checkbox
+                                                size="small"
+                                                checked={allSelected}
+                                                indeterminate={someSelected}
+                                                onChange={handleToggleGroup(
+                                                    modulePermissions,
+                                                )}
+                                            />
+                                        }
+                                        label="Select All"
+                                    />
+                                </Box>
 
                                 <Divider sx={{ mb: 1 }} />
 
@@ -135,7 +194,8 @@ const SelectRolePermissions = ({
                             </CCardContent>
                         </CCard>
                     </Grid>
-                ))}
+                    );
+                })}
             </Grid>
 
             {!errors?.permissionIds && (
