@@ -39,7 +39,6 @@ class ModuleController extends Controller
         }
 
         return Inertia::render('System/Modules', [
-            'can' => $this->getModulePermissions(new Module()),
             'categories' => Helper::MODULE_CATEGORIES,
         ]);
     }

@@ -19,6 +19,19 @@ interface UserModuleInterface
     public function getAccessibleModules(?int $profileId): array;
 
     /**
+     * Get all permissions for the given profile across every module.
+     *
+     * Returns a flat array of permission strings (e.g. ['view-users', 'create-roles'])
+     * for every active permission assigned to the profile via its roles.
+     * Results are cached using the global permissions version so the cache is
+     * automatically invalidated whenever refreshGlobalPermissionsVersion() is called.
+     *
+     * @param int $profileId The ID of the profile to evaluate.
+     * @return array List of permission strings across all modules.
+     */
+    public function getAllPermissions(int $profileId): array;
+
+    /**
      * Refresh the global permissions version.
      *
      * This method increments the global permissions version in the cache. It is used to invalidate
