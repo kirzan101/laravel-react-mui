@@ -13,14 +13,12 @@ use App\Traits\ReturnModelTrait;
 use App\Interfaces\CurrentUserInterface;
 use App\Interfaces\BaseInterface;
 use App\Interfaces\FetchInterfaces\BaseFetchInterface;
-use App\Models\Permission;
 use App\Traits\CheckIfColumnExistsTrait;
 use App\Traits\DetectsSoftDeletesTrait;
 use App\Traits\EnsureDataTrait;
 use App\Traits\EnsureSuccessTrait;
 use Illuminate\Support\Facades\DB;
 use App\Models\RolePermission;
-use Illuminate\Database\Eloquent\Collection;
 
 class RolePermissionService implements RolePermissionInterface
 {
@@ -110,15 +108,17 @@ class RolePermissionService implements RolePermissionInterface
 
     /**
      * Store multiple role permissions in the database.
-     * 
-     * This method is used to store multiple permissions for a role. It takes an array of permission IDs and a role ID, and creates a new role permission for each permission ID with the given role ID. The is_active field is set to true if the permission ID is in the default permissions, otherwise it is set to false.
+     *
+     * This method is used to assign multiple permissions to a role. It takes an array of
+     * permission IDs and a role ID, and creates a new role_permission record for each
+     * permission ID with the given role ID. A permission is considered assigned to the role
+     * simply by the existence of its role_permission record.
      *
      * Process Overview:
-     * - Fetch the default permissions from the database and get their IDs.
-     * - Iterate over the provided permission IDs and create an array of role permission data, setting the is_active field based on whether the permission ID is in the default permissions.
+     * - Build a role_permission row for every provided permission ID.
      * - Store the role permissions in the database using the base interface's storeMultiple method.
      * - Return a CollectionResponse with the created role permissions.
-     * 
+     *
      * @param array $permissionIds
      * @param int $roleId
      * @return CollectionResponse
@@ -127,26 +127,22 @@ class RolePermissionService implements RolePermissionInterface
     {
         try {
             return DB::transaction(function () use ($permissionIds, $roleId) {
-                $defaultPermissionIds = $this->fetch->indexQuery(Permission::class)->pluck('id')->toArray();
+                $permissionIds = array_unique($permissionIds);
 
-                $rolePermissionsData = [];
-                foreach ($defaultPermissionIds as $permissionId) {
-                    $rolePermissionsData[] = [
-                        'role_id' => $roleId,
-                        'permission_id' => $permissionId,
-                        'is_active' => in_array($permissionId, $permissionIds), // Set is_active to true if the permission is in the provided permission IDs, otherwise false
-                    ];
-                }
+                $rolePermissionsData = array_map(fn($permissionId) => [
+                    'role_id' => $roleId,
+                    'permission_id' => $permissionId,
+                ], $permissionIds);
 
                 if (!empty($rolePermissionsData)) {
                     $this->base->storeMultiple(RolePermission::class, $rolePermissionsData);
                 }
 
-                $rolePermissionCollection = new Collection([
-                    $rolePermissionsData
-                ]);
+                $rolePermissions = $this->fetch->indexQuery(RolePermission::class)
+                    ->where('role_id', $roleId)
+                    ->get();
 
-                return CollectionResponse::success(201, Helper::SUCCESS, 'Role permissions created successfully!', $rolePermissionCollection);
+                return CollectionResponse::success(201, Helper::SUCCESS, 'Role permissions created successfully!', $rolePermissions);
             });
         } catch (\Throwable $th) {
             $code = $this->httpCode($th);
@@ -157,13 +153,18 @@ class RolePermissionService implements RolePermissionInterface
     /**
      * Update multiple role permissions in the database.
      *
-     * This method is used to update the active status of multiple role permissions for a given role. It takes an array of permission IDs and a role ID, and updates the is_active field of the role permissions associated with the given role ID based on whether their permission ID is in the provided array of permission IDs.
+     * This method synchronizes the permissions assigned to a role with the given array of
+     * permission IDs. Permissions no longer present in the array are removed (their
+     * role_permission record is deleted), and permissions newly present in the array are
+     * added (a new role_permission record is created). Existing, unchanged assignments are
+     * left untouched.
      *
      * Process Overview:
-     * - Fetch all role permissions for the given role ID from the database.
-     * - Deactivate all role permissions for the given role ID by setting their is_active field to false.
-     * - Update the is_active field to true for the role permissions whose permission ID is in the provided array of permission IDs.
-     * - Return a CollectionResponse with the updated role permissions.
+     * - Fetch the permission IDs currently assigned to the given role ID.
+     * - Determine which permission IDs need to be added and which need to be removed.
+     * - Delete the role_permission records for removed permissions.
+     * - Create role_permission records for newly added permissions.
+     * - Return a CollectionResponse with the role's current role permissions.
      *
      * @param array $permissionIds
      * @param int $roleId
@@ -173,21 +174,37 @@ class RolePermissionService implements RolePermissionInterface
     {
         try {
             return DB::transaction(function () use ($permissionIds, $roleId) {
-                // Fetch all role permissions for the given role ID
+                $permissionIds = array_unique($permissionIds);
+
+                $existingPermissionIds = $this->fetch->indexQuery(RolePermission::class)
+                    ->where('role_id', $roleId)
+                    ->pluck('permission_id')
+                    ->toArray();
+
+                $permissionIdsToAdd = array_diff($permissionIds, $existingPermissionIds);
+                $permissionIdsToRemove = array_diff($existingPermissionIds, $permissionIds);
+
+                // Remove permissions that are no longer assigned to the role
+                if (!empty($permissionIdsToRemove)) {
+                    $this->fetch->indexQuery(RolePermission::class)
+                        ->where('role_id', $roleId)
+                        ->whereIn('permission_id', $permissionIdsToRemove)
+                        ->delete();
+                }
+
+                // Create role_permission records for the newly assigned permissions
+                if (!empty($permissionIdsToAdd)) {
+                    $rolePermissionsData = array_map(fn($permissionId) => [
+                        'role_id' => $roleId,
+                        'permission_id' => $permissionId,
+                    ], array_values($permissionIdsToAdd));
+
+                    $this->base->storeMultiple(RolePermission::class, $rolePermissionsData);
+                }
+
                 $rolePermissions = $this->fetch->indexQuery(RolePermission::class)
                     ->where('role_id', $roleId)
                     ->get();
-
-                // deactivate all permissions first
-                $this->fetch->indexQuery(RolePermission::class)
-                    ->where('role_id', $roleId)
-                    ->update(['is_active' => false]);
-
-                // Then update the selected permissions to active
-                $this->fetch->indexQuery(RolePermission::class)
-                    ->where('role_id', $roleId)
-                    ->whereIn('permission_id', $permissionIds)
-                    ->update(['is_active' => true]);
 
                 return CollectionResponse::success(200, Helper::SUCCESS, 'Role permissions updated successfully!', $rolePermissions);
             });

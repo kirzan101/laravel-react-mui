@@ -5,7 +5,6 @@ namespace App\Console\Commands;
 use App\Helpers\Helper;
 use App\Models\Module;
 use App\Models\Permission;
-use App\Models\Role;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
@@ -62,18 +61,9 @@ class GenerateModulePermissions extends Command
                 $createdPermissions[] = $permission->id;
             }
 
-            $roles = Role::all();
-            foreach ($roles as $role) {
-                foreach ($createdPermissions as $permissionId) {
-                    $role->rolePermissions()->firstOrCreate(
-                        [
-                            'permission_id' => $permissionId,
-                            'role_id' => $role->id,
-                        ],
-                        ['is_active' => false] // default to inactive, but can be updated later
-                    );
-                }
-            }
+            // Note: newly generated permissions are not automatically assigned to any role.
+            // A role_permission record's existence now represents an active assignment, so
+            // permissions must be explicitly granted to a role via the Roles UI.
 
             // Create the module entry
             Module::create([

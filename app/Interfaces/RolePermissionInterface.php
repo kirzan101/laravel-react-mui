@@ -36,15 +36,17 @@ interface RolePermissionInterface
 
     /**
      * Store multiple role permissions in the database.
-     * 
-     * This method is used to store multiple permissions for a role. It takes an array of permission IDs and a role ID, and creates a new role permission for each permission ID with the given role ID. The is_active field is set to true if the permission ID is in the default permissions, otherwise it is set to false.
+     *
+     * This method is used to assign multiple permissions to a role. It takes an array of
+     * permission IDs and a role ID, and creates a new role_permission record for each
+     * permission ID with the given role ID. A permission is considered assigned to the role
+     * simply by the existence of its role_permission record (no `is_active` flag involved).
      *
      * Process Overview:
-     * - Fetch the default permissions from the database and get their IDs.
-     * - Iterate over the provided permission IDs and create an array of role permission data, setting the is_active field based on whether the permission ID is in the default permissions.
+     * - Build a role_permission row for every provided permission ID.
      * - Store the role permissions in the database using the base interface's storeMultiple method.
      * - Return a CollectionResponse with the created role permissions.
-     * 
+     *
      * @param array $permissionIds
      * @param int $roleId
      * @return CollectionResponse
@@ -53,14 +55,20 @@ interface RolePermissionInterface
 
     /**
      * Update multiple role permissions in the database.
-     * 
-     * This method is used to update multiple permissions for a role. It takes an array of permission IDs and a role ID, and updates the is_active field for each role permission associated with the given role ID based on whether the permission ID is in the provided array of permission IDs.
+     *
+     * This method synchronizes the permissions assigned to a role with the given array of
+     * permission IDs. Permissions no longer present in the array are removed (their
+     * role_permission record is deleted), and permissions newly present in the array are
+     * added (a new role_permission record is created). Existing, unchanged assignments are
+     * left untouched.
      *
      * Process Overview:
-     * - Fetch all role permissions for the given role ID from the database.
-     * - Iterate over the fetched role permissions and update the is_active field based on whether the permission ID is in the provided array of permission IDs.
-     * - Return a CollectionResponse with the updated role permissions.
-     * 
+     * - Fetch the permission IDs currently assigned to the given role ID.
+     * - Determine which permission IDs need to be added and which need to be removed.
+     * - Delete the role_permission records for removed permissions.
+     * - Create role_permission records for newly added permissions.
+     * - Return a CollectionResponse with the role's current role permissions.
+     *
      * @param array $permissionIds
      * @param int $roleId
      * @return CollectionResponse
