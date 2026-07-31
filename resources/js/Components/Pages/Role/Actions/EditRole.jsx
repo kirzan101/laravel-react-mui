@@ -77,10 +77,10 @@ const EditRole = ({
             `/roles/${role.id}`,
             {
                 _method: "PUT",
-                forceFormData: true,
                 ...form,
             },
             {
+                forceFormData: true,
                 onSuccess: ({ props }) => {
                     setOpen(false);
 
