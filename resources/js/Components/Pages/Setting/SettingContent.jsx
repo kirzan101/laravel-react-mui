@@ -81,9 +81,12 @@ const SettingContent = ({
         },
     ];
 
+    const iconOnly = isMobile && !sidebarExpanded;
+    const ICON_PANEL_WIDTH = 56; // px — tight width for icon-only sidebar
+
     return (
         <CBoxContent>
-            <Box sx={{ display: "flex", width: "100%" }}>
+            <Box sx={{ display: "flex", width: "100%", overflow: "hidden" }}>
                 {/* Left: Navigation */}
                 <Box
                     sx={{
@@ -91,33 +94,50 @@ const SettingContent = ({
                         display: "flex",
                         flexDirection: "column",
                         alignItems: "center",
+                        width: iconOnly ? ICON_PANEL_WIDTH : undefined,
+                        transition: "width 0.2s",
                     }}
                 >
                     <Tabs
                         orientation="vertical"
                         value={value}
                         onChange={handleTabChange}
-                        sx={{ flexShrink: 0 }}
+                        sx={{
+                            width: "100%",
+                            "& .MuiTabs-indicator": iconOnly
+                                ? { left: 0 }
+                                : undefined,
+                        }}
                     >
                         {tabs.map((tab, index) => {
                             const Icon = iconMap[tab.icon];
-                            const iconOnly = isMobile && !sidebarExpanded;
 
                             return (
                                 <Tooltip
                                     key={index}
                                     title={iconOnly ? tab.label : ""}
                                     placement="right"
+                                    disableHoverListener={!iconOnly}
+                                    disableFocusListener={!iconOnly}
+                                    disableTouchListener={!iconOnly}
                                 >
                                     <Tab
-                                        icon={<Icon />}
+                                        icon={<Icon fontSize="small" />}
                                         iconPosition={
                                             iconOnly ? "top" : "start"
                                         }
                                         label={iconOnly ? undefined : tab.label}
                                         aria-label={tab.label}
                                         sx={{
-                                            minWidth: iconOnly ? 48 : undefined,
+                                            minWidth: iconOnly
+                                                ? ICON_PANEL_WIDTH
+                                                : undefined,
+                                            maxWidth: iconOnly
+                                                ? ICON_PANEL_WIDTH
+                                                : undefined,
+                                            px: iconOnly ? 0 : undefined,
+                                            py: iconOnly ? 1 : undefined,
+                                            minHeight: iconOnly ? 48 : undefined,
                                         }}
                                     />
                                 </Tooltip>
@@ -152,7 +172,7 @@ const SettingContent = ({
                     sx={{
                         flex: 1,
                         minWidth: 0,
-                        pl: 3,
+                        pl: { xs: 1, md: 3 },
                         overflow: "auto",
                     }}
                 >
