@@ -1,24 +1,19 @@
-import { CBoxContent } from "@/Components";
+import { CBoxContent, CSelect } from "@/Components";
 import { iconMap } from "@/Utilities/icons";
 
 import UserGroupContent from "@/Components/Pages/UserGroup/UserGroupContent";
 import RoleContent from "@/Components/Pages/Role/RoleContent";
+
 import {
     Tabs,
     Tab,
     Box,
-    Drawer,
-    IconButton,
-    List,
-    ListItemButton,
-    ListItemIcon,
-    ListItemText,
-    Divider,
-    Typography,
+    FormControl,
+    Select,
+    MenuItem,
     useTheme,
     useMediaQuery,
 } from "@mui/material";
-import MenuIcon from "@mui/icons-material/Menu";
 
 import { useEffect, useState } from "react";
 
@@ -34,7 +29,6 @@ const SettingContent = ({
 }) => {
     const [value, setValue] = useState(0);
     const [showMessages, setShowMessages] = useState(true);
-    const [drawerOpen, setDrawerOpen] = useState(false);
 
     const theme = useTheme();
     const isMobile = useMediaQuery(theme.breakpoints.down("md"));
@@ -48,18 +42,13 @@ const SettingContent = ({
         setShowMessages(false);
     };
 
-    const handleMobileSelect = (index) => {
-        setValue(index);
-        setShowMessages(false);
-        setDrawerOpen(false);
-    };
-
     const defaultFlash = {
         success: null,
         error: null,
         info: null,
         warning: null,
     };
+
     const defaultErrors = {};
 
     const tabs = [
@@ -92,84 +81,87 @@ const SettingContent = ({
 
     return (
         <CBoxContent>
-            {/* Mobile: hamburger button + Drawer nav */}
-            {isMobile && (
-                <>
-                    <Box sx={{ mb: 1 }}>
-                        <IconButton
-                            onClick={() => setDrawerOpen(true)}
-                            aria-label="Open settings menu"
-                            size="small"
-                        >
-                            <MenuIcon />
-                        </IconButton>
-                        <Typography
-                            variant="caption"
-                            sx={{ ml: 1, color: "text.secondary" }}
-                        >
-                            {tabs[value].label}
-                        </Typography>
-                    </Box>
-
-                    <Drawer
-                        anchor="left"
-                        open={drawerOpen}
-                        onClose={() => setDrawerOpen(false)}
+            <Box
+                sx={{
+                    display: "flex",
+                    flexDirection: isMobile ? "column" : "row",
+                    width: "100%",
+                    gap: 2,
+                }}
+            >
+                {/* Mobile: Dropdown */}
+                {isMobile ? (
+                    <FormControl fullWidth>
+                        <CSelect
+                            options={tabs.map((tab, index) => ({
+                                value: index,
+                                label: tab.label,
+                            }))}
+                            value={value}
+                            onChange={(e) =>
+                                handleTabChange(null, e.target.value)
+                            }
+                            label="Select Setting"
+                        />
+                    </FormControl>
+                ) : (
+                    /* Desktop: Vertical Tabs */
+                    <Box
                         sx={{
-                            "& .MuiDrawer-paper": {
-                                width: DRAWER_WIDTH,
-                                pt: 2,
-                            },
+                            width: 220,
+                            flexShrink: 0,
+                            borderRight: 1,
+                            borderColor: "divider",
                         }}
                     >
-                        <Typography variant="subtitle2" sx={{ px: 2, pb: 1 }}>
-                            Settings
-                        </Typography>
-                        <Divider />
-                        <List>
+                        <Tabs
+                            orientation="vertical"
+                            value={value}
+                            onChange={handleTabChange}
+                            sx={{
+                                "& .MuiTab-root": {
+                                    justifyContent: "flex-start",
+                                    alignItems: "stretch",
+                                    minHeight: 48,
+                                    textTransform: "none",
+                                    px: 2,
+                                },
+                            }}
+                        >
                             {tabs.map((tab, index) => {
                                 const Icon = iconMap[tab.icon];
+
                                 return (
-                                    <ListItemButton
+                                    <Tab
                                         key={index}
-                                        selected={value === index}
-                                        onClick={() =>
-                                            handleMobileSelect(index)
+                                        value={index}
+                                        disableRipple
+                                        label={
+                                            <Box
+                                                sx={{
+                                                    display: "flex",
+                                                    alignItems: "center",
+                                                    width: "100%",
+                                                    gap: 1.5,
+                                                }}
+                                            >
+                                                <Icon fontSize="small" />
+                                                <Box
+                                                    component="span"
+                                                    sx={{
+                                                        fontSize: 14,
+                                                        fontWeight: 500,
+                                                    }}
+                                                >
+                                                    {tab.label}
+                                                </Box>
+                                            </Box>
                                         }
-                                    >
-                                        <ListItemIcon sx={{ minWidth: 36 }}>
-                                            <Icon fontSize="small" />
-                                        </ListItemIcon>
-                                        <ListItemText primary={tab.label} />
-                                    </ListItemButton>
+                                    />
                                 );
                             })}
-                        </List>
-                    </Drawer>
-                </>
-            )}
-
-            <Box sx={{ display: "flex", width: "100%" }}>
-                {/* Desktop: inline vertical Tabs */}
-                {!isMobile && (
-                    <Tabs
-                        orientation="vertical"
-                        value={value}
-                        onChange={handleTabChange}
-                        sx={{ flexShrink: 0 }}
-                    >
-                        {tabs.map((tab, index) => {
-                            const Icon = iconMap[tab.icon];
-                            return (
-                                <Tab
-                                    key={index}
-                                    icon={<Icon />}
-                                    iconPosition="start"
-                                    label={tab.label}
-                                />
-                            );
-                        })}
-                    </Tabs>
+                        </Tabs>
+                    </Box>
                 )}
 
                 {/* Content */}
@@ -177,7 +169,6 @@ const SettingContent = ({
                     sx={{
                         flex: 1,
                         minWidth: 0,
-                        pl: isMobile ? 0 : 3,
                         overflow: "auto",
                     }}
                 >

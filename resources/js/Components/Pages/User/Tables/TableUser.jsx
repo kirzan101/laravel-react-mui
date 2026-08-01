@@ -38,10 +38,10 @@ const TableUser = ({
                 );
             },
         },
-        { field: "username", headerName: "Username", flex: 1 },
-        { field: "email", headerName: "Email", flex: 1 },
-        { field: "position", headerName: "Position", flex: 1 },
-        { field: "user_group_name", headerName: "User Group", flex: 1 },
+        { field: "username", headerName: "Username", width: 200 },
+        { field: "email", headerName: "Email", width: 250 },
+        { field: "position", headerName: "Position", width: 200 },
+        { field: "user_group_name", headerName: "User Group", width: 200 },
     ];
 
     return (
