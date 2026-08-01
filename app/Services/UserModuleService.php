@@ -83,6 +83,11 @@ class UserModuleService implements UserModuleInterface
      */
     public function refreshGlobalPermissionsVersion(): void
     {
+        // if no cache exists for the global permissions version, initialize it to 1
+        if (!Cache::has("permissions.version.global")) {
+            Cache::add("permissions.version.global", 1, now()->addYears(10));
+        }
+
         Cache::increment("permissions.version.global");
     }
 }

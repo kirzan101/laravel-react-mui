@@ -4,6 +4,7 @@ namespace App\Http\Controllers\System;
 
 use App\Helpers\Helper;
 use App\Http\Controllers\Controller;
+use App\Interfaces\FetchInterfaces\ModuleFetchInterface;
 use App\Interfaces\FetchInterfaces\PermissionFetchInterface;
 use App\Models\Role;
 use App\Models\UserGroup;
@@ -21,6 +22,7 @@ class SettingsController extends Controller
 
     public function __construct(
         private PermissionFetchInterface $permissionFetch,
+        private ModuleFetchInterface $moduleFetch
     ) {}
 
     /**
@@ -28,17 +30,18 @@ class SettingsController extends Controller
      */
     public function index()
     {
-        if (Gate::denies('view', new UserGroup()) && Gate::denies('view', new Role())) {
+        [
+            'permissions' => $permissions,
+            'moduleLists' => $moduleLists,
+            'settingsModules' => $settingsModules,
+        ] = $this->getCacheData();
+
+        if (empty($settingsModules)) {
             return Inertia::render('Error', [
                 'code' => 403,
                 'message' => 'You do not have permission to view this page.'
             ]);
         }
-
-        [
-            'permissions' => $permissions,
-            'moduleLists' => $moduleLists,
-        ] = $this->getCacheData();
 
         return Inertia::render('System/Settings', [
             'userGroupTypes' => Helper::USER_GROUP_CODE_TYPES,      // user group props
@@ -54,19 +57,25 @@ class SettingsController extends Controller
      */
     protected function getCacheData(): array
     {
-        $permissions = Cache::remember('permission_fetch_list', 60, function () {
+        $permissions = Cache::remember('permission_fetch_list', now()->addHour(), function () {
             // Fetch the result and extract only the 'data' part
             $result = $this->permissionFetch->indexPermissions();
             return $result->data ?? []; // Only return 'data' part
         });
 
-        $moduleLists = Cache::remember('module_lists', 60, function () {
-            return Helper::getModuleList();
+        $modules = Cache::remember('module_lists', now()->addHour(), function () {
+            $result = $this->moduleFetch->indexModules();
+            return $result->data ?? collect(); // Only return 'data' part
         });
+
+        $moduleLists = $modules->pluck('name')->toArray();
+        $settingsModules = $modules->where('category', Helper::MODULE_CATEGORY_SETTINGS)->pluck('name')->toArray();
 
         return [
             'permissions' => $permissions,
             'moduleLists' => $moduleLists,
+            'modules' => $modules,
+            'settingsModules' => $settingsModules,
         ];
     }
 }

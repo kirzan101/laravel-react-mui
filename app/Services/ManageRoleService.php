@@ -20,6 +20,7 @@ use App\Traits\CheckIfColumnExistsTrait;
 use App\Traits\DetectsSoftDeletesTrait;
 use App\Traits\EnsureDataTrait;
 use App\Traits\EnsureSuccessTrait;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 
 class ManageRoleService implements ManageRoleInterface
@@ -106,6 +107,9 @@ class ManageRoleService implements ManageRoleInterface
                     // Then update the selected permissions to active
                     $rolePermissionResponse = $this->rolePermission->updateMultipleRolePermissions($manageRoleDTO->permissionIds, $roleId);
                     $this->ensureSuccess($rolePermissionResponse->toArray(), 'Failed to sync permissions to role.');
+
+                    // update the permissions version for the profile to invalidate the cache
+                    $this->refreshGlobalPermissionsVersion();
                 }
                 return ModelResponse::success(200, Helper::SUCCESS, 'Role updated successfully!', $role, $roleId);
             });
@@ -139,5 +143,21 @@ class ManageRoleService implements ManageRoleInterface
             $code = $this->httpCode($th);
             return ModelResponse::error($code, Helper::ERROR, $th->getMessage());
         }
+    }
+
+    /**
+     * Refresh the global permissions version.
+     *
+     * This method increments the global permissions version in the cache. It is used to invalidate
+     * cached module access data for all users when permissions are updated.
+     */
+    protected function refreshGlobalPermissionsVersion(): void
+    {
+        // if no cache exists for the global permissions version, initialize it to 1
+        if (!Cache::has("permissions.version.global")) {
+            Cache::add("permissions.version.global", 1, now()->addYears(10));
+        }
+
+        Cache::increment("permissions.version.global");
     }
 }

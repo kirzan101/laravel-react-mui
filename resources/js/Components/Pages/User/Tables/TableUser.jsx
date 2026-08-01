@@ -18,7 +18,7 @@ const TableUser = ({
         {
             field: "name",
             headerName: "Name",
-            width: 350,
+            width: 330,
             renderCell: (params) => {
                 return (
                     <EditUser

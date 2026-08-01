@@ -3,7 +3,7 @@ import {
     CFormGrid,
     CFormRow,
     CSelect,
-    CSelectMultiple,
+    CAutocomplete,
 } from "@/Components";
 import { Autocomplete, Grid, Typography } from "@mui/material";
 import { useState } from "react";
@@ -143,17 +143,34 @@ const FormUser = ({
             </CFormGrid>
 
             <CFormGrid size={{ xs: 12, sm: 6 }}>
-                <CSelectMultiple
+                <CAutocomplete
+                    multiple
                     label="Roles"
                     name="role_ids"
-                    value={form.role_ids}
-                    onChange={handleChange("role_ids")}
+                    value={roles
+                        .filter((role) => form.role_ids.includes(role.id))
+                        .map((role) => ({
+                            value: role.id,
+                            label: role.name,
+                        }))}
+                    onChange={(e) =>
+                        handleChange("role_ids")({
+                            target: {
+                                name: "role_ids",
+                                value: e.target.value.map((role) => role.value),
+                            },
+                        })
+                    }
                     error={!!errors.role_ids}
                     helperText={errors.role_ids}
                     options={roles.map((role) => ({
                         value: role.id,
                         label: role.name,
                     }))}
+                    getOptionLabel={(option) => option.label ?? ""}
+                    isOptionEqualToValue={(option, value) =>
+                        option.value === value.value
+                    }
                 />
             </CFormGrid>
 

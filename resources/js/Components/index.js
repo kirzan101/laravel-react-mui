@@ -30,6 +30,9 @@ export { default as CAlertError } from "./Customs/Alerts/CAlertError";
 export { default as CAlertSuccess } from "./Customs/Alerts/CAlertSuccess";
 export { default as CAlertMessage } from "./Customs/Alerts/CAlertMessage";
 
+// Autocompletes
+export { default as CAutocomplete } from "./Customs/Autocompletes/CAutocomplete";
+
 // Boxes
 export { default as CBox } from "./Customs/Boxes/CBox";
 export { default as CBoxContent } from "./Customs/Boxes/CBoxContent";

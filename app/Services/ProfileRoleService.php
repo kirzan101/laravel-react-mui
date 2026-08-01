@@ -206,4 +206,33 @@ class ProfileRoleService implements ProfileRoleInterface
             return StandardResponse::error($code, Helper::ERROR, $th->getMessage());
         }
     }
+
+    /**
+     * Delete the given profile role in the database by profile ID.
+     *
+     * @param integer $profileId
+     * @return StandardResponse
+     */
+    public function removeProfileRolesByProfileId(int $profileId): StandardResponse
+    {
+        try {
+            return DB::transaction(function () use ($profileId) {
+
+                // We remove the profile roles associated with the profile.
+                $profileRoles = $this->fetch->indexQuery(ProfileRole::class)
+                    ->where('profile_id', $profileId)
+                    ->pluck('id');
+
+                $deletedRows = $this->base->deleteMultiple(ProfileRole::class, $profileRoles->toArray());
+                if ($deletedRows === 0) {
+                    throw new \Exception('Failed to delete profile roles associated with the profile.');
+                }
+
+                return StandardResponse::success(200, Helper::SUCCESS, 'Profile roles associated with the profile deleted successfully!');
+            });
+        } catch (\Throwable $th) {
+            $code = $this->httpCode($th);
+            return StandardResponse::error($code, Helper::ERROR, $th->getMessage());
+        }
+    }
 }

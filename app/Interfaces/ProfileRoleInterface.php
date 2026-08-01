@@ -58,4 +58,12 @@ interface ProfileRoleInterface
      * @return StandardResponse
      */
     public function deleteProfileRolesByRoleId(int $roleId): StandardResponse;
+
+    /**
+     * Delete the given profile role in the database by profile ID.
+     *
+     * @param integer $profileId
+     * @return StandardResponse
+     */
+    public function removeProfileRolesByProfileId(int $profileId): StandardResponse;
 }

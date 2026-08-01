@@ -41,6 +41,9 @@ class Permission extends Model
         foreach ($profileIds as $profileId) {
             Cache::forget($this->getPermissionCacheKey($profileId, $module));
         }
+
+        // Clear the permission fetch list cache
+        Cache::forget('permission_fetch_list');
     }
 
     protected $fillable = [

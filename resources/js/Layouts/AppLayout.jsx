@@ -91,7 +91,8 @@ const DrawerHeader = styled("div")(({ theme }) => ({
     alignItems: "center",
     justifyContent: "flex-end",
     padding: theme.spacing(0, 1),
-    ...theme.mixins.toolbar,
+    // ...theme.mixins.toolbar,
+    minHeight: 48, // use to match the height of the AppBar (48px for dense)
 }));
 
 /* ================= COMPONENT ================= */
@@ -200,7 +201,7 @@ const AppLayout = ({ children }) => {
                 isMobile={isMobile}
                 sx={{ backgroundColor: "#13294B" }}
             >
-                <Toolbar>
+                <Toolbar variant="dense">
                     {/* OPEN BUTTON */}
                     <IconButton
                         color="inherit"
@@ -226,7 +227,35 @@ const AppLayout = ({ children }) => {
                         Logout
                     </Button>
                 </Toolbar>
+
+                {/* Environment warning for UAT environment */}
+                {import.meta.env.VITE_APP_ENV === "uat" && (
+                    <Box
+                        sx={{
+                            bgcolor: "#ff9800",
+                            color: "#fff",
+                            py: 0.25,
+                            textAlign: "center",
+                            fontSize: 10,
+                            fontWeight: 700,
+                            letterSpacing: 1,
+                        }}
+                    >
+                        UAT ENVIRONMENT
+                    </Box>
+                )}
             </AppBar>
+
+            {/* <AppBar
+                position="fixed"
+                open={open}
+                isMobile={isMobile}
+                sx={{ backgroundColor: "#f00e06" }}
+            >
+                <Toolbar variant="dense">
+                    production mode
+                </Toolbar>
+            </AppBar> */}
 
             {/* ================= DRAWER ================= */}
             <Drawer

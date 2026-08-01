@@ -26,6 +26,8 @@ const SettingContent = ({
     userGroupTypes,
     permissions,
     moduleLists,
+    accessibleRoutes,
+    settingsModules,
 }) => {
     const [value, setValue] = useState(0);
     const [showMessages, setShowMessages] = useState(true);
@@ -51,10 +53,10 @@ const SettingContent = ({
 
     const defaultErrors = {};
 
-    const tabs = [
+    // list of contents for each setting module
+    const settingTabContents = [
         {
-            label: "User groups",
-            icon: "GroupsIcon",
+            base_name: "user_groups",
             component: (
                 <UserGroupContent
                     flash={showMessages ? flash : defaultFlash}
@@ -65,8 +67,7 @@ const SettingContent = ({
             ),
         },
         {
-            label: "Roles",
-            icon: "RoleIcon",
+            base_name: "roles",
             component: (
                 <RoleContent
                     flash={showMessages ? flash : defaultFlash}
@@ -78,6 +79,26 @@ const SettingContent = ({
             ),
         },
     ];
+
+    // Map settings modules to their corresponding tab content
+    const tabs = settingsModules.map((module) => {
+        const tabContent = settingTabContents.find(
+            (content) => content.base_name === module.base_name,
+        );
+
+        return {
+            label: module.name,
+            icon: module.icon,
+            component: tabContent ? tabContent.component : null,
+        };
+    });
+
+    // Filter tabs based on accessible routes
+    const accessibleTabs = tabs.filter((tab) =>
+        accessibleRoutes.some((route) =>
+            route.includes(tab.label.toLowerCase().replace(" ", "_")),
+        ),
+    );
 
     return (
         <CBoxContent>
@@ -93,7 +114,7 @@ const SettingContent = ({
                 {isMobile ? (
                     <FormControl fullWidth>
                         <CSelect
-                            options={tabs.map((tab, index) => ({
+                            options={accessibleTabs.map((tab, index) => ({
                                 value: index,
                                 label: tab.label,
                             }))}
@@ -128,7 +149,7 @@ const SettingContent = ({
                                 },
                             }}
                         >
-                            {tabs.map((tab, index) => {
+                            {accessibleTabs.map((tab, index) => {
                                 const Icon = iconMap[tab.icon];
 
                                 return (
@@ -172,7 +193,7 @@ const SettingContent = ({
                         overflow: "auto",
                     }}
                 >
-                    {tabs[value].component}
+                    {accessibleTabs[value].component}
                 </Box>
             </Box>
         </CBoxContent>

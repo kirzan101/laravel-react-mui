@@ -11,9 +11,15 @@ const Settings = ({
     userGroupTypes,
     permissions,
     moduleLists,
+    auth,
+    modules,
 }) => {
     const page = usePage();
     const appName = page.props.appName || "Laravel React App";
+    const accessibleRoutes = auth.user.accessibleModules || [];
+    const settingsModules = modules
+        .filter((module) => module.category?.toLowerCase() === "settings")
+        .sort((a, b) => (a.order || 0) - (b.order || 0)); // Sort by order property, default to 0 if not present
 
     return (
         <>
@@ -43,6 +49,8 @@ const Settings = ({
                     userGroupTypes={userGroupTypes}
                     permissions={permissions}
                     moduleLists={moduleLists}
+                    accessibleRoutes={accessibleRoutes}
+                    settingsModules={settingsModules}
                 />
             </CBox>
         </>

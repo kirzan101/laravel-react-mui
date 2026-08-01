@@ -149,8 +149,15 @@ class ManageAccountService implements ManageAccountInterface
                 }
 
                 // Update user
-                $userData = $accountDTO->user;
-                $userResult = $this->user->updateUser($userData, $user->id);
+                $userDTO = $accountDTO->user;
+
+                // Check if user is first login
+                if (!$user->is_first_login) {
+                    // do not update the first_login field if the user is not on their first login
+                    $userDTO = $userDTO->isAlreadyLoggedIn($user->toArray()); // user here is the existing user model, we convert it to array to pass to the DTO
+                }
+
+                $userResult = $this->user->updateUser($userDTO, $user->id);
 
                 // Ensure user update was successful
                 $this->ensureSuccess($userResult->toArray(), 'User update failed!');
@@ -171,6 +178,10 @@ class ManageAccountService implements ManageAccountInterface
                 if (is_array($accountDTO->role_ids) && !empty($accountDTO->role_ids)) {
                     $manageRoleResult = $this->profileRole->updateMultipleProfileRoles($profile->id, $accountDTO->role_ids);
                     $this->ensureSuccess($manageRoleResult->toArray(), 'Profile roles update failed!');
+                } else {
+                    // If no role IDs are provided, remove all roles associated with the profile
+                    $removeRolesResult = $this->profileRole->removeProfileRolesByProfileId($profile->id);
+                    $this->ensureSuccess($removeRolesResult->toArray(), 'Failed to remove profile roles!');
                 }
 
                 return ModelResponse::success(200, Helper::SUCCESS, 'Profile updated successfully!', $profile, $profile->id);
