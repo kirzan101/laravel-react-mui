@@ -4,8 +4,9 @@ const UserAvatar = ({ avatarUrl, initials, size = 40 }) => {
     return (
         <Box
             sx={{
-                width: 1,
-                height: 1,
+                width: size,
+                height: size,
+                flexShrink: 0,
                 display: "flex",
                 justifyContent: "center",
                 alignItems: "center",
