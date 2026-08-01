@@ -25,8 +25,9 @@ class ProfileResource extends JsonResource
         return [
             'id' => $this->id,
             'full_name' => $this->getFullName(),
+            'initials' => $this->getInitials(),
             'name' => $this->getName(1),
-            'avatar' => $this->avatar,
+            'avatar' => $this->avatar ? \Illuminate\Support\Facades\Storage::url($this->avatar) : null,
             'first_name' => $this->first_name,
             'middle_name' => $this->middle_name,
             'last_name' => $this->last_name,
