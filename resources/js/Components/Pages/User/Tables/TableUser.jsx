@@ -1,7 +1,8 @@
 import { CDataGrid } from "@/Components";
+import { Box } from "@mui/material";
 
 import EditUser from "../Actions/EditUser";
-import { autocompleteClasses } from "@mui/material";
+import UserAvatar from "@/Components/Utilities/UserAvatar";
 
 const TableUser = ({
     flash,
@@ -21,20 +22,37 @@ const TableUser = ({
             width: 330,
             renderCell: (params) => {
                 return (
-                    <EditUser
-                        user={params.row}
-                        flash={flash}
-                        errors={errors}
-                        userGroups={userGroups}
-                        accountTypes={accountTypes}
-                        roles={roles}
-                        can={can}
+                    <Box
                         sx={{
-                            minHeight: 28,
-                            py: 0,
-                            m: 0,
+                            display: "flex",
+                            alignItems: "center",
+                            gap: 1,
+                            width: "100%",
+                            minWidth: 0,
                         }}
-                    />
+                    >
+                        <UserAvatar
+                            avatarUrl={params.row.avatar}
+                            initials={params.row.initials}
+                            size={32}
+                        />
+                        <Box sx={{ flex: 1, minWidth: 0 }}>
+                            <EditUser
+                                user={params.row}
+                                flash={flash}
+                                errors={errors}
+                                userGroups={userGroups}
+                                accountTypes={accountTypes}
+                                roles={roles}
+                                can={can}
+                                sx={{
+                                    minHeight: 28,
+                                    py: 0,
+                                    m: 0,
+                                }}
+                            />
+                        </Box>
+                    </Box>
                 );
             },
         },
