@@ -6,7 +6,7 @@ import {
     Box,
     Divider,
 } from "@mui/material";
-import { CTextField, CButton, CAlertError } from "@/Components";
+import { CTextField, CButton, CAlertError, CPasswordField } from "@/Components";
 import { useTheme, useMediaQuery } from "@mui/material";
 import { useState } from "react";
 import { router, Head, usePage } from "@inertiajs/react";
@@ -145,25 +145,25 @@ const FirstLogin = ({ flash, errors }) => {
                         )}
 
                         <form className="mt-2" onSubmit={handleSubmit}>
-                            <CTextField
+                            <CPasswordField
+                                id="new-password"
                                 fullWidth
                                 label="New Password"
                                 sx={{ mt: 2 }}
                                 value={form.password}
                                 onChange={handleChange("password")}
-                                type="password"
                                 error={!!errors.password}
                                 helperText={errors.password}
                                 autoComplete="current-password"
                             />
 
-                            <CTextField
+                            <CPasswordField
+                                id="confirm-password"
                                 fullWidth
                                 label="Confirm Password"
                                 sx={{ mt: 2 }}
                                 value={form.password_confirmation}
                                 onChange={handleChange("password_confirmation")}
-                                type="password"
                                 error={!!errors.password_confirmation}
                                 helperText={errors.password_confirmation}
                                 autoComplete="current-password"

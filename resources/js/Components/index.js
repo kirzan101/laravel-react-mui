@@ -78,6 +78,7 @@ export { default as CSwitchLabeled } from "./Customs/Switches/CSwitchLabeled";
 // TextFields
 export { default as CTextField } from "./Customs/TextFields/CTextField";
 export { default as CSearchField } from "./Customs/TextFields/CSearchField";
+export { default as CPasswordField } from "./Customs/TextFields/CPasswordField";
 
 // Customs Components end
 

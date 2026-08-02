@@ -6,7 +6,7 @@ import {
     Box,
     Divider,
 } from "@mui/material";
-import { CTextField, CButton, CAlertError } from "@/Components";
+import { CTextField, CButton, CAlertError, CPasswordField } from "@/Components";
 import { useTheme, useMediaQuery } from "@mui/material";
 import { useState } from "react";
 import { router, Head, usePage } from "@inertiajs/react";
@@ -133,13 +133,12 @@ const Login = ({ flash, errors }) => {
                                 autoComplete="username"
                             />
 
-                            <CTextField
+                            <CPasswordField
                                 fullWidth
                                 label="Password"
                                 sx={{ mt: 2 }}
                                 value={form.password}
                                 onChange={handleChange("password")}
-                                type="password"
                                 error={!!errors.password}
                                 helperText={errors.password}
                                 autoComplete="current-password"
