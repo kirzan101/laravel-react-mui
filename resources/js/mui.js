@@ -22,6 +22,10 @@ const buildPalette = (theme) => {
             primary: theme.colors.text.primary,
             secondary: theme.colors.text.secondary,
         },
+
+        buttonTextColor: {
+            main: theme.colors.buttonTextColor,
+        },
     };
 };
 

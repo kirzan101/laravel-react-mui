@@ -21,7 +21,7 @@ const CModalFull = ({
         width: "100vw",
         height: "100vh",
 
-        bgcolor: "background.paper",
+        bgcolor: "background.default",
 
         display: "flex",
         flexDirection: "column",

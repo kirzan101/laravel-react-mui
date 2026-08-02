@@ -3,8 +3,8 @@ import EditIcon from "@mui/icons-material/Edit";
 
 const CButtonEdit = ({
     size = "medium",
-    variant = "contained",
-    startIcon = <EditIcon />,
+    variant = "text",
+    endIcon = <EditIcon />,
     children = "Edit",
     sx,
     ...props
@@ -13,8 +13,15 @@ const CButtonEdit = ({
         <Button
             size={size}
             variant={variant}
-            startIcon={startIcon}
-            sx={{ m: 1, ...sx }}
+            endIcon={endIcon}
+            sx={{
+                m: 1,
+                ...sx,
+                color: (theme) => theme.palette.buttonTextColor.main,
+                "&:hover": {
+                    color: (theme) => theme.palette.buttonTextColor.main,
+                },
+            }}
             {...props}
         >
             {children}

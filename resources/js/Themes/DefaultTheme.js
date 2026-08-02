@@ -1,7 +1,8 @@
 const light = {
     mode: "light",
     colors: {
-        background: "#ECEFF1",
+        // background: "#ECEFF1",
+        background: "#FAFAFA",
         primary: "#13294B",
         secondary: "#c7960c",
         accent: "#185D33",
@@ -9,18 +10,18 @@ const light = {
         searchBg: "#FBFBFC",
         textField: "#13294B",
         closeText: "#13294B",
-
         text: {
             primary: "#111",
             secondary: "rgba(0,0,0,0.6)",
         },
+        buttonTextColor: "#13294B",
     },
 };
 
 const dark = {
     mode: "dark",
     colors: {
-        background: "#121212",
+        background: "#0f0f10",
         primary: "#13294B",
         secondary: "#b08521",
         accent: "#185D33",
@@ -32,6 +33,7 @@ const dark = {
             primary: "#fff",
             secondary: "rgba(255,255,255,0.7)",
         },
+        buttonTextColor: "#66B3FF",
     },
 };
 
