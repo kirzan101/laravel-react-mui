@@ -190,6 +190,28 @@ const AppLayout = ({ children }) => {
     }, [errors]);
     // End of Snackbar logic
 
+    // mobile keyboard behavior start
+    const [keyboardOpen, setKeyboardOpen] = useState(false);
+
+    useEffect(() => {
+        const viewport = window.visualViewport;
+
+        if (!viewport) return;
+
+        const handleResize = () => {
+            const keyboardHeight = window.innerHeight - viewport.height;
+
+            setKeyboardOpen(keyboardHeight > 150);
+        };
+
+        viewport.addEventListener("resize", handleResize);
+
+        return () => {
+            viewport.removeEventListener("resize", handleResize);
+        };
+    }, []);
+    // mobile keyboard behavior end
+
     return (
         <Box sx={{ display: "flex", width: "100%" }}>
             <CssBaseline />
@@ -331,24 +353,27 @@ const AppLayout = ({ children }) => {
                     <Box>{children}</Box>
                 </Fade>
 
-                <Box
-                    sx={{
-                        position: "fixed",
-                        bottom: 0,
-                        left: 0,
-                        right: 0,
-                        backgroundColor: "inherit",
-                        p: 1,
-                        textAlign: "center",
-                        borderTop: "1px solid",
-                        borderColor: "divider",
-                        fontSize: "0.875rem",
-                        color: "text.secondary",
-                    }}
-                >
-                    {appDeveloper} {new Date().getFullYear()} &copy; — v
-                    {appVersion}
-                </Box>
+                {!keyboardOpen && (
+                    <Box
+                        sx={{
+                            position: "fixed",
+                            bottom: 0,
+                            left: 0,
+                            right: 0,
+                            backgroundColor: "inherit",
+                            p: 1,
+                            textAlign: "center",
+                            borderTop: "1px solid",
+                            borderColor: "divider",
+                            fontSize: "0.875rem",
+                            color: "text.secondary",
+                            zIndex: 10,
+                        }}
+                    >
+                        {appDeveloper} {new Date().getFullYear()} &copy; — v
+                        {appVersion}
+                    </Box>
+                )}
 
                 <GlobalSnackbar ref={snackRef} />
             </Main>
