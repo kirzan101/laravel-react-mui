@@ -66,7 +66,12 @@ const AddModule = ({ flash, errors, can, categories, sx }) => {
                 onClose={() => setOpen(false)}
             >
                 <form onSubmit={handleSubmit}>
-                    <FormModule form={form} setForm={setForm} errors={errors} categories={categories} />
+                    <FormModule
+                        form={form}
+                        setForm={setForm}
+                        errors={errors}
+                        categories={categories}
+                    />
 
                     <Box
                         sx={{
@@ -76,7 +81,10 @@ const AddModule = ({ flash, errors, can, categories, sx }) => {
                         }}
                     >
                         <CButtonClose onClick={() => setOpen(false)} />
-                        <CButtonSubmit sx={{ ml: 1 }} loading={btnDisabled} />
+                        <CButtonSubmit
+                            sx={{ ml: 1, mr: 0 }}
+                            loading={btnDisabled}
+                        />
                     </Box>
                 </form>
             </CModal>

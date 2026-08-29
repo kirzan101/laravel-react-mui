@@ -77,7 +77,10 @@ const AddUserGroup = ({ flash, errors, can, userGroupTypes, sx }) => {
                         }}
                     >
                         <CButtonClose onClick={() => setOpen(false)} />
-                        <CButtonSubmit sx={{ ml: 1 }} loading={btnDisabled} />
+                        <CButtonSubmit
+                            sx={{ ml: 1, mr: 0 }}
+                            loading={btnDisabled}
+                        />
                     </Box>
                 </form>
             </CModal>

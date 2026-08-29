@@ -12,6 +12,7 @@ const CButtonClose = ({
 }) => {
     return (
         <Button
+            tabIndex={1}
             size={size}
             variant={variant}
             startIcon={startIcon}

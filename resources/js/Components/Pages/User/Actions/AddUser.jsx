@@ -91,10 +91,16 @@ const AddUser = ({
                             display: "flex",
                             justifyContent: "flex-end",
                             mt: 2,
+                            mx: 0,
                         }}
                     >
-                        <CButtonClose onClick={() => setOpen(false)} />
-                        <CButtonSubmit sx={{ ml: 1 }} loading={btnDisabled} />
+                        <CButtonClose
+                            onClick={() => setOpen(false)}
+                        />
+                        <CButtonSubmit
+                            sx={{ ml: 1, mr: 0 }}
+                            loading={btnDisabled}
+                        />
                     </Box>
                 </form>
             </CModal>

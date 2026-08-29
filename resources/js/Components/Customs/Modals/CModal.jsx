@@ -44,7 +44,7 @@ const CModal = ({
                             id="cmodal-title"
                             variant="h6"
                             component="h2"
-                            sx={{ mt: 1, mb: 4 }}
+                            sx={{ mt: 1, mb: 2 }}
                         >
                             {title}
                         </Typography>
