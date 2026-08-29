@@ -9,6 +9,9 @@ use LogicException;
 
 trait ActivityLoggerTrait
 {
+    /**
+     * This trait is NOT USED! USED THE ActivityLogService instead.
+     */
     public function logActivity(
         BaseResponse $result,
         Request $request,

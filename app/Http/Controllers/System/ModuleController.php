@@ -6,22 +6,20 @@ use App\DTOs\ModuleDTO;
 use App\Helpers\Helper;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ModuleFormRequest;
-use App\Interfaces\ActivityLogInterface;
+use App\Interfaces\ActivityLoggerInterface;
 use App\Interfaces\ModuleInterface;
 use App\Models\Module;
-use App\Traits\ActivityLoggerTrait;
 use App\Traits\ReturnMessageTrait;
 use Illuminate\Support\Facades\Gate;
 use Inertia\Inertia;
 
 class ModuleController extends Controller
 {
-    use ReturnMessageTrait,
-        ActivityLoggerTrait;
+    use ReturnMessageTrait;
 
     public function __construct(
         private ModuleInterface $module,
-        private ActivityLogInterface $activityLog
+        private ActivityLoggerInterface $activityLogger
     ) {}
 
     const MODULE_NAME = 'modules';
@@ -59,7 +57,8 @@ class ModuleController extends Controller
         $moduleDTO = ModuleDTO::fromRequest($request);
         $result = $this->module->storeModule($moduleDTO);
 
-        $this->logActivity($result, $request, self::MODULE_NAME, 'store');
+        // Log the activity
+        $this->activityLogger->addLog($result, $request, self::MODULE_NAME, 'store');
 
         return $this->returnMessage($result);
     }
@@ -80,7 +79,8 @@ class ModuleController extends Controller
         $moduleDTO = ModuleDTO::fromRequest($request);
         $result = $this->module->updateModule($moduleDTO, $id);
 
-        $this->logActivity($result, $request, self::MODULE_NAME, 'update');
+        // Log the activity
+        $this->activityLogger->addLog($result, $request, self::MODULE_NAME, 'update');
 
         return $this->returnMessage($result);
     }
@@ -105,7 +105,8 @@ class ModuleController extends Controller
         $request = clone request();
         $request->merge(['id' => $id]);
 
-        $this->logActivity($result, $request, self::MODULE_NAME, 'delete');
+        // Log the activity
+        $this->activityLogger->addLog($result, $request, self::MODULE_NAME, 'delete');
 
         return $this->returnMessage($result);
     }

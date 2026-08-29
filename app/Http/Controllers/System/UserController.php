@@ -9,7 +9,7 @@ use App\DTOs\UserDTO;
 use App\Helpers\Helper;
 use App\Http\Requests\UserFormRequest;
 use App\Http\Resources\IndexResource\UserGroupIndexResource;
-use App\Interfaces\ActivityLogInterface;
+use App\Interfaces\ActivityLoggerInterface;
 use App\Interfaces\FetchInterfaces\RoleFetchInterface;
 use App\Interfaces\FetchInterfaces\UserGroupFetchInterface;
 use App\Interfaces\ManageAccountInterface;
@@ -29,7 +29,7 @@ class UserController extends Controller
         private UserGroupFetchInterface $userGroupFetch,
         private RoleFetchInterface $roleFetch,
         private ManageAccountInterface $manageAccount,
-        private ActivityLogInterface $activityLog
+        private ActivityLoggerInterface $activityLogger
     ) {}
 
     /**
@@ -89,14 +89,7 @@ class UserController extends Controller
         }
 
         // Log the activity
-        $activityLogData = ActivityLogDTO::fromArray([
-            'module' => 'users',
-            'description' => $registerResult->message,
-            'status' => $registerResult->status,
-            'type' => 'create',
-            'properties' => $request->toArray(),
-        ]);
-        $this->activityLog->storeActivityLog($activityLogData);
+        $this->activityLogger->addLog($registerResult, $request, 'users', 'create');
 
         $this->refreshCache(); // Refresh the cache after creating a new user   
 
@@ -135,14 +128,7 @@ class UserController extends Controller
         }
 
         // Log the activity
-        $activityLogData = ActivityLogDTO::fromArray([
-            'module' => 'profiles',
-            'description' => $updateResult->message,
-            'status' => $updateResult->status,
-            'type' => 'update',
-            'properties' => $request->toArray(),
-        ]);
-        $this->activityLog->storeActivityLog($activityLogData);
+        $this->activityLogger->addLog($updateResult, $request, 'profiles', 'update');
 
         $this->refreshCache(); // Refresh the cache after updating the user
 
@@ -169,14 +155,7 @@ class UserController extends Controller
         }
 
         // Log the activity
-        $activityLogData = ActivityLogDTO::fromArray([
-            'module' => 'profiles',
-            'description' => $result->message,
-            'status' => $result->status,
-            'type' => 'update',
-            'properties' => ['profile_id' => $profileId],
-        ]);
-        $this->activityLog->storeActivityLog($activityLogData);
+        $this->activityLogger->addLog($result, $request, 'profiles', 'update');
 
         $this->refreshCache(); // Refresh the cache after changing the avatar
 

@@ -7,6 +7,7 @@ use App\Helpers\ErrorHelper;
 use App\Helpers\Helper;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\UserGroupFormRequest;
+use App\Interfaces\ActivityLoggerInterface;
 use App\Interfaces\FetchInterfaces\PermissionFetchInterface;
 use App\Interfaces\FetchInterfaces\UserGroupFetchInterface;
 use App\Interfaces\UserGroupInterface;
@@ -18,10 +19,11 @@ use Inertia\Inertia;
 class UserGroupController extends Controller
 {
     public function __construct(
-        private PermissionFetchInterface $permissionFetch,
         private UserGroupInterface $userGroup,
-        private UserGroupFetchInterface $userGroupFetch
+        private ActivityLoggerInterface $activityLogger
     ) {}
+
+    const MODULE_NAME = 'user_groups';
 
     /**
      * Display a listing of the resource.
@@ -57,6 +59,9 @@ class UserGroupController extends Controller
         $userGroupDTO = UserGroupDTO::fromArray($request->all());
         $storeResult = $this->userGroup->storeUserGroup($userGroupDTO);
 
+        // Log the activity
+        $this->activityLogger->addLog($storeResult, $request, self::MODULE_NAME, 'store');
+
         $productionErrorMessage = ErrorHelper::productionErrorMessage($storeResult->code, $storeResult->message);
         if ($storeResult->status === Helper::ERROR) {
             return Inertia::render('Error', [
@@ -84,6 +89,9 @@ class UserGroupController extends Controller
         $userGroupDTO = UserGroupDTO::fromArray($request->all());
         $updateResult = $this->userGroup->updateUserGroup($userGroupDTO, $id);
 
+        // Log the activity
+        $this->activityLogger->addLog($updateResult, $request, self::MODULE_NAME, 'update');
+
         $productionErrorMessage = ErrorHelper::productionErrorMessage($updateResult->code, $updateResult->message);
         if ($updateResult->status === Helper::ERROR) {
             return Inertia::render('Error', [
@@ -109,6 +117,11 @@ class UserGroupController extends Controller
         }
 
         $deleteResult = $this->userGroup->deleteUserGroup($id);
+
+        // add the id to the request for logging purposes
+        $request = clone request();
+        $request->merge(['id' => $id]);
+        $this->activityLogger->addLog($deleteResult, $request, self::MODULE_NAME, 'delete');
 
         $productionErrorMessage = ErrorHelper::productionErrorMessage($deleteResult->code, $deleteResult->message);
         if ($deleteResult->status === Helper::ERROR) {

@@ -6,19 +6,13 @@ use App\Helpers\Helper;
 use App\Http\Controllers\Controller;
 use App\Interfaces\FetchInterfaces\ModuleFetchInterface;
 use App\Interfaces\FetchInterfaces\PermissionFetchInterface;
-use App\Models\Role;
-use App\Models\UserGroup;
-use App\Traits\ActivityLoggerTrait;
 use App\Traits\ReturnMessageTrait;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\Gate;
 use Inertia\Inertia;
 
 class SettingsController extends Controller
 {
-    use ReturnMessageTrait,
-        ActivityLoggerTrait;
+    use ReturnMessageTrait;
 
     public function __construct(
         private PermissionFetchInterface $permissionFetch,

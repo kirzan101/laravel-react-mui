@@ -48,6 +48,7 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(\App\Interfaces\FetchInterfaces\RoleFetchInterface::class, \App\Services\FetchServices\RoleFetchService::class);
         $this->app->bind(\App\Interfaces\ModuleInterface::class, \App\Services\ModuleService::class);
         $this->app->bind(\App\Interfaces\FetchInterfaces\ModuleFetchInterface::class, \App\Services\FetchServices\ModuleFetchService::class);
+        $this->app->bind(\App\Interfaces\ActivityLoggerInterface::class, \App\Services\ActivityLoggerService::class);
     }
 
     /**

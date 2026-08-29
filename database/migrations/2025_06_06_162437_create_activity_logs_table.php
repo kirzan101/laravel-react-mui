@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('status')->nullable(); // e.g., pending, completed, failed
             $table->string('type'); // e.g., create, update, delete
             $table->json('properties')->nullable(); // JSON to store additional properties
+            $table->json('old_properties')->nullable(); // JSON to store old properties before the change
             $table->unsignedBigInteger('created_by')->nullable(); // User ID who created the log
             $table->unsignedBigInteger('updated_by')->nullable(); // User ID who updated the log
             $table->foreign('created_by')->references('id')->on('users');

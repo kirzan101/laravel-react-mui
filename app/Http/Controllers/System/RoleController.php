@@ -6,12 +6,11 @@ use App\DTOs\ManageRoleDTO;
 use App\Helpers\Helper;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\RoleFormRequest;
-use App\Interfaces\ActivityLogInterface;
+use App\Interfaces\ActivityLoggerInterface;
 use App\Interfaces\FetchInterfaces\PermissionFetchInterface;
 use App\Interfaces\ManageRoleInterface;
 use App\Interfaces\UserModuleInterface;
 use App\Models\Role;
-use App\Traits\ActivityLoggerTrait;
 use App\Traits\ReturnMessageTrait;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Gate;
@@ -19,14 +18,13 @@ use Inertia\Inertia;
 
 class RoleController extends Controller
 {
-    use ReturnMessageTrait,
-        ActivityLoggerTrait;
+    use ReturnMessageTrait;
 
     public function __construct(
         private UserModuleInterface $userModule,
         private PermissionFetchInterface $permissionFetch,
         private ManageRoleInterface $manageRole,
-        private ActivityLogInterface $activityLog
+        private ActivityLoggerInterface $activityLogger
     ) {}
 
     const MODULE_NAME = 'roles';
@@ -75,7 +73,7 @@ class RoleController extends Controller
         $manageRoleDTO = ManageRoleDTO::fromRequest($request);
         $result = $this->manageRole->storeRole($manageRoleDTO);
 
-        $this->logActivity($result, $request, self::MODULE_NAME, 'store');
+        $this->activityLogger->addLog($result, $request, self::MODULE_NAME, 'store');
 
         $this->refreshCache(); // Refresh the cache after creating the role
 
@@ -98,7 +96,7 @@ class RoleController extends Controller
         $manageRoleDTO = ManageRoleDTO::fromRequest($request);
         $result = $this->manageRole->updateRole($manageRoleDTO, $id);
 
-        $this->logActivity($result, $request, self::MODULE_NAME, 'update');
+        $this->activityLogger->addLog($result, $request, self::MODULE_NAME, 'update');
 
         $this->refreshCache(); // Refresh the cache after updating the role
 
@@ -125,7 +123,7 @@ class RoleController extends Controller
         $request = clone request();
         $request->merge(['id' => $id]);
 
-        $this->logActivity($result, $request, self::MODULE_NAME, 'delete');
+        $this->activityLogger->addLog($result, $request, self::MODULE_NAME, 'delete');
 
         $this->refreshCache(); // Refresh the cache after deleting the role
 

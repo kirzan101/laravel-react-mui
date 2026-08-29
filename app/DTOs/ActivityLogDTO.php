@@ -13,10 +13,37 @@ class ActivityLogDTO extends AuditableDTO
         public readonly ?string $status = null,
         public readonly ?string $type = null,
         public readonly ?array $properties = [],
+        public readonly ?array $old_properties = [],
         ?int $id = null,
         ?int $created_by = null,
         ?int $updated_by = null,
     ) {
         parent::__construct($id, $created_by, $updated_by);
+    }
+
+    /**
+     * Set properties
+     *
+     * @param array $properties
+     * @return self
+     */
+    public function withProperties(array $properties): self
+    {
+        $data = array_merge($this->toArray(), ['properties' => $properties]);
+
+        return self::fromArray($data);
+    }
+
+    /**
+     * Set old properties
+     *
+     * @param array $old_properties
+     * @return self
+     */
+    public function withOldProperties(array $old_properties): self
+    {
+        $data = array_merge($this->toArray(), ['old_properties' => $old_properties]);
+
+        return self::fromArray($data);
     }
 }

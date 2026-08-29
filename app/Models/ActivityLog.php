@@ -13,6 +13,7 @@ class ActivityLog extends Model
         'status',
         'type',
         'properties',
+        'old_properties',
         'created_by',
         'updated_by'
     ];
