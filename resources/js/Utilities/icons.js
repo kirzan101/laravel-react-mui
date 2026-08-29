@@ -5,6 +5,7 @@ import RoleIcon from "@mui/icons-material/VerifiedUser";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import PeopleIcon from '@mui/icons-material/People';
 import ViewModuleIcon from "@mui/icons-material/ViewModule";
+import HistoryIcon from '@mui/icons-material/History';
 
 export const iconMap = {
     DashboardIcon: DashboardIcon,
@@ -14,4 +15,5 @@ export const iconMap = {
     AccountCircleIcon: AccountCircleIcon,
     PeopleIcon: PeopleIcon,
     ViewModuleIcon: ViewModuleIcon,
+    HistoryIcon: HistoryIcon,
 };

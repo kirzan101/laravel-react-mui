@@ -13,6 +13,7 @@ const Settings = ({
     moduleLists,
     auth,
     modules,
+    categories,
 }) => {
     const page = usePage();
     const appName = page.props.appName || "Laravel React App";
@@ -51,6 +52,7 @@ const Settings = ({
                     moduleLists={moduleLists}
                     accessibleRoutes={accessibleRoutes}
                     settingsModules={settingsModules}
+                    categories={categories}
                 />
             </CBox>
         </>

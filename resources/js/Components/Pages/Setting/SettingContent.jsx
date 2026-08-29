@@ -3,6 +3,7 @@ import { iconMap } from "@/Utilities/icons";
 
 import UserGroupContent from "@/Components/Pages/UserGroup/UserGroupContent";
 import RoleContent from "@/Components/Pages/Role/RoleContent";
+import ModuleContent from "@/Components/Pages/Module/ModuleContent";
 
 import {
     Tabs,
@@ -28,6 +29,7 @@ const SettingContent = ({
     moduleLists,
     accessibleRoutes,
     settingsModules,
+    categories,
 }) => {
     const [value, setValue] = useState(0);
     const [showMessages, setShowMessages] = useState(true);
@@ -78,6 +80,17 @@ const SettingContent = ({
                 />
             ),
         },
+        // {
+        //     base_name: "modules",
+        //     component: (
+        //         <ModuleContent
+        //             flash={showMessages ? flash : defaultFlash}
+        //             errors={showMessages ? errors : defaultErrors}
+        //             can={can}
+        //             categories={categories}
+        //         />
+        //     ),
+        // },
     ];
 
     // Map settings modules to their corresponding tab content

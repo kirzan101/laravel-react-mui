@@ -37,6 +37,7 @@ Route::middleware(['auth'])->group(function () {
         Route::resource('users', \App\Http\Controllers\System\UserController::class)->only(['index', 'store', 'update']);
         Route::resource('user-groups', \App\Http\Controllers\System\UserGroupController::class)->only(['index', 'store', 'update', 'destroy']);
         Route::resource('roles', \App\Http\Controllers\System\RoleController::class)->only(['index', 'store', 'update', 'destroy']);
+        Route::get('activity-logs', [\App\Http\Controllers\System\ActivityLogController::class, 'index'])->name('activity-logs.index');
     });
 });
 

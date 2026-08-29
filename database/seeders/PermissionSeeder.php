@@ -25,24 +25,32 @@ class PermissionSeeder extends Seeder
                 'category' => null,
             ],
             [
+                'module' => 'activity_logs',
+                'icon' => 'HistoryIcon',
+                'types' => ['view'], // only view permission for activity logs
+                'order' => 2,
+                'category' => null,
+            ],
+            [
                 'module' => 'user_groups',
                 'icon' => 'GroupsIcon',
                 'types' => ['create', 'view', 'update'],
-                'order' => 2,
+                'order' => 3,
                 'category' => Helper::MODULE_CATEGORY_SETTINGS,
             ],
             [
                 'module' => 'roles',
                 'icon' => 'RoleIcon',
                 'types' => ['create', 'view', 'update'],
-                'order' => 3,
+                'order' => 4,
                 'category' => Helper::MODULE_CATEGORY_SETTINGS,
             ],
             // [
             //     'module' => 'modules',
             //     'icon' => 'ViewModuleIcon',
             //     'types' => ['create', 'view', 'update'],
-            //     'order' => 4,
+            //     'order' => 5,
+            //     'category' => Helper::MODULE_CATEGORY_SETTINGS,
             // ],
         ];
 
@@ -69,7 +77,7 @@ class PermissionSeeder extends Seeder
             Module::create([
                 'name' => Str::title(str_replace('_', ' ', $permission['module'])),
                 'icon' => $permission['icon'],
-                'category' => $permission['category'],
+                'category' => $permission['category'] ?? null,
                 'route' => '/' . str_replace('_', '-', $permission['module']),
                 'order' => $permission['order'],
                 'base_name' => $permission['module'],

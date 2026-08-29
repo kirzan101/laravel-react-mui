@@ -39,6 +39,9 @@ class RoleSeeder extends Seeder
                         'update',
                         'delete',
                     ],
+                    'activity_logs' => [
+                        'view',
+                    ],
                     // 'modules' => [
                     //     'create',
                     //     'view',
@@ -63,6 +66,9 @@ class RoleSeeder extends Seeder
                         'view',
                         'update',
                         'delete',
+                    ],
+                    'activity_logs' => [
+                        'view',
                     ],
                     'roles' => [
                         'create',
@@ -89,6 +95,9 @@ class RoleSeeder extends Seeder
                     'user_groups' => [
                         'view',
                     ],
+                    'activity_logs' => [
+                        'view',
+                    ],
                     'roles' => [
                         'view',
                     ],
@@ -107,6 +116,9 @@ class RoleSeeder extends Seeder
                     'user_groups' => [
                         'view',
                         'create',
+                    ],
+                    'activity_logs' => [
+                        'view',
                     ],
                     'roles' => [
                         'view',

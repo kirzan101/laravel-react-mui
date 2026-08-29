@@ -3,7 +3,9 @@
 namespace App\Http\Controllers\System;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
+use Inertia\Inertia;
+use App\Models\ActivityLog;
 
 class ActivityLogController extends Controller
 {
@@ -12,6 +14,13 @@ class ActivityLogController extends Controller
      */
     public function index()
     {
-        //
+        if (Gate::denies('view', new ActivityLog())) {
+            return Inertia::render('Error', [
+                'code' => 403,
+                'message' => 'You do not have permission to view this page.'
+            ]);
+        }
+
+        return Inertia::render('System/ActivityLogs', []);
     }
 }

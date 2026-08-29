@@ -41,6 +41,7 @@ class SettingsController extends Controller
             'userGroupTypes' => Helper::USER_GROUP_CODE_TYPES,      // user group props
             'permissions' => $permissions,                          // role props
             'moduleLists' => $moduleLists,                          // role props
+            'categories' => Helper::MODULE_CATEGORIES,              // module props
         ]);
     }
 
