@@ -57,6 +57,7 @@ class HandleInertiaRequests extends Middleware
 
         $profile = $auth?->profile;
         $profileId = $auth?->profile?->id;
+        $avatarUrl = $profile?->avatar ? route('uploads.show', ['path' => $profile->avatar]) : null;
 
         return array_merge(parent::share($request), [
             'appVersion' => env('APP_VERSION', '1.0.0'),
@@ -73,7 +74,8 @@ class HandleInertiaRequests extends Middleware
             },
             'auth' => Auth::check() ? [
                 'user' => [
-                    'avatar' => $profile?->avatar ? \Illuminate\Support\Facades\Storage::url($profile->avatar) : null,
+                    // 'avatar' => $profile?->avatar ? \Illuminate\Support\Facades\Storage::url($profile->avatar) : null,
+                    'avatar' => $avatarUrl,
                     'username' => $auth->username,
                     'name' => $profile?->getFullName(),
                     'initials' => $profile?->getInitials(),

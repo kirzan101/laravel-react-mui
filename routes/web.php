@@ -40,6 +40,17 @@ Route::middleware(['auth'])->group(function () {
         Route::resource('roles', \App\Http\Controllers\System\RoleController::class)->only(['index', 'store', 'update', 'destroy']);
         Route::get('activity-logs', [\App\Http\Controllers\System\ActivityLogController::class, 'index'])->name('activity-logs.index');
     });
+
+    // Route to serve uploaded files from the private disk
+    Route::get('/uploads/{path}', function (string $path) {
+        $disk = \Illuminate\Support\Facades\Storage::disk('private');
+
+        abort_unless($disk->exists($path), 404);
+
+        return response()->file($disk->path($path));
+    })
+        ->where('path', '.*')
+        ->name('uploads.show');
 });
 
 // Catch-all route for Inertia (must be defined last)

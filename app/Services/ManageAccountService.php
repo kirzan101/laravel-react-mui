@@ -386,12 +386,12 @@ class ManageAccountService implements ManageAccountInterface
                 ->firstOrFail();
 
             // Delete the existing avatar from storage if present
-            if (!empty($profile->avatar) && Storage::disk('public')->exists($profile->avatar)) {
-                Storage::disk('public')->delete($profile->avatar);
+            if (!empty($profile->avatar) && Storage::disk('private')->exists($profile->avatar)) {
+                Storage::disk('private')->delete($profile->avatar);
             }
 
             // Store the new avatar in the avatars folder
-            $avatarPath = $file->store('avatars', 'public');
+            $avatarPath = $file->store('avatars', 'private');
 
             if (!$avatarPath) {
                 throw new RuntimeException('Failed to store avatar file.');
@@ -436,8 +436,8 @@ class ManageAccountService implements ManageAccountInterface
                 ->firstOrFail();
 
             // Delete the existing avatar from storage if present
-            if (!empty($profile->avatar) && Storage::disk('public')->exists($profile->avatar)) {
-                Storage::disk('public')->delete($profile->avatar);
+            if (!empty($profile->avatar) && Storage::disk('private')->exists($profile->avatar)) {
+                Storage::disk('private')->delete($profile->avatar);
             }
 
             // Update profile to remove the avatar path
