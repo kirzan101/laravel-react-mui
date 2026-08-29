@@ -1,8 +1,10 @@
 import { Modal, Box, Typography, Fade, Button } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
+import { iconMap } from "../../../Utilities/icons";
 
 const CModalFull = ({
     title,
+    titleIcon,
     description,
     children,
     open,
@@ -31,6 +33,10 @@ const CModalFull = ({
         position: "relative", // FOR FAB POSITIONING
     };
 
+    // use the titleIcon prop to get the corresponding icon component from the iconMap
+    // uppercase the first letter of the titleIcon prop to match the key in the iconMap
+    const TitleIcon = titleIcon ? iconMap[titleIcon] : null;
+
     return (
         <Modal
             open={open}
@@ -56,14 +62,27 @@ const CModalFull = ({
                         >
                             {/* Left Side */}
                             <Box>
-                                {title && (
-                                    <Typography
-                                        id="cmodalfull-title"
-                                        variant="h6"
-                                        component="h2"
+                                {(titleIcon || title) && (
+                                    <Box
+                                        sx={{
+                                            display: "flex",
+                                            alignItems: "center",
+                                            gap: 1,
+                                            mb: 2,
+                                        }}
                                     >
-                                        {title}
-                                    </Typography>
+                                        {titleIcon && <TitleIcon />}
+
+                                        {title && (
+                                            <Typography
+                                                id="cmodalfull-title"
+                                                variant="h6"
+                                                component="h2"
+                                            >
+                                                {title}
+                                            </Typography>
+                                        )}
+                                    </Box>
                                 )}
 
                                 {description && (

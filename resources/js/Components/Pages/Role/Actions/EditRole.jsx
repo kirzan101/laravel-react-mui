@@ -116,6 +116,7 @@ const EditRole = ({
 
             <CModalFull
                 title="Edit Role"
+                titleIcon="EditIcon"
                 open={open}
                 onClose={() => setOpen(false)}
             >

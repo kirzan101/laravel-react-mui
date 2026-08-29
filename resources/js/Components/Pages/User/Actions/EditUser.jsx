@@ -116,6 +116,7 @@ const EditUser = ({
 
             <CModal
                 title={`Editing ${user.name}`}
+                titleIcon="EditIcon"
                 width={750}
                 open={open}
                 onClose={() => setOpen(false)}

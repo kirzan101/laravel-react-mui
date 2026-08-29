@@ -87,6 +87,7 @@ const AddRole = ({ flash, errors, sx, permissions, moduleLists, can }) => {
 
             <CModalFull
                 title="Add Role"
+                titleIcon="AddIcon"
                 open={open}
                 onClose={() => setOpen(false)}
             >

@@ -71,6 +71,7 @@ const AddUser = ({
 
             <CModal
                 title="Add User"
+                titleIcon="AddIcon"
                 width={750}
                 open={open}
                 onClose={() => setOpen(false)}
@@ -94,9 +95,7 @@ const AddUser = ({
                             mx: 0,
                         }}
                     >
-                        <CButtonClose
-                            onClick={() => setOpen(false)}
-                        />
+                        <CButtonClose onClick={() => setOpen(false)} />
                         <CButtonSubmit
                             sx={{ ml: 1, mr: 0 }}
                             loading={btnDisabled}

@@ -1,7 +1,9 @@
 import { Modal, Box, Typography, Fade } from "@mui/material";
+import { iconMap } from "../../../Utilities/icons";
 
 const CModal = ({
     title,
+    titleIcon,
     description,
     width = 400,
     children,
@@ -29,6 +31,10 @@ const CModal = ({
         py: 2,
     };
 
+    // use the titleIcon prop to get the corresponding icon component from the iconMap
+    // uppercase the first letter of the titleIcon prop to match the key in the iconMap
+    const TitleIcon = titleIcon ? iconMap[titleIcon] : null;
+
     return (
         <Modal
             open={open}
@@ -39,15 +45,28 @@ const CModal = ({
         >
             <Fade in={open} timeout={300}>
                 <Box sx={modalStyle}>
-                    {title && (
-                        <Typography
-                            id="cmodal-title"
-                            variant="h6"
-                            component="h2"
-                            sx={{ mt: 1, mb: 2 }}
+                    {(titleIcon || title) && (
+                        <Box
+                            sx={{
+                                display: "flex",
+                                alignItems: "center",
+                                gap: 1,
+                                mb: 2,
+                            }}
                         >
-                            {title}
-                        </Typography>
+                            {titleIcon && <TitleIcon />}
+
+                            {title && (
+                                <Typography
+                                    id="cmodal-title"
+                                    variant="h6"
+                                    component="h2"
+                                    sx={{ m: 0 }}
+                                >
+                                    {title}
+                                </Typography>
+                            )}
+                        </Box>
                     )}
 
                     {description && (

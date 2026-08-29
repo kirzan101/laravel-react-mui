@@ -57,6 +57,7 @@ const AddUserGroup = ({ flash, errors, can, userGroupTypes, sx }) => {
 
             <CModal
                 title="Add User Group"
+                titleIcon="AddIcon"
                 width={450}
                 open={open}
                 onClose={() => setOpen(false)}

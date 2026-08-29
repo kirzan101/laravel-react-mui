@@ -93,6 +93,7 @@ const EditUserGroup = ({
 
             <CModal
                 title={`Editing ${userGroup.name}`}
+                titleIcon="EditIcon"
                 width={450}
                 open={open}
                 onClose={() => setOpen(false)}
