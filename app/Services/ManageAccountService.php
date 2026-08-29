@@ -422,6 +422,49 @@ class ManageAccountService implements ManageAccountInterface
     }
 
     /**
+     * Remove profile avatar
+     *
+     * @param integer $profileId
+     * @return ModelResponse
+     */
+    public function removeProfileAvatar(int $profileId): ModelResponse
+    {
+        try {
+            // Get the profile by profile ID
+            $profile = $this->fetch
+                ->showQuery(Profile::class, $profileId)
+                ->firstOrFail();
+
+            // Delete the existing avatar from storage if present
+            if (!empty($profile->avatar) && Storage::disk('public')->exists($profile->avatar)) {
+                Storage::disk('public')->delete($profile->avatar);
+            }
+
+            // Update profile to remove the avatar path
+            $profile = $this->base->update($profile, [
+                'avatar' => null,
+                'updated_at' => now(),
+                'updated_by' => $this->currentUser->getProfileId(),
+            ]);
+
+            if (!$profile) {
+                throw new RuntimeException('Profile avatar removal failed!');
+            }
+
+            return ModelResponse::success(
+                200,
+                Helper::SUCCESS,
+                'Profile avatar removed successfully!',
+                $profile,
+                $profile->id
+            );
+        } catch (\Throwable $th) {
+            $code = $this->httpCode($th);
+            return ModelResponse::error($code, Helper::ERROR, $th->getMessage());
+        }
+    }
+
+    /**
      * check if the inputed password is correct
      *
      * @param integer $userId

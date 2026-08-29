@@ -20,7 +20,8 @@ Route::middleware(['auth'])->group(function () {
     Route::put('/change-password', [\App\Http\Controllers\System\AuthController::class, 'changePassword'])->name('change-password');
     Route::put('/reset-password/{userId}', [\App\Http\Controllers\System\AuthController::class, 'resetPassword'])->name('reset-password');
     Route::put('/set-user-status/{userId}', [\App\Http\Controllers\System\AuthController::class, 'setUserStatus'])->name('set-user-status');
-    Route::put('/change-avatar', [\App\Http\Controllers\System\UserController::class, 'changeAvatar'])->name('change-avatar');
+    Route::put('/change-avatar/{profileId?}', [\App\Http\Controllers\System\UserController::class, 'changeAvatar'])->name('change-avatar');
+    Route::put('/remove-avatar/{profileId?}', [\App\Http\Controllers\System\UserController::class, 'removeAvatar'])->name('remove-avatar');
 
     // Protected routes that require the user to have completed the first login process
     Route::middleware(['first.login'])->group(function () {

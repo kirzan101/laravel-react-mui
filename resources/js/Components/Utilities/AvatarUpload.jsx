@@ -13,6 +13,8 @@ import {
 } from "@mui/material";
 import PhotoCameraIcon from "@mui/icons-material/PhotoCamera";
 import VisibilityIcon from "@mui/icons-material/Visibility";
+import DeleteIcon from "@mui/icons-material/Delete";
+import { router } from "@inertiajs/react";
 
 const CROP_SIZE = 280;
 const OUTPUT_SIZE = 750; // change this if you want a different output size (in px)
@@ -268,6 +270,26 @@ const AvatarUpload = ({
         requestAnimationFrame(() => fileInputRef.current?.click());
     };
 
+    // Remove photo handler
+    const handleRemovePhoto = () => {
+        setViewOpen(false);
+        onChange?.(null, null);
+
+        router.post(
+            "/remove-avatar",
+            {
+                _method: "PUT",
+            },
+            {
+                forceFormData: true,
+                onSuccess: () => {},
+                onError: (errors) => {
+                    console.error("Error removing avatar", errors);
+                },
+            },
+        );
+    };
+
     // -------------------------------------------------------------------------
     // Render
     // -------------------------------------------------------------------------
@@ -370,6 +392,24 @@ const AvatarUpload = ({
                             sx={{ width: 200, height: 200 }}
                         />
                     </Box>
+                    {!disabled && (
+                        <Box
+                            sx={{
+                                display: "flex",
+                                justifyContent: "center",
+                            }}
+                        >
+                            <Button
+                                startIcon={<DeleteIcon />}
+                                variant="text"
+                                color="error"
+                                size="small"
+                                onClick={handleRemovePhoto}
+                            >
+                                Remove Photo
+                            </Button>
+                        </Box>
+                    )}
                 </DialogContent>
                 <DialogActions>
                     <Button

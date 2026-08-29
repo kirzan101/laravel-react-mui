@@ -163,6 +163,29 @@ class UserController extends Controller
     }
 
     /**
+     * Remove the avatar for the specified profile.
+     */
+    public function removeAvatar(?int $profileId = null)
+    {
+        // If profileId is not provided, use the authenticated user's profile ID
+        $profileId = $profileId ?? Auth::user()->profile->id;
+
+        // Call the service to handle avatar removal
+        $result = $this->manageAccount->removeProfileAvatar($profileId);
+
+        if ($result->status === Helper::ERROR) {
+            return redirect()->back()->with($result->status, $result->message);
+        }
+
+        // Log the activity
+        $this->activityLogger->addLog($result, request(), 'profiles', 'update');
+
+        $this->refreshCache(); // Refresh the cache after removing the avatar
+
+        return redirect()->back()->with($result->status, $result->message);
+    }
+
+    /**
      * Refresh the cache for the current user's permissions.
      */
     protected function refreshCache(): void

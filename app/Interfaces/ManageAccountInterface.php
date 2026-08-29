@@ -60,7 +60,7 @@ interface ManageAccountInterface
      * @return ModelResponse
      */
     public function firstLoginChangePassword(FirstLoginChangePasswordDTO $firstLoginChangePasswordDTO): ModelResponse;
-    
+
     /**
      * Change profile avatar
      *
@@ -69,4 +69,12 @@ interface ManageAccountInterface
      * @return ModelResponse
      */
     public function changeProfileAvatar(int $profileId, UploadedFile $file): ModelResponse;
+
+    /**
+     * Remove profile avatar
+     *
+     * @param integer $profileId
+     * @return ModelResponse
+     */
+    public function removeProfileAvatar(int $profileId): ModelResponse;
 }
