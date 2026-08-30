@@ -1,15 +1,19 @@
-import { CContainer, CBoxContent, CSearchField } from "@/Components";
-import { Typography, Alert, TextField, Grid } from "@mui/material";
-import { CButtonAdd, CTextField } from "@/Components";
+import { useEffect, useState, useCallback } from "react";
+import { Typography, Grid } from "@mui/material";
+import { CBoxContent, CSearchField } from "@/Components";
+
 import AddUserGroup from "./Actions/AddUserGroup";
 import AlertTransaction from "@/Components/Utilities/AlertTransaction";
 import TableUserGroup from "./Tables/TableUserGroup";
-import { useEffect, useState } from "react";
 
 const UserGroupContent = ({ flash, errors, can, userGroupTypes }) => {
     const [search, setSearch] = useState("");
     const [debouncedSearch, setDebouncedSearch] = useState("");
     const [refreshKey, setRefreshKey] = useState(0);
+
+    const refreshTable = useCallback(() => {
+        setRefreshKey((key) => key + 1);
+    }, []);
 
     useEffect(() => {
         const timer = setTimeout(() => {
@@ -18,10 +22,6 @@ const UserGroupContent = ({ flash, errors, can, userGroupTypes }) => {
 
         return () => clearTimeout(timer);
     }, [search]);
-
-    useEffect(() => {
-        if (flash) setRefreshKey((k) => k + 1);
-    }, [flash]);
 
     return (
         <CBoxContent>
@@ -50,6 +50,7 @@ const UserGroupContent = ({ flash, errors, can, userGroupTypes }) => {
                         errors={errors}
                         can={can}
                         userGroupTypes={userGroupTypes}
+                        onSuccess={refreshTable}
                     />
                 </Grid>
 
@@ -79,15 +80,16 @@ const UserGroupContent = ({ flash, errors, can, userGroupTypes }) => {
             </Grid>
 
             {/* Display flash messages if they exist */}
-            {flash && flash.error && <AlertTransaction flash={flash} />}
+            {flash?.error && <AlertTransaction flash={flash} />}
 
             <TableUserGroup
                 flash={flash}
                 errors={errors}
                 can={can}
                 userGroupTypes={userGroupTypes}
-                refreshKey={refreshKey}
                 search={debouncedSearch}
+                refreshKey={refreshKey}
+                onRefresh={refreshTable}
             />
         </CBoxContent>
     );

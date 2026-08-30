@@ -13,6 +13,7 @@ const AddUser = ({
     roles,
     can,
     sx,
+    onSuccess,
 }) => {
     const [open, setOpen] = useState(false);
     const [btnDisabled, setBtnDisabled] = useState(false);
@@ -48,6 +49,9 @@ const AddUser = ({
 
                 // reset form value
                 handleResetForm();
+
+                // call onSuccess callback if provided
+                onSuccess?.();
             },
             onError: () => {
                 // emits("notification", "Some fields has an error.", "error");

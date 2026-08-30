@@ -1,5 +1,5 @@
+import { useEffect, useState } from "react";
 import { CModal, CButtonEdit, CButtonClose, CButtonSubmit } from "@/Components";
-import { useEffect, userEffect, useState } from "react";
 
 import EditLabel from "@/Components/Utilities/EditLabel";
 import FormUserGroup from "./Forms/FormUserGroup";
@@ -13,6 +13,7 @@ const EditUserGroup = ({
     can,
     sx,
     userGroupTypes,
+    onSuccess,
 }) => {
     const [open, setOpen] = useState(false);
     const [btnDisabled, setBtnDisabled] = useState(false);
@@ -63,6 +64,9 @@ const EditUserGroup = ({
 
                     // reset form value
                     handleResetForm();
+
+                    // call onSuccess callback if provided
+                    onSuccess?.();
                 },
                 onError: () => {
                     // emits("notification", "Some fields has an error.", "error");

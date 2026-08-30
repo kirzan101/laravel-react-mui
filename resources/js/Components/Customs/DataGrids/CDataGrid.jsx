@@ -12,7 +12,6 @@ const CDataGrid = ({
 }) => {
     const [rows, setRows] = useState([]);
     const [loading, setLoading] = useState(false);
-
     const [rowCount, setRowCount] = useState(0);
 
     const [paginationModel, setPaginationModel] = useState({
@@ -55,12 +54,7 @@ const CDataGrid = ({
 
     useEffect(() => {
         fetchData();
-    }, [
-        paginationModel,
-        sortModel,
-        queryParams.search,
-        queryParams.refreshKey,
-    ]);
+    }, [fetchData]);
 
     return (
         <DataGrid

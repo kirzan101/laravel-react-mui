@@ -19,6 +19,14 @@ import {
 import { useEffect, useState } from "react";
 
 const DRAWER_WIDTH = 200;
+const DEFAULT_FLASH = {
+    success: null,
+    error: null,
+    info: null,
+    warning: null,
+};
+
+const DEFAULT_ERRORS = {};
 
 const SettingContent = ({
     flash,
@@ -46,23 +54,14 @@ const SettingContent = ({
         setShowMessages(false);
     };
 
-    const defaultFlash = {
-        success: null,
-        error: null,
-        info: null,
-        warning: null,
-    };
-
-    const defaultErrors = {};
-
     // list of contents for each setting module
     const settingTabContents = [
         {
             base_name: "user_groups",
             component: (
                 <UserGroupContent
-                    flash={showMessages ? flash : defaultFlash}
-                    errors={showMessages ? errors : defaultErrors}
+                    flash={showMessages ? flash : DEFAULT_FLASH}
+                    errors={showMessages ? errors : DEFAULT_ERRORS}
                     can={can}
                     userGroupTypes={userGroupTypes}
                 />
@@ -72,8 +71,8 @@ const SettingContent = ({
             base_name: "roles",
             component: (
                 <RoleContent
-                    flash={showMessages ? flash : defaultFlash}
-                    errors={showMessages ? errors : defaultErrors}
+                    flash={showMessages ? flash : DEFAULT_FLASH}
+                    errors={showMessages ? errors : DEFAULT_ERRORS}
                     permissions={permissions}
                     moduleLists={moduleLists}
                     can={can}
@@ -84,8 +83,8 @@ const SettingContent = ({
         //     base_name: "modules",
         //     component: (
         //         <ModuleContent
-        //             flash={showMessages ? flash : defaultFlash}
-        //             errors={showMessages ? errors : defaultErrors}
+        //             flash={showMessages ? flash : DEFAULT_FLASH}
+        //             errors={showMessages ? errors : DEFAULT_ERRORS}
         //             can={can}
         //             categories={categories}
         //         />

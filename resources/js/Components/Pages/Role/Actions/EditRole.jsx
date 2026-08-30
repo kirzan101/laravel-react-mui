@@ -1,8 +1,5 @@
 import {
     CModalFull,
-    CButtonAdd,
-    CButtonClose,
-    CButtonSubmit,
     CCard,
     CCardContent,
     CFabSubmit,
@@ -24,6 +21,7 @@ const EditRole = ({
     permissions,
     moduleLists,
     can,
+    onSuccess,
 }) => {
     const [open, setOpen] = useState(false);
     const [btnDisabled, setBtnDisabled] = useState(false);
@@ -86,6 +84,9 @@ const EditRole = ({
 
                     // reset form value
                     handleResetForm();
+
+                    // call onSuccess callback if provided
+                    onSuccess?.();
                 },
                 onError: () => {
                     // emits("notification", "Some fields has an error.", "error");

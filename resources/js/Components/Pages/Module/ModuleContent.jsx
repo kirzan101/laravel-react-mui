@@ -1,15 +1,19 @@
-import { CContainer, CBoxContent, CSearchField } from "@/Components";
-import { Typography, Alert, TextField, Grid } from "@mui/material";
-import { CButtonAdd, CTextField } from "@/Components";
+import { useEffect, useState, useCallback } from "react";
+import { CBoxContent, CSearchField } from "@/Components";
+import { Typography, Grid } from "@mui/material";
+
 import AddModule from "./Actions/AddModule";
 import AlertTransaction from "@/Components/Utilities/AlertTransaction";
 import TableModule from "./Tables/TableModule";
-import { useEffect, useState } from "react";
 
 const ModuleContent = ({ flash, errors, can, categories }) => {
     const [search, setSearch] = useState("");
     const [debouncedSearch, setDebouncedSearch] = useState("");
     const [refreshKey, setRefreshKey] = useState(0);
+
+    const refreshTable = useCallback(() => {
+        setRefreshKey((key) => key + 1);
+    }, []);
 
     useEffect(() => {
         const timer = setTimeout(() => {
@@ -18,10 +22,6 @@ const ModuleContent = ({ flash, errors, can, categories }) => {
 
         return () => clearTimeout(timer);
     }, [search]);
-
-    useEffect(() => {
-        if (flash) setRefreshKey((k) => k + 1);
-    }, [flash]);
 
     return (
         <CBoxContent>
@@ -50,6 +50,7 @@ const ModuleContent = ({ flash, errors, can, categories }) => {
                         errors={errors}
                         can={can}
                         categories={categories}
+                        onSuccess={refreshTable}
                     />
                 </Grid>
 
@@ -79,7 +80,7 @@ const ModuleContent = ({ flash, errors, can, categories }) => {
             </Grid>
 
             {/* Display flash error messages if they exist */}
-            {flash && flash.error && <AlertTransaction flash={flash} />}
+            {flash?.error && <AlertTransaction flash={flash} />}
 
             <TableModule
                 flash={flash}
@@ -88,6 +89,7 @@ const ModuleContent = ({ flash, errors, can, categories }) => {
                 categories={categories}
                 refreshKey={refreshKey}
                 search={debouncedSearch}
+                onRefresh={refreshTable}
             />
         </CBoxContent>
     );

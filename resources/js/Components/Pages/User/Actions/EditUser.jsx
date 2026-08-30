@@ -1,5 +1,5 @@
 import { CModal, CButtonEdit, CButtonClose, CButtonSubmit } from "@/Components";
-import { useEffect, userEffect, useState } from "react";
+import { useEffect, useState } from "react";
 
 import EditLabel from "@/Components/Utilities/EditLabel";
 import FormUser from "./Forms/FormUser";
@@ -15,6 +15,7 @@ const EditUser = ({
     roles,
     can,
     sx,
+    onSuccess,
 }) => {
     const [open, setOpen] = useState(false);
     const [btnDisabled, setBtnDisabled] = useState(false);
@@ -70,7 +71,7 @@ const EditUser = ({
         event.preventDefault();
 
         // Add profileId to the form data
-        form.profile_id = user.id; // user here is profile, not user model
+        form = { ...form, profile_id: user.id }; // user here is profile, not user model
 
         // submission here
         router.post(
@@ -86,6 +87,9 @@ const EditUser = ({
 
                     // reset form value
                     handleResetForm();
+
+                    // call onSuccess callback if provided
+                    onSuccess?.();
                 },
                 onError: () => {
                     // emits("notification", "Some fields has an error.", "error");

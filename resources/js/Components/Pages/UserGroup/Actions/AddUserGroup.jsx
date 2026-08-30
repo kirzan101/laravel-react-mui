@@ -5,7 +5,14 @@ import FormUserGroup from "./Forms/FormUserGroup";
 import { Box } from "@mui/material";
 import { router } from "@inertiajs/react";
 
-const AddUserGroup = ({ flash, errors, can, userGroupTypes, sx }) => {
+const AddUserGroup = ({
+    flash,
+    errors,
+    can,
+    userGroupTypes,
+    sx,
+    onSuccess,
+}) => {
     const [open, setOpen] = useState(false);
     const [btnDisabled, setBtnDisabled] = useState(false);
 
@@ -35,6 +42,9 @@ const AddUserGroup = ({ flash, errors, can, userGroupTypes, sx }) => {
 
                 // reset form value
                 handleResetForm();
+
+                // call onSuccess callback if provided
+                onSuccess?.();
             },
             onError: () => {
                 // emits("notification", "Some fields has an error.", "error");

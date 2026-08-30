@@ -1,21 +1,19 @@
-import { CContainer, CBoxContent, CSearchField } from "@/Components";
-import { Typography, Alert, TextField, Grid } from "@mui/material";
-import { CButtonAdd, CTextField } from "@/Components";
+import { useEffect, useState, useCallback } from "react";
+import { Typography, Grid } from "@mui/material";
+import { CBoxContent, CSearchField } from "@/Components";
+
 import AddRole from "./Actions/AddRole";
 import AlertTransaction from "@/Components/Utilities/AlertTransaction";
 import TableRole from "./Tables/TableRole";
-import { useEffect, useState } from "react";
 
-const RoleContent = ({
-    flash,
-    errors,
-    permissions,
-    moduleLists,
-    can,
-}) => {
+const RoleContent = ({ flash, errors, permissions, moduleLists, can }) => {
     const [search, setSearch] = useState("");
     const [debouncedSearch, setDebouncedSearch] = useState("");
     const [refreshKey, setRefreshKey] = useState(0);
+
+    const refreshTable = useCallback(() => {
+        setRefreshKey((key) => key + 1);
+    }, []);
 
     useEffect(() => {
         const timer = setTimeout(() => {
@@ -24,10 +22,6 @@ const RoleContent = ({
 
         return () => clearTimeout(timer);
     }, [search]);
-
-    useEffect(() => {
-        if (flash) setRefreshKey((k) => k + 1);
-    }, [flash]);
 
     return (
         <CBoxContent>
@@ -57,6 +51,7 @@ const RoleContent = ({
                         permissions={permissions}
                         moduleLists={moduleLists}
                         can={can}
+                        onSuccess={refreshTable}
                     />
                 </Grid>
 
@@ -86,7 +81,7 @@ const RoleContent = ({
             </Grid>
 
             {/* Display flash messages if they exist */}
-            {flash && flash.error && <AlertTransaction flash={flash} />}
+            {flash?.error && <AlertTransaction flash={flash} />}
 
             <TableRole
                 flash={flash}
@@ -96,6 +91,7 @@ const RoleContent = ({
                 moduleLists={moduleLists}
                 refreshKey={refreshKey}
                 search={debouncedSearch}
+                onRefresh={refreshTable}
             />
         </CBoxContent>
     );

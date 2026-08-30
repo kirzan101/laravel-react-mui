@@ -1,12 +1,20 @@
+import { useEffect, useState } from "react";
 import { CModal, CButtonEdit, CButtonClose, CButtonSubmit } from "@/Components";
-import { useEffect, userEffect, useState } from "react";
 
 import EditLabel from "@/Components/Utilities/EditLabel";
 import FormModule from "./Forms/FormModule";
 import { Box } from "@mui/material";
 import { router } from "@inertiajs/react";
 
-const EditModule = ({ module, flash, errors, can, categories, sx }) => {
+const EditModule = ({
+    module,
+    flash,
+    errors,
+    can,
+    categories,
+    sx,
+    onSuccess,
+}) => {
     const [open, setOpen] = useState(false);
     const [btnDisabled, setBtnDisabled] = useState(false);
 
@@ -64,6 +72,9 @@ const EditModule = ({ module, flash, errors, can, categories, sx }) => {
 
                     // reset form value
                     handleResetForm();
+
+                    // call onSuccess callback if provided
+                    onSuccess?.();
                 },
                 onError: () => {
                     // emits("notification", "Some fields has an error.", "error");

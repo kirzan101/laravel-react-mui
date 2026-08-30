@@ -1,20 +1,26 @@
+import { useState } from "react";
 import {
     CModalFull,
     CButtonAdd,
-    CButtonClose,
-    CButtonSubmit,
     CCard,
     CCardContent,
     CFabSubmit,
 } from "@/Components";
-import { useState } from "react";
+import { router } from "@inertiajs/react";
+import { Box, Grid, Typography } from "@mui/material";
 
 import FormRole from "./Forms/FormRole";
-import { Box, Divider, Fab, Grid, Table, Typography } from "@mui/material";
-import { router } from "@inertiajs/react";
 import SelectRolePermissions from "../Fields/SelectRolePermissions";
 
-const AddRole = ({ flash, errors, sx, permissions, moduleLists, can }) => {
+const AddRole = ({
+    flash,
+    errors,
+    sx,
+    permissions,
+    moduleLists,
+    can,
+    onSuccess,
+}) => {
     const [open, setOpen] = useState(false);
     const [btnDisabled, setBtnDisabled] = useState(false);
 
@@ -55,6 +61,9 @@ const AddRole = ({ flash, errors, sx, permissions, moduleLists, can }) => {
 
                 // reset form value
                 handleResetForm();
+
+                // call onSuccess callback if provided
+                onSuccess?.();
             },
             onError: () => {
                 // emits("notification", "Some fields has an error.", "error");

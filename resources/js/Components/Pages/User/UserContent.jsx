@@ -1,9 +1,9 @@
-import { CContainer, CBoxContent, CSearchField } from "@/Components";
-import { Typography, Alert, TextField, Grid } from "@mui/material";
-import { CButtonAdd, CTextField } from "@/Components";
+import { useEffect, useState, useCallback } from "react";
+import { Typography, Grid } from "@mui/material";
+import { CBoxContent, CSearchField } from "@/Components";
+
 import AddUser from "./Actions/AddUser";
 import TableUser from "./Tables/TableUser";
-import { useEffect, useState } from "react";
 import AlertTransaction from "@/Components/Utilities/AlertTransaction";
 
 const UserContent = ({
@@ -18,6 +18,10 @@ const UserContent = ({
     const [debouncedSearch, setDebouncedSearch] = useState("");
     const [refreshKey, setRefreshKey] = useState(0);
 
+    const refreshTable = useCallback(() => {
+        setRefreshKey((key) => key + 1);
+    }, []);
+
     useEffect(() => {
         const timer = setTimeout(() => {
             setDebouncedSearch(search);
@@ -25,10 +29,6 @@ const UserContent = ({
 
         return () => clearTimeout(timer);
     }, [search]);
-
-    useEffect(() => {
-        if (flash) setRefreshKey((k) => k + 1);
-    }, [flash]);
 
     return (
         <CBoxContent>
@@ -59,6 +59,7 @@ const UserContent = ({
                         accountTypes={accountTypes}
                         roles={roles}
                         can={can}
+                        onSuccess={refreshTable}
                     />
                 </Grid>
 
@@ -88,7 +89,7 @@ const UserContent = ({
             </Grid>
 
             {/* Display flash messages if they exist */}
-            {flash && flash.error && <AlertTransaction flash={flash} />}
+            {flash?.error && <AlertTransaction flash={flash} />}
 
             <TableUser
                 flash={flash}
@@ -99,6 +100,7 @@ const UserContent = ({
                 accountTypes={accountTypes}
                 roles={roles}
                 can={can}
+                onRefresh={refreshTable}
             />
         </CBoxContent>
     );

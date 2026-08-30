@@ -1,24 +1,29 @@
 import { CDataGrid } from "@/Components";
+import { useMemo } from "react";
 
 import EditUserGroup from "../Actions/EditUserGroup";
-import { autocompleteClasses } from "@mui/material";
 
 const TableUserGroup = ({
     flash,
     errors,
     search,
     refreshKey,
+    onRefresh,
     can,
     userGroupTypes,
 }) => {
-    const columns = [
-        { field: "id", headerName: "ID", width: 70 },
-        {
-            field: "name",
-            headerName: "Name",
-            width: 300,
-            renderCell: (params) => {
-                return (
+    const columns = useMemo(
+        () => [
+            {
+                field: "id",
+                headerName: "ID",
+                width: 70,
+            },
+            {
+                field: "name",
+                headerName: "Name",
+                width: 300,
+                renderCell: (params) => (
                     <EditUserGroup
                         userGroup={params.row}
                         flash={flash}
@@ -30,19 +35,37 @@ const TableUserGroup = ({
                             py: 0,
                             m: 0,
                         }}
+                        onSuccess={onRefresh}
                     />
-                );
+                ),
             },
-        },
-        { field: "code", headerName: "Code", width: 150 },
-        { field: "description", headerName: "Description", width: 150 },
-    ];
+            {
+                field: "code",
+                headerName: "Code",
+                width: 150,
+            },
+            {
+                field: "description",
+                headerName: "Description",
+                width: 150,
+            },
+        ],
+        [flash, errors, can, userGroupTypes, onRefresh],
+    );
+
+    const queryParams = useMemo(
+        () => ({
+            search,
+            refreshKey,
+        }),
+        [search, refreshKey],
+    );
 
     return (
         <CDataGrid
             url="/user-groups"
             columns={columns}
-            queryParams={{ refreshKey, search }}
+            queryParams={queryParams}
         />
     );
 };
