@@ -2,9 +2,9 @@ import { CBox } from "@/Components";
 import { Typography, Breadcrumbs, Link } from "@mui/material";
 import { Head, usePage, router } from "@inertiajs/react";
 
-// import ModuleContent from "@/Components/Pages/Module/ModuleContent";
+import ActivityLogContent from "@/Components/Pages/ActivityLog/ActivityLogContent";
 
-const ActivityLogs = ({ flash, errors, can, categories }) => {
+const ActivityLogs = ({ flash, errors, can }) => {
     const page = usePage();
     const appName = page.props.appName || "Laravel React App";
 
@@ -26,12 +26,7 @@ const ActivityLogs = ({ flash, errors, can, categories }) => {
                     </Typography>
                 </Breadcrumbs>
 
-                {/* <ModuleContent
-                    flash={flash}
-                    errors={errors}
-                    can={can}
-                    categories={categories}
-                /> */}
+                <ActivityLogContent flash={flash} errors={errors} can={can} />
             </CBox>
         </>
     );

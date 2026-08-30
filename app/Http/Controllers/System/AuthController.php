@@ -8,6 +8,7 @@ use App\Helpers\ErrorHelper;
 use App\Helpers\Helper;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\System\ChangePasswordFormRequest;
+use App\Interfaces\ActivityLoggerInterface;
 use App\Interfaces\AuthInterface;
 use App\Interfaces\CurrentUserInterface;
 use App\Interfaces\ManageAccountInterface;
@@ -21,7 +22,8 @@ class AuthController extends Controller
     public function __construct(
         private AuthInterface $auth,
         private ManageAccountInterface $manageAccount,
-        private CurrentUserInterface $currentUser
+        private CurrentUserInterface $currentUser,
+        private ActivityLoggerInterface $activityLogger
     ) {}
 
     /**
@@ -53,6 +55,9 @@ class AuthController extends Controller
         // Set a global version for permissions caching if it doesn't exist
         Cache::add("permissions.version.global", 1, now()->addYears(10));
 
+        // Log the successful login activity
+        $this->activityLogger->addLog($loginResult, $request, 'auth', 'login', $this->currentUser->getProfileId());
+
         return redirect()->intended();
     }
 
@@ -74,6 +79,11 @@ class AuthController extends Controller
                 'error' => $logoutResult->message,
             ]);
         }
+
+        // Log the successful logout activity
+        $request = request(); // Get the current request instance
+        $request->merge(['user_id' => $this->currentUser->getUserId()]); // Add username to the request for logging
+        $this->activityLogger->addLog($logoutResult, $request, 'auth', 'logout', $profileId);
 
         return redirect()->route('login');
     }
@@ -108,6 +118,9 @@ class AuthController extends Controller
             ]);
         }
 
+        // Log the successful password change activity
+        $this->activityLogger->addLog($changePasswordResult, $request, 'auth', 'change_password', $profileId);
+
         // Success → redirect back with flash message
         return redirect()->back()->with($changePasswordResult->status, $changePasswordResult->message);
     }
@@ -130,6 +143,11 @@ class AuthController extends Controller
             ]);
         }
 
+        // Log the successful password reset activity
+        $request = request(); // Get the current request instance
+        $request->merge(['user_id' => $userId]); // Add user_id to the request for logging
+        $this->activityLogger->addLog($resetResult, $request, 'auth', 'reset_password', $this->currentUser->getProfileId());
+
         // Success → redirect back with flash message
         return redirect()->back()->with($resetResult->status, $resetResult->message);
     }
@@ -151,6 +169,11 @@ class AuthController extends Controller
                 'message' => $productionErrorMessage,
             ]);
         }
+
+        // Log the successful user status change activity
+        $request = request(); // Get the current request instance
+        $request->merge(['user_id' => $userId]); // Add user_id to the request for logging
+        $this->activityLogger->addLog($statusResult, $request, 'auth', 'set_user_status', $this->currentUser->getProfileId());
 
         // Success → redirect back with flash message
         return redirect()->back()->with($statusResult->status, $statusResult->message);
@@ -196,6 +219,11 @@ class AuthController extends Controller
                 'message' => $productionErrorMessage,
             ]);
         }
+
+        // Log the successful first login password change activity
+        // add profile_id to the request for logging
+        $request->merge(['profile_id' => $this->currentUser->getProfileId()]);
+        $this->activityLogger->addLog($changePasswordResult, $request, 'auth', 'first_login_change_password', $this->currentUser->getProfileId());
 
         // Success → redirect to dashboard with flash message
         return redirect()->route('dashboard')->with($changePasswordResult->status, $changePasswordResult->message);

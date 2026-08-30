@@ -29,49 +29,25 @@ class CurrentUserService implements CurrentUserInterface
     /**
      * get the authenticated user's profile ID.
      *
-     * @return integer
+     * @return integer|null
      */
     public function getProfileId(): ?int
     {
         $user = $this->getUser();
 
-        if (app()->environment('local')) {
-            // If no user or profile in local, return fallback
-            if (!$user || !$user->profile?->id) {
-                // return 1;
-            }
-        }
-
-        // For non-local environments, fail if missing
-        if (!$user || !$user->profile?->id) {
-            throw new RuntimeException('Authenticated user or profile not found.');
-        }
-
-        return $user->profile->id;
+        return $user?->profile?->id;
     }
 
     /**
      * Get the authenticated user's ID.
      *
-     * @return integer
+     * @return integer|null
      */
     public function getUserId(): ?int
     {
         $user = $this->getUser();
 
-        if (app()->environment('local')) {
-            // If no user or profile in local, return fallback
-            if (!$user || !$user->id) {
-                // return 1;
-            }
-        }
-
-        // For non-local environments, fail if missing
-        if (!$user || !$user->id) {
-            throw new RuntimeException('Authenticated user or profile not found.');
-        }
-
-        return $user->id;
+        return $user?->id;
     }
 
     /**
@@ -96,9 +72,9 @@ class CurrentUserService implements CurrentUserInterface
     /**
      * Get the authenticated user.
      *
-     * @return User
+     * @return User|null
      */
-    private function getUser(): User
+    private function getUser(): ?User
     {
         if ($this->cachedUser === null) {
             $this->cachedUser = Auth::user();

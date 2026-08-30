@@ -39,9 +39,9 @@ class ActivityLogService implements ActivityLogInterface
     {
         try {
             return DB::transaction(function () use ($activityLogDTO) {
-                $currentProfileId = $this->currentUser->getProfileId();
+                $currentProfileId = ($activityLogDTO->processed_by ?? $this->currentUser->getProfileId());
 
-                $activityLogData = $activityLogDTO->withDefaultAudit($currentProfileId)->toArray();
+                $activityLogData = $activityLogDTO->withProcessedBy($currentProfileId)->toArray();
                 $activityLog = $this->base->store(ActivityLog::class, $activityLogData);
 
                 return ModelResponse::success(201, Helper::SUCCESS, 'Activity log created successfully!', $activityLog, $activityLog->id);
@@ -66,9 +66,9 @@ class ActivityLogService implements ActivityLogInterface
 
                 $activityLog = $this->fetch->showQuery(ActivityLog::class, $activityLogId)->firstOrFail();
 
-                $currentProfileId = $this->currentUser->getProfileId();
+                $currentProfileId = ($activityLogDTO->processed_by ?? $this->currentUser->getProfileId());
                 $activityLogData = ActivityLogDTO::fromModel($activityLog, $activityLogDTO->toArray())
-                    ->touchUpdatedBy($currentProfileId)
+                    ->withProcessedBy($currentProfileId)
                     ->toArray();
 
                 $activityLog = $this->base->update($activityLog, $activityLogData);
@@ -92,15 +92,6 @@ class ActivityLogService implements ActivityLogInterface
         try {
             return DB::transaction(function () use ($activityLogId) {
                 $activityLog = $this->fetch->showQuery(ActivityLog::class, $activityLogId)->firstOrFail();
-
-                if ($this->modelUsesSoftDeletes($activityLog)) {
-                    if ($this->modelHasColumn($activityLog, 'updated_by')) {
-                        // record who deleted the activity log
-                        $this->base->update($activityLog, [
-                            'updated_by' => $this->currentUser->getProfileId(),
-                        ]);
-                    }
-                }
 
                 $this->base->delete($activityLog);
 

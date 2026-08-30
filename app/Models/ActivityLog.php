@@ -14,31 +14,21 @@ class ActivityLog extends Model
         'type',
         'properties',
         'old_properties',
-        'created_by',
-        'updated_by'
+        'processed_by',
     ];
 
     protected $casts = [
         'properties' => 'array', // Store properties as an array
+        'old_properties' => 'array', // Store old_properties as an array
     ];
 
     /**
-     * Get the profile that created this activity log.
+     * Get the profile that processed this activity log.
      *
      * @return BelongsTo
      */
-    public function createdBy(): BelongsTo
+    public function processedBy(): BelongsTo
     {
-        return $this->belongsTo(Profile::class, 'created_by');
-    }
-
-    /**
-     * Get the profile that last updated this activity log.
-     *
-     * @return BelongsTo
-     */
-    public function updatedBy(): BelongsTo
-    {
-        return $this->belongsTo(Profile::class, 'updated_by');
+        return $this->belongsTo(Profile::class, 'processed_by');
     }
 }

@@ -2,7 +2,7 @@
 
 namespace App\DTOs;
 
-class ActivityLogDTO extends AuditableDTO
+class ActivityLogDTO extends BaseDTO
 {
     /**
      * Create a new ActivityLogDTO instance.
@@ -14,11 +14,10 @@ class ActivityLogDTO extends AuditableDTO
         public readonly ?string $type = null,
         public readonly ?array $properties = [],
         public readonly ?array $old_properties = [],
+        public readonly ?int $processed_by = null,
         ?int $id = null,
-        ?int $created_by = null,
-        ?int $updated_by = null,
     ) {
-        parent::__construct($id, $created_by, $updated_by);
+        parent::__construct($id);
     }
 
     /**
@@ -43,6 +42,19 @@ class ActivityLogDTO extends AuditableDTO
     public function withOldProperties(array $old_properties): self
     {
         $data = array_merge($this->toArray(), ['old_properties' => $old_properties]);
+
+        return self::fromArray($data);
+    }
+
+    /**
+     * Set processed_by
+     *
+     * @param int|null $processed_by
+     * @return self
+     */
+    public function withProcessedBy(?int $processed_by): self
+    {
+        $data = array_merge($this->toArray(), ['processed_by' => $processed_by]);
 
         return self::fromArray($data);
     }

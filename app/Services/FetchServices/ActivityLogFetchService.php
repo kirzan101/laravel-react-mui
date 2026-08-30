@@ -37,14 +37,6 @@ class ActivityLogFetchService implements ActivityLogFetchInterface
                 $query->with($resourceClass::$relations ?? []);
             }
 
-            if (isset($request['search']) && !empty($request['search'])) {
-                $search = $request['search'];
-                $query->where(function ($q) use ($search) {
-                    $q->where('module', 'like', "%{$search}%")
-                        ->orWhere('description', 'like', "%{$search}%");
-                });
-            }
-
             if (!empty($request['status'])) {
                 $status = $request['status'];
                 $query->where('status', $status);
@@ -53,6 +45,26 @@ class ActivityLogFetchService implements ActivityLogFetchInterface
             if (!empty($request['type'])) {
                 $type = $request['type'];
                 $query->where('type', $type);
+            }
+
+            if (!empty($request['processed_by'])) {
+                $processed_by = $request['processed_by'];
+                $query->where('processed_by', $processed_by);
+            }
+
+            // process date range filter, will use created_at field for filtering
+            if (!empty($request['start_date']) && !empty($request['end_date'])) {
+                $start_date = $request['start_date'];
+                $end_date = $request['end_date'];
+                $query->whereBetween('created_at', [$start_date, $end_date]);
+            }
+
+            if (isset($request['search']) && !empty($request['search'])) {
+                $search = $request['search'];
+                $query->where(function ($q) use ($search) {
+                    $q->where('module', 'like', "%{$search}%")
+                        ->orWhere('description', 'like', "%{$search}%");
+                });
             }
 
             if ($isPaginated) {

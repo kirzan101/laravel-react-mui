@@ -19,10 +19,7 @@ return new class extends Migration
             $table->string('type'); // e.g., create, update, delete
             $table->json('properties')->nullable(); // JSON to store additional properties
             $table->json('old_properties')->nullable(); // JSON to store old properties before the change
-            $table->unsignedBigInteger('created_by')->nullable(); // User ID who created the log
-            $table->unsignedBigInteger('updated_by')->nullable(); // User ID who updated the log
-            $table->foreign('created_by')->references('id')->on('users');
-            $table->foreign('updated_by')->references('id')->on('users');
+            $table->foreignId('processed_by')->nullable()->constrained('profiles')->onDelete('set null');
             $table->timestamps();
         });
     }

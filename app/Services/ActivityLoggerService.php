@@ -74,10 +74,11 @@ class ActivityLoggerService implements ActivityLoggerInterface
                 'type' => $type,
                 'properties' => $request->except(self::EXCLUDED_FIELDS),
                 'old_properties' => $old_properties,
+                'processed_by' => $processedBy,
             ]);
 
             if ($processedBy !== null) {
-                $activityLogDTO = $activityLogDTO->withDefaultAudit($processedBy);
+                $activityLogDTO = $activityLogDTO->withProcessedBy($processedBy);
             }
 
             $activityLogResult = $this->activityLog->storeActivityLog($activityLogDTO);
