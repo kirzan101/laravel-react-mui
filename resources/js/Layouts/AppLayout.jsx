@@ -33,6 +33,7 @@ import { router, usePage } from "@inertiajs/react";
 import ProfileNav from "./Components/ProfileNav";
 import SidebarItem from "./Components/SidebarItem";
 import GlobalSnackbar from "../Components/Utilities/GlobalSnackbar";
+import Logout from "../Components/Pages/Auth/Logout";
 
 const drawerWidth = 245;
 
@@ -136,24 +137,8 @@ const AppLayout = ({ children }) => {
     // Responsive drawer behavior
     const isMobile = useMediaQuery(theme.breakpoints.down("md"));
 
-    const handleLogout = () => {
-        // prevent multiple clicks
-        // Will not use the button disabled state as it may cause UI issues, but this will prevent multiple logout requests
-        if (btnDisabled) return; // Prevent if already disabled
-
-        router.post(
-            "/logout",
-            {},
-            {
-                onBefore: () => {
-                    setBtnDisabled(true);
-                },
-                onFinish: () => {
-                    setBtnDisabled(false);
-                },
-            },
-        );
-    };
+    // logout modal state
+    const [logoutOpen, setLogoutOpen] = useState(false);
 
     const handleDrawerOpen = () => setOpen(true);
     const handleDrawerClose = () => setOpen(false);
@@ -243,11 +228,15 @@ const AppLayout = ({ children }) => {
                     <Button
                         color="inherit"
                         variant="text"
-                        onClick={handleLogout}
+                        onClick={() => setLogoutOpen(true)}
                         startIcon={<LogoutIcon />}
                     >
                         Logout
                     </Button>
+                    <Logout
+                        open={logoutOpen}
+                        onClose={() => setLogoutOpen(false)}
+                    />
                 </Toolbar>
 
                 {/* Environment warning for UAT environment */}

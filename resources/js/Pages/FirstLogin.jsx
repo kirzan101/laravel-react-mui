@@ -10,6 +10,8 @@ import { CTextField, CButton, CAlertError, CPasswordField } from "@/Components";
 import { useTheme, useMediaQuery } from "@mui/material";
 import { useState } from "react";
 import { router, Head, usePage } from "@inertiajs/react";
+import LogoutIcon from "@mui/icons-material/Logout";
+import Logout from "@/Components/Pages/Auth/Logout";
 
 import EmptyLayout from "@/Layouts/EmptyLayout";
 
@@ -59,6 +61,9 @@ const FirstLogin = ({ flash, errors }) => {
             },
         });
     };
+
+    // logout modal state
+    const [logoutOpen, setLogoutOpen] = useState(false);
 
     return (
         <>
@@ -178,6 +183,21 @@ const FirstLogin = ({ flash, errors }) => {
                             >
                                 UPDATE PASSWORD
                             </CButton>
+
+                            <CButton
+                                fullWidth
+                                sx={{ mt: 2, mx: 0 }}
+                                loading={btnDisabled}
+                                loadingPosition="start"
+                                color="error"
+                                onClick={() => setLogoutOpen(true)}
+                            >
+                                LOGOUT
+                            </CButton>
+                            <Logout
+                                open={logoutOpen}
+                                onClose={() => setLogoutOpen(false)}
+                            />
                         </form>
 
                         <Divider sx={{ my: 2 }} />

@@ -9,6 +9,7 @@ import HistoryIcon from '@mui/icons-material/History';
 import AddIcon from '@mui/icons-material/Add';
 import EditIcon from '@mui/icons-material/Edit';
 import QuestionMarkIcon from '@mui/icons-material/QuestionMark';
+import LogoutIcon from "@mui/icons-material/Logout";
 
 export const iconMap = {
     DashboardIcon: DashboardIcon,
@@ -22,4 +23,5 @@ export const iconMap = {
     AddIcon: AddIcon,
     EditIcon: EditIcon,
     QuestionMarkIcon: QuestionMarkIcon,
+    LogoutIcon: LogoutIcon,
 };
