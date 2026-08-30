@@ -36,8 +36,14 @@ trait DefaultPaginateFilterTrait
         $sort = strtolower($request['sort'] ?? 'desc');
         $sort = in_array($sort, ['asc', 'desc']) ? $sort : 'desc';
 
-        $currentPage = isset($request['current_page']) && is_numeric($request['current_page']) && $request['current_page'] > 0
-            ? (int) $request['current_page']
+        // commented out the current_page logic to prioritize 'page' parameter if provided
+        // $currentPage = isset($request['current_page']) && is_numeric($request['current_page']) && $request['current_page'] > 0
+        //     ? (int) $request['current_page']
+        //     : 1;
+
+        // If 'page' is provided in the request, it takes precedence over 'current_page'
+        $currentPage = isset($request['page']) && is_numeric($request['page']) && $request['page'] > 0
+            ? (int) $request['page']
             : 1;
 
         return [

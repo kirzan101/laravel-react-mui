@@ -26,45 +26,45 @@ const EditRole = ({
     const [open, setOpen] = useState(false);
     const [btnDisabled, setBtnDisabled] = useState(false);
 
-    const [form, setForm] = useState({
-        id: null,
-        name: "",
-        is_active: true,
-        description: "",
-        permissionIds: [],
+    const getFormData = (role) => ({
+        id: role?.id ?? null,
+        name: role?.name ?? "",
+        is_active: role?.is_active ?? true,
+        description: role?.description ?? "",
+        permissionIds:
+            role?.rolePermissions?.map((perm) => perm.permission_id) || [],
     });
+
+    const [form, setForm] = useState(getFormData(role));
+
+    // Store the original form value for logging purposes
+    const [oldForm, setOldForm] = useState(null);
 
     // update form value when role props change
     useEffect(() => {
-        if (!role) return;
-
-        setForm({
-            id: role?.id || null,
-            name: role?.name || "",
-            is_active: role?.is_active ?? true,
-            description: role?.description || "",
-            permissionIds:
-                role?.rolePermissions?.map((perm) => perm.permission_id) || [],
-        });
+        setForm(getFormData(role));
     }, [role]);
+
+    // Open modal
+    const handleOpen = () => {
+        const initialForm = getFormData(role);
+
+        setForm(initialForm);
+        setOldForm({ ...initialForm });
+        setOpen(true);
+    };
+
+    const handleClose = () => {
+        setOpen(false);
+        setForm(getFormData(null));
+        setOldForm(null);
+    };
 
     const handlePermissionsChange = (permissions) => {
         setForm((prev) => ({
             ...prev,
             permissionIds: permissions,
         }));
-    };
-
-    // reset form value to initial state
-    const handleResetForm = () => {
-        setForm({
-            id: role?.id || null,
-            name: role?.name || "",
-            is_active: role?.is_active ?? true,
-            description: role?.description || "",
-            permissionIds:
-                role?.rolePermissions?.map((perm) => perm.permission_id) || [],
-        });
     };
 
     const handleSubmit = (event) => {
@@ -76,14 +76,12 @@ const EditRole = ({
             {
                 _method: "PUT",
                 ...form,
+                old_properties: oldForm, // add old_properties to the form data for logging purposes
             },
             {
                 forceFormData: true,
                 onSuccess: ({ props }) => {
-                    setOpen(false);
-
-                    // reset form value
-                    handleResetForm();
+                    handleClose();
 
                     // call onSuccess callback if provided
                     onSuccess?.();
@@ -108,7 +106,7 @@ const EditRole = ({
     return (
         <>
             {canUpdateRole ? (
-                <CButtonEdit sx={sx} onClick={() => setOpen(true)}>
+                <CButtonEdit sx={sx} onClick={handleOpen}>
                     {role.name}
                 </CButtonEdit>
             ) : (
@@ -119,7 +117,7 @@ const EditRole = ({
                 title="Edit Role"
                 titleIcon="EditIcon"
                 open={open}
-                onClose={() => setOpen(false)}
+                onClose={handleClose}
             >
                 <form onSubmit={handleSubmit}>
                     <Grid container spacing={4}>

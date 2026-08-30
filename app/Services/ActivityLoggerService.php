@@ -34,8 +34,10 @@ class ActivityLoggerService implements ActivityLoggerInterface
 
     /**
      * Fields to exclude from logging
+     * 
+     * Note: removed the older 'old_properties' from the excluded fields as it is now being handled separately
      */
-    const EXCLUDED_FIELDS = ['_token', '_method', 'password', 'password_confirmation'];
+    const EXCLUDED_FIELDS = ['_token', '_method', 'password', 'password_confirmation', 'forceFormData', 'old_properties'];
 
     /**
      * Add an activity log entry.

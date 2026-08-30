@@ -120,7 +120,10 @@ const FormUser = ({
                             {...params}
                             label="Contact Numbers"
                             error={!!errors.contact_numbers}
-                            helperText={errors.contact_numbers}
+                            helperText={
+                                errors.contact_numbers ??
+                                "Hit enter after typing a number to add it to the list."
+                            }
                         />
                     )}
                 />

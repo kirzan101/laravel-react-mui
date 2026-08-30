@@ -18,35 +18,39 @@ const EditUserGroup = ({
     const [open, setOpen] = useState(false);
     const [btnDisabled, setBtnDisabled] = useState(false);
 
-    const [form, setForm] = useState({
-        id: null,
-        name: "",
-        code: "",
-        description: "",
+    const getFormData = (userGroup) => ({
+        id: userGroup?.id ?? null,
+        name: userGroup?.name ?? "",
+        code: userGroup?.code ?? "",
+        description: userGroup?.description ?? "",
     });
+
+    const [form, setForm] = useState(getFormData(userGroup));
+
+    // Store the original form value for logging purposes
+    const [oldForm, setOldForm] = useState(null);
 
     // update form value when userGroup props change
     useEffect(() => {
-        if (!userGroup) return;
-
-        setForm({
-            id: userGroup?.id || null,
-            name: userGroup?.name || "",
-            code: userGroup?.code || "",
-            description: userGroup?.description || "",
-        });
+        setForm(getFormData(userGroup));
     }, [userGroup]);
 
-    // reset form value to initial state
-    const handleResetForm = () => {
-        setForm({
-            id: userGroup?.id || null,
-            name: userGroup?.name || "",
-            code: userGroup?.code || "",
-            description: userGroup?.description || "",
-        });
+    // Open modal
+    const handleOpen = () => {
+        const initialForm = getFormData(userGroup);
+
+        setForm(initialForm);
+        setOldForm({ ...initialForm });
+        setOpen(true);
     };
 
+    const handleClose = () => {
+        setOpen(false);
+        setForm(getFormData(null));
+        setOldForm(null);
+    };
+
+    // reset form value to initial state
     const handleSubmit = (event) => {
         event.preventDefault();
 
@@ -57,13 +61,11 @@ const EditUserGroup = ({
                 _method: "PUT",
                 forceFormData: true,
                 ...form,
+                old_properties: oldForm, // add old_properties to the form data for logging purposes
             },
             {
                 onSuccess: ({ props }) => {
-                    setOpen(false);
-
-                    // reset form value
-                    handleResetForm();
+                    handleClose();
 
                     // call onSuccess callback if provided
                     onSuccess?.();
@@ -88,7 +90,7 @@ const EditUserGroup = ({
     return (
         <>
             {canUpdate ? (
-                <CButtonEdit sx={sx} onClick={() => setOpen(true)}>
+                <CButtonEdit sx={sx} onClick={handleOpen}>
                     {userGroup.name}
                 </CButtonEdit>
             ) : (
@@ -100,7 +102,7 @@ const EditUserGroup = ({
                 titleIcon="EditIcon"
                 width={450}
                 open={open}
-                onClose={() => setOpen(false)}
+                onClose={handleClose}
             >
                 <form onSubmit={handleSubmit}>
                     <FormUserGroup
@@ -117,7 +119,7 @@ const EditUserGroup = ({
                             mt: 2,
                         }}
                     >
-                        <CButtonClose onClick={() => setOpen(false)} />
+                        <CButtonClose onClick={handleClose} />
                         <CButtonSubmit
                             sx={{ ml: 1, mr: 0 }}
                             loading={btnDisabled}

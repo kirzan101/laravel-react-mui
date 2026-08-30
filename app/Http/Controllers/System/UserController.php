@@ -155,6 +155,11 @@ class UserController extends Controller
         }
 
         // Log the activity
+        // log the file type and size in bytes
+        $request->merge([
+            'avatar_file_type' => $file->getClientMimeType(),
+            'avatar_file_size' => $file->getSize(),
+        ]);
         $this->activityLogger->addLog($result, $request, 'profiles', 'update');
 
         $this->refreshCache(); // Refresh the cache after changing the avatar
@@ -169,6 +174,7 @@ class UserController extends Controller
     {
         // If profileId is not provided, use the authenticated user's profile ID
         $profileId = $profileId ?? Auth::user()->profile->id;
+        $currentAvatarPath = Auth::user()->profile->avatar; // copy temporary for logging
 
         // Call the service to handle avatar removal
         $result = $this->manageAccount->removeProfileAvatar($profileId);
@@ -178,7 +184,13 @@ class UserController extends Controller
         }
 
         // Log the activity
-        $this->activityLogger->addLog($result, request(), 'profiles', 'update');
+        // log the current avatar path before removal
+        $request = request(); // Get the current request instance
+        $request->merge([
+            'removed_avatar_path' => $currentAvatarPath,
+            'profile_id' => $profileId,
+        ]);
+        $this->activityLogger->addLog($result, $request, 'profiles', 'update');
 
         $this->refreshCache(); // Refresh the cache after removing the avatar
 

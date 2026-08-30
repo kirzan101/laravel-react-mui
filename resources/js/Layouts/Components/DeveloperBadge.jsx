@@ -4,6 +4,8 @@ import { useTheme } from "@mui/material/styles";
 
 const DeveloperBadge = ({ user }) => {
     const consideredDeveloper = [
+        "software quality assurance",
+        "software developer",
         "system analyst",
         "software engineer",
         "full stack developer",

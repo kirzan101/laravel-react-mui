@@ -54,24 +54,32 @@ const EditUser = ({
 
     const [form, setForm] = useState(buildEmptyForm);
 
+    // Store the original form value for logging purposes
+    const [oldForm, setOldForm] = useState(null);
+
     useEffect(() => {
         if (!user) return;
         setForm(buildFormFromUser(user));
     }, [user]);
 
-    const handleResetForm = () => {
-        if (user) {
-            setForm(buildFormFromUser(user));
-        } else {
-            setForm(buildEmptyForm());
-        }
+    const handleOpen = () => {
+        if (!user) return;
+
+        const initialForm = buildFormFromUser(user);
+
+        setForm(initialForm);
+        setOldForm({ ...initialForm });
+        setOpen(true);
+    };
+
+    const handleClose = () => {
+        setOpen(false);
+        setForm(buildEmptyForm());
+        setOldForm(null);
     };
 
     const handleSubmit = (event) => {
         event.preventDefault();
-
-        // Add profileId to the form data
-        form = { ...form, profile_id: user.id }; // user here is profile, not user model
 
         // submission here
         router.post(
@@ -80,13 +88,12 @@ const EditUser = ({
                 _method: "PUT",
                 forceFormData: true,
                 ...form,
+                profile_id: user.id, // user here is profile, not user model
+                old_properties: oldForm, // add old_properties to the form data for logging purposes
             },
             {
                 onSuccess: ({ props }) => {
-                    setOpen(false);
-
-                    // reset form value
-                    handleResetForm();
+                    handleClose();
 
                     // call onSuccess callback if provided
                     onSuccess?.();
@@ -111,7 +118,7 @@ const EditUser = ({
     return (
         <>
             {canUpdate ? (
-                <CButtonEdit sx={sx} onClick={() => setOpen(true)}>
+                <CButtonEdit sx={sx} onClick={handleOpen}>
                     {user.name}
                 </CButtonEdit>
             ) : (
@@ -123,7 +130,7 @@ const EditUser = ({
                 titleIcon="EditIcon"
                 width={750}
                 open={open}
-                onClose={() => setOpen(false)}
+                onClose={handleClose}
             >
                 <form onSubmit={handleSubmit}>
                     <FormUser
@@ -143,7 +150,7 @@ const EditUser = ({
                             mt: 2,
                         }}
                     >
-                        <CButtonClose onClick={() => setOpen(false)} />
+                        <CButtonClose onClick={handleClose} />
                         <CButtonSubmit
                             sx={{ ml: 1, mr: 0 }}
                             loading={btnDisabled}

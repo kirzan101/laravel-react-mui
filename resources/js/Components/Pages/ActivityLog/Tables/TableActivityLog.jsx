@@ -1,5 +1,7 @@
-import { CDataGrid } from "@/Components";
 import { useMemo } from "react";
+import { CDataGrid } from "@/Components";
+
+import ShowActivityLogDetails from "@/Components/Pages/ActivityLog/Actions/ShowActivityLogDetails";
 
 const TableActivityLog = ({
     flash,
@@ -35,6 +37,24 @@ const TableActivityLog = ({
                 field: "created_at",
                 headerName: "Processed At",
                 width: 200,
+            },
+            {
+                field: "details",
+                headerName: "Details",
+                flex: 1,
+                sortable: false,
+                renderCell: (params) => {
+                    return (
+                        <ShowActivityLogDetails
+                            activityLog={params.row}
+                            sx={{
+                                minHeight: 28,
+                                py: 0,
+                                m: 0,
+                            }}
+                        />
+                    );
+                },
             },
         ],
         [flash, errors, can, onRefresh],
