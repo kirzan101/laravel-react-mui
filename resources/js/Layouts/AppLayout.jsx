@@ -339,31 +339,29 @@ const AppLayout = ({ children }) => {
                 <DrawerHeader />
 
                 <Fade in={true} timeout={500}>
-                    <Box>{children}</Box>
-                </Fade>
-
-                {!keyboardOpen && (
                     <Box
                         sx={{
-                            position: "fixed",
-                            bottom: 0,
-                            left: 0,
-                            right: 0,
-                            backgroundColor: "inherit",
-                            p: 1,
-                            textAlign: "center",
-                            borderTop: "1px solid",
-                            borderColor: "divider",
-                            fontSize: "0.875rem",
-                            color: "text.secondary",
-                            zIndex: 10,
+                            display: "flex",
+                            flexDirection: "column",
                         }}
                     >
-                        {appDeveloper} {new Date().getFullYear()} &copy; — v
-                        {appVersion}
-                    </Box>
-                )}
+                        <Box component="main">{children}</Box>
 
+                        <Box
+                            component="footer"
+                            sx={{
+                                py: 3,
+                                px: 2,
+                                backgroundColor: "inherit",
+                                flexShrink: 0,
+                                textAlign: "center",
+                            }}
+                        >
+                            {appDeveloper} {new Date().getFullYear()} &copy; — v
+                            {appVersion}
+                        </Box>
+                    </Box>
+                </Fade>
                 <GlobalSnackbar ref={snackRef} />
             </Main>
         </Box>

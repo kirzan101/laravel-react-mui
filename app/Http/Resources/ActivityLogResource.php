@@ -31,12 +31,17 @@ class ActivityLogResource extends JsonResource
             'properties' => $this->properties,
             'old_properties' => $this->old_properties,
             'processed_by' => $this->processed_by,
+            'processed_by_avatar' => $this->processedBy?->avatar ? route('uploads.show', ['path' => $this->processedBy->avatar]) : null,
+            'processed_by_initials' => $this->processedBy?->getInitials(),
             'processed_by_name' => $this->processedByName(),
             'created_at' => $this->returnShortDateTime($this->created_at),
             'updated_at' => $this->returnShortDateTime($this->updated_at),
         ];
     }
 
+    /**
+     * Get the name of the user who processed the activity.
+     */
     private function processedByName(): ?string
     {
         return $this->processedBy?->getName() ?? '-';

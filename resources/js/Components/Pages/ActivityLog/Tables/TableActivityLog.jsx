@@ -1,7 +1,10 @@
 import { useMemo } from "react";
+import { Box } from "@mui/material";
 import { CDataGrid } from "@/Components";
 
 import ShowActivityLogDetails from "@/Components/Pages/ActivityLog/Actions/ShowActivityLogDetails";
+import UserAvatar from "@/Components/Utilities/UserAvatar";
+import ProcessBy from "@/Components/Utilities/ProcessBy";
 
 const TableActivityLog = ({
     flash,
@@ -31,7 +34,28 @@ const TableActivityLog = ({
             {
                 field: "processed_by_name",
                 headerName: "Processed By",
-                width: 200,
+                width: 250,
+                renderCell: (params) => {
+                    return (
+                        <Box
+                            sx={{
+                                display: "flex",
+                                alignItems: "center",
+                                justifyContent: "center",
+                                width: "100%",
+                                height: "100%",
+                                minWidth: 0,
+                            }}
+                        >
+                            <ProcessBy
+                                avatarUrl={params.row.processed_by_avatar}
+                                initials={params.row.processed_by_initials}
+                                name={params.row.processed_by_name}
+                                fontSize={14}
+                            />
+                        </Box>
+                    );
+                },
             },
             {
                 field: "created_at",
