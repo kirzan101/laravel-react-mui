@@ -204,6 +204,26 @@ export const getTheme = (mode = "light") => {
             // =====================================================
             // ✅ END OVERRIDES FOR TABS (LEFT SIDEBAR)
             // =====================================================
+
+            // =====================================================
+            // ✅ OVERRIDES FOR TEXTFIELDS
+            // =====================================================
+            MuiTextField: {
+                styleOverrides: {
+                    root: ({ theme }) => ({
+                        '& input[type="date"]::-webkit-calendar-picker-indicator':
+                            {
+                                filter:
+                                    theme.palette.mode === "dark"
+                                        ? "invert(1)"
+                                        : "none",
+                            },
+                    }),
+                },
+            },
+            // =====================================================
+            // ✅ END OVERRIDES FOR TEXTFIELDS
+            // =====================================================
         },
 
         transitions: {

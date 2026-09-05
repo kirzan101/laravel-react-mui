@@ -44,10 +44,12 @@ const CTextField = ({
     isReadonly = false,
     tabIndex,
     slotProps = {},
+    type,
     ...props
 }) => (
     <TextField
         {...props}
+        type={type}
         fullWidth
         size="small"
         variant="outlined"
@@ -59,6 +61,11 @@ const CTextField = ({
             input: {
                 ...slotProps.input,
                 readOnly: isReadonly,
+            },
+
+            inputLabel: {
+                ...slotProps.inputLabel,
+                ...(type === "date" && { shrink: true }),
             },
 
             htmlInput: {

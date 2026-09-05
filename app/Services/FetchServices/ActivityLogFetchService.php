@@ -42,6 +42,12 @@ class ActivityLogFetchService implements ActivityLogFetchInterface
                 $query->where('status', $status);
             }
 
+            if (!empty($request['module'])) {
+                $module = $request['module'];
+                $query->where('module', $module);
+            }
+
+
             if (!empty($request['type'])) {
                 $type = $request['type'];
                 $query->where('type', $type);
@@ -62,8 +68,7 @@ class ActivityLogFetchService implements ActivityLogFetchInterface
             if (isset($request['search']) && !empty($request['search'])) {
                 $search = $request['search'];
                 $query->where(function ($q) use ($search) {
-                    $q->where('module', 'like', "%{$search}%")
-                        ->orWhere('description', 'like', "%{$search}%");
+                    $q->where('description', 'like', "%{$search}%");
                 });
             }
 

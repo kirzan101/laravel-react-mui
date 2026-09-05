@@ -12,6 +12,7 @@ const TableActivityLog = ({
     search,
     refreshKey,
     onRefresh,
+    filters,
     can,
 }) => {
     const columns = useMemo(
@@ -19,6 +20,11 @@ const TableActivityLog = ({
             {
                 field: "module",
                 headerName: "Module",
+                width: 150,
+            },
+            {
+                field: "type",
+                headerName: "Type",
                 width: 150,
             },
             {
@@ -80,12 +86,17 @@ const TableActivityLog = ({
         [flash, errors, can, onRefresh],
     );
 
+    const { start_date, end_date, type, module } = filters;
     const queryParams = useMemo(
         () => ({
             search,
             refreshKey,
+            start_date,
+            end_date,
+            type,
+            module,
         }),
-        [search, refreshKey],
+        [search, refreshKey, start_date, end_date, type, module],
     );
 
     return (
