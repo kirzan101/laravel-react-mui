@@ -12,6 +12,7 @@ interface UserModuleInterface
      *
      * This method checks the user's profile and retrieves all active permissions associated with that profile's roles.
      * It then extracts the unique module names from those permissions and caches the result for 30 minutes.
+     * If the user is an admin, all active modules will be returned regardless of their specific permissions.
      *
      * @return array List of module names that the user has access to (e.g. ['profiles', 'user_management']).
      *               Returns an empty array if the user is not authenticated or has no permissions.

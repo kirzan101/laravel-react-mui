@@ -13,6 +13,7 @@ class UserModuleService implements UserModuleInterface
      *
      * This method checks the user's profile and retrieves all active permissions associated with that profile's roles.
      * It then extracts the unique module names from those permissions and caches the result for 30 minutes.
+     * If the user is an admin, all active modules will be returned regardless of their specific permissions.
      *
      * @return array List of module names that the user has access to (e.g. ['profiles', 'user_management']).
      *               Returns an empty array if the user is not authenticated or has no permissions.
@@ -23,8 +24,28 @@ class UserModuleService implements UserModuleInterface
             return [];
         }
 
-        // $version = Cache::get("permissions.version.$profileId", 1);
+        $isAdmin = DB::table('profiles')
+            ->join('users', 'users.id', 'profiles.user_id')
+            ->where('profiles.id', $profileId)
+            ->where('users.is_admin', true)
+            ->exists();
+
         $version = Cache::get("permissions.version.global", 1);
+
+        if ($isAdmin) {
+            return Cache::remember(
+                "user.modules.$profileId.v$version",
+                now()->addMinutes(30),
+                function () use ($profileId) {
+                    return DB::table('permissions as p')
+                        ->where('p.is_active', true)
+                        ->distinct()
+                        ->pluck('p.module')
+                        ->values()
+                        ->toArray();
+                }
+            );
+        }
 
         return Cache::remember(
             "user.modules.$profileId.v$version",
@@ -52,7 +73,30 @@ class UserModuleService implements UserModuleInterface
      */
     public function getAllPermissions(int $profileId): array
     {
+        $isAdmin = DB::table('profiles')
+            ->join('users', 'users.id', 'profiles.user_id')
+            ->where('profiles.id', $profileId)
+            ->where('users.is_admin', true)
+            ->exists();
+
         $version = Cache::get("permissions.version.global", 1);
+
+        if ($isAdmin) {
+            return Cache::remember(
+                "user.all-permissions.$profileId.v$version",
+                now()->addMinutes(60),
+                function () use ($profileId) {
+                    return DB::table('permissions as p')
+                        ->where('p.is_active', true)
+                        ->distinct()
+                        ->get(['p.type', 'p.module'])
+                        ->map(fn($row) => "{$row->type}-{$row->module}")
+                        ->unique()
+                        ->values()
+                        ->toArray();
+                }
+            );
+        }
 
         return Cache::remember(
             "user.all-permissions.$profileId.v$version",

@@ -343,9 +343,12 @@ const AppLayout = ({ children }) => {
                         sx={{
                             display: "flex",
                             flexDirection: "column",
+                            minHeight: "85vh",
                         }}
                     >
-                        <Box component="main">{children}</Box>
+                        <Box component="main" sx={{ flexGrow: 1 }}>
+                            {children}
+                        </Box>
 
                         <Box
                             component="footer"
