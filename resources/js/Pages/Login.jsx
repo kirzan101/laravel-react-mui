@@ -159,6 +159,7 @@ const Login = ({ flash, errors }) => {
 
                         <Typography variant="body2"></Typography>
                         <Typography variant="body2">
+                            {appName} <br />
                             {appDeveloper} {new Date().getFullYear()} &copy; — v
                             {appVersion}
                         </Typography>

@@ -43,7 +43,6 @@ const TableUser = ({
 
     const columns = useMemo(
         () => [
-            { field: "id", headerName: "ID", width: 70 },
             {
                 field: "name",
                 headerName: "Name",
@@ -99,7 +98,7 @@ const TableUser = ({
             {
                 field: "status",
                 headerName: "Status",
-                width: 150,
+                width: 100,
                 renderCell: (params) => {
                     return (
                         <CChip
@@ -115,6 +114,7 @@ const TableUser = ({
                     );
                 },
             },
+            {field: "last_login_at", headerName: "Last Login At", width: 200 },
             {
                 field: "actions",
                 headerName: "Actions",

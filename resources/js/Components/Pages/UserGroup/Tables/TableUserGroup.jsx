@@ -15,11 +15,6 @@ const TableUserGroup = ({
     const columns = useMemo(
         () => [
             {
-                field: "id",
-                headerName: "ID",
-                width: 70,
-            },
-            {
                 field: "name",
                 headerName: "Name",
                 width: 300,

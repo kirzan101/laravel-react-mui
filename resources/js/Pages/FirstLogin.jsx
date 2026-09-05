@@ -14,7 +14,7 @@ import LogoutIcon from "@mui/icons-material/Logout";
 import Logout from "@/Components/Pages/Auth/Logout";
 
 import EmptyLayout from "@/Layouts/EmptyLayout";
-import UserAvatar from "@/Components/Utilities/AvatarUpload";
+import UserAvatar from "@/Components/Utilities/UserAvatar";
 
 const FirstLogin = ({ flash, errors }) => {
     const theme = useTheme();
@@ -132,6 +132,9 @@ const FirstLogin = ({ flash, errors }) => {
                         sx={{
                             width: "100%",
                             maxWidth: 400,
+                            display: "flex",
+                            flexDirection: "column",
+                            alignItems: "center",
                             textAlign: "center",
                         }}
                     >
@@ -214,6 +217,7 @@ const FirstLogin = ({ flash, errors }) => {
 
                         <Typography variant="body2"></Typography>
                         <Typography variant="body2">
+                            {appName} <br />
                             {appDeveloper} {new Date().getFullYear()} &copy; — v
                             {appVersion}
                         </Typography>

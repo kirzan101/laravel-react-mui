@@ -360,6 +360,7 @@ const AppLayout = ({ children }) => {
                                 textAlign: "center",
                             }}
                         >
+                            {appName} <br />
                             {appDeveloper} {new Date().getFullYear()} &copy; — v
                             {appVersion}
                         </Box>

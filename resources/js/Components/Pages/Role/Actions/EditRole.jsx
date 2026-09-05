@@ -10,7 +10,7 @@ import { useEffect, useState } from "react";
 import EditLabel from "@/Components/Utilities/EditLabel";
 import FormRole from "./Forms/FormRole";
 import SelectRolePermissions from "../Fields/SelectRolePermissions";
-import { Box, Grid, Typography } from "@mui/material";
+import { Box, Grid, Typography, Alert } from "@mui/material";
 import { router } from "@inertiajs/react";
 
 const EditRole = ({
@@ -69,6 +69,7 @@ const EditRole = ({
 
     // check if user has permission to update roles
     const canUpdateRole = can.includes("update-roles");
+    const isAdminRole = role?.id === 1; // assume role with ID 1 is the admin role
 
     const handleSubmit = (event) => {
         event.preventDefault();
@@ -124,6 +125,17 @@ const EditRole = ({
                 open={open}
                 onClose={handleClose}
             >
+                {isAdminRole && (
+                    <Alert
+                        variant="filled"
+                        severity="info"
+                        color="primary"
+                        sx={{ mb: 2 }}
+                    >
+                        Editing the admin role is restricted.
+                    </Alert>
+                )}
+
                 <form onSubmit={handleSubmit}>
                     <Grid container spacing={4}>
                         {/* Left Side */}
@@ -159,7 +171,9 @@ const EditRole = ({
                                         errors={errors}
                                         permissions={permissions}
                                         moduleLists={moduleLists}
-                                        isReadonly={!canUpdateRole}
+                                        isReadonly={
+                                            !canUpdateRole || isAdminRole
+                                        }
                                     />
                                 </CCardContent>
                             </CCard>
@@ -180,12 +194,12 @@ const EditRole = ({
                                 selectedPermissions={form.permissionIds}
                                 onChange={handlePermissionsChange}
                                 errors={errors}
-                                isReadonly={!canUpdateRole}
+                                isReadonly={!canUpdateRole || isAdminRole}
                             />
                         </Grid>
                     </Grid>
 
-                    {canUpdateRole && (
+                    {(canUpdateRole && !isAdminRole) && (
                         <Box
                             sx={{
                                 position: "absolute",

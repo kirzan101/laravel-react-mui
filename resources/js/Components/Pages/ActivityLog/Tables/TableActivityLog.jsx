@@ -17,11 +17,6 @@ const TableActivityLog = ({
     const columns = useMemo(
         () => [
             {
-                field: "id",
-                headerName: "ID",
-                width: 70,
-            },
-            {
                 field: "module",
                 headerName: "Module",
                 width: 150,

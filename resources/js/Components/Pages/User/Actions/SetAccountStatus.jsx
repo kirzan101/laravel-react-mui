@@ -23,9 +23,13 @@ const SetAccountStatus = ({ user, flash, errors, can, onSuccess, sx }) => {
     const iconStatus =
         user.status === "active" ? "PersonRemoveIcon" : "PersonAddAlt1Icon";
     const colorStatus = user.status === "active" ? "error" : "accent";
+    const isAdmin = user.is_admin;
 
     const handleSubmit = (event) => {
         event.preventDefault();
+
+        // prevent changing status of admin user
+        if (isAdmin) return;
 
         // submission here
         router.post(
@@ -66,7 +70,7 @@ const SetAccountStatus = ({ user, flash, errors, can, onSuccess, sx }) => {
                 tooltip="Set Account Status"
                 sx={sx}
                 onClick={toggleModal}
-                disabled={!canSetAccountStatus}
+                disabled={!canSetAccountStatus || isAdmin}
             />
 
             <CModal
