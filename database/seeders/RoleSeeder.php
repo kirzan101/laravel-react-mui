@@ -27,7 +27,8 @@ class RoleSeeder extends Seeder
                         'update',
                         'delete',
                         'reset',
-                        'set-status'
+                        'set-status',
+                        'set-avatar'
                     ],
                     'user_groups' => [
                         'create',

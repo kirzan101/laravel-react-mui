@@ -1,11 +1,12 @@
 import { useMemo } from "react";
 import { CDataGrid, CChip } from "@/Components";
 import { Box } from "@mui/material";
+import { router } from "@inertiajs/react";
 
 import EditUser from "../Actions/EditUser";
 import ResetPassword from "../Actions/ResetPassword";
 import SetAccountStatus from "../Actions/SetAccountStatus";
-import UserAvatar from "@/Components/Utilities/UserAvatar";
+import AvatarUpload from "@/Components/Utilities/AvatarUpload";
 
 const TableUser = ({
     flash,
@@ -18,6 +19,28 @@ const TableUser = ({
     roles,
     can,
 }) => {
+    const canSetAvatar = can.includes("set-avatar-users");
+
+    const handleAvatarChange = (profileId, blob) => {
+        router.post(
+            `/change-avatar/${profileId}`,
+            {
+                _method: "PUT",
+                avatar: blob,
+            },
+            {
+                forceFormData: true,
+                onSuccess: () => {
+                    // refresh the table or component to reflect the new avatar
+                    onRefresh();
+                },
+                onError: (errors) => {
+                    console.error("Error changing avatar", errors);
+                },
+            },
+        );
+    };
+
     const columns = useMemo(
         () => [
             { field: "id", headerName: "ID", width: 70 },
@@ -36,10 +59,17 @@ const TableUser = ({
                                 minWidth: 0,
                             }}
                         >
-                            <UserAvatar
+                            <AvatarUpload
                                 avatarUrl={params.row.avatar}
                                 initials={params.row.initials}
                                 size={32}
+                                onChange={handleAvatarChange.bind(
+                                    null,
+                                    params.row.id,
+                                )}
+                                disabled={!canSetAvatar}
+                                profileId={params.row.id}
+                                onSuccess={onRefresh}
                             />
                             <Box sx={{ flex: 1, minWidth: 0 }}>
                                 <EditUser

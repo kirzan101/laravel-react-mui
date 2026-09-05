@@ -14,10 +14,14 @@ import LogoutIcon from "@mui/icons-material/Logout";
 import Logout from "@/Components/Pages/Auth/Logout";
 
 import EmptyLayout from "@/Layouts/EmptyLayout";
+import UserAvatar from "@/Components/Utilities/AvatarUpload";
 
 const FirstLogin = ({ flash, errors }) => {
     const theme = useTheme();
     const isMobile = useMediaQuery(theme.breakpoints.down("md"));
+
+    // Get user data from Inertia page props
+    const user = usePage().props.auth?.user || {};
 
     // app info from backend (via Inertia props)
     const page = usePage();
@@ -131,8 +135,14 @@ const FirstLogin = ({ flash, errors }) => {
                             textAlign: "center",
                         }}
                     >
+                        <UserAvatar
+                            avatarUrl={user.avatar}
+                            initials={user.initials}
+                            size={124}
+                        />
+
                         <Typography variant="h4" fontWeight="bold">
-                            Welcome!
+                            Welcome {user.nickname || user.name}!
                         </Typography>
 
                         <Typography

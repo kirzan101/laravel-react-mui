@@ -59,6 +59,8 @@ class HandleInertiaRequests extends Middleware
         $profileId = $auth?->profile?->id;
         $avatarUrl = $profile?->avatar ? route('uploads.show', ['path' => $profile->avatar]) : null;
 
+        $nickName = str($profile?->nickname)?->title()->toString();
+
         return array_merge(parent::share($request), [
             'appVersion' => env('APP_VERSION', '1.0.0'),
             'appName' => env('APP_NAME', 'Laravel'),
@@ -78,6 +80,7 @@ class HandleInertiaRequests extends Middleware
                     'avatar' => $avatarUrl,
                     'username' => $auth->username,
                     'name' => $profile?->getFullName(),
+                    'nickname' => $nickName,
                     'initials' => $profile?->getInitials(),
                     'email' => $auth->email,
                     'position' => $profile?->position,

@@ -30,6 +30,8 @@ const OUTPUT_SIZE = 750; // change this if you want a different output size (in 
  *  - onChange   {(blob, dataUrl) => void} Called with the cropped Blob and a JPEG data URL.
  *  - size       {number}                  Diameter of the trigger avatar in px. Default: 96.
  *  - disabled   {boolean}                 Disables upload interaction. Default: false.
+ *  - profileId  {number|null}             ID of the profile associated with the avatar. Default: null.
+ *  - onSuccess  {() => void}                Callback invoked after a successful avatar change. Default: empty function.
  */
 const AvatarUpload = ({
     avatarUrl,
@@ -37,6 +39,8 @@ const AvatarUpload = ({
     onChange,
     size = 96,
     disabled = false,
+    profileId = null,
+    onSuccess = () => {},
 }) => {
     const [open, setOpen] = useState(false);
     const [viewOpen, setViewOpen] = useState(false);
@@ -275,14 +279,25 @@ const AvatarUpload = ({
         setViewOpen(false);
         onChange?.(null, null);
 
+        // remove url
+        let url = "/remove-avatar";
+
+        // If a profileId is provided, update the URL to include it
+        if (profileId) {
+            url = `/remove-avatar/${profileId}`;
+        }
+
         router.post(
-            "/remove-avatar",
+            url,
             {
                 _method: "PUT",
             },
             {
                 forceFormData: true,
-                onSuccess: () => {},
+                onSuccess: () => {
+                    // Invoke the onSuccess callback after successfully removing the avatar
+                    onSuccess?.();
+                },
                 onError: (errors) => {
                     console.error("Error removing avatar", errors);
                 },
@@ -332,6 +347,12 @@ const AvatarUpload = ({
                         color: theme.palette.getContrastText(
                             theme.palette.primary.main,
                         ),
+
+                        ...(!avatarUrl && {
+                            px: 0.5,
+                            fontSize: size * 0.4,
+                            fontWeight: 600,
+                        }),
                     })}
                 >
                     {!avatarUrl && initials ? initials : null}

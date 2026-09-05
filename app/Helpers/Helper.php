@@ -28,7 +28,8 @@ class Helper
         'view',
         'restore',
         'reset',
-        'set-status'
+        'set-status',
+        'set-avatar'
     ];
     const ACTION_TYPE_CREATE = 'create';
     const ACTION_TYPE_UPDATE = 'update';
@@ -37,6 +38,7 @@ class Helper
     const ACTION_TYPE_RESTORE = 'restore';
     const ACTION_TYPE_RESET = 'reset';
     const ACTION_TYPE_SET_STATUS = 'set-status';
+    const ACTION_TYPE_SET_AVATAR = 'set-avatar';
 
     /**
      * Normalize name: remove accents and convert ñ to n.

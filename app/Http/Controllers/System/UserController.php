@@ -69,6 +69,14 @@ class UserController extends Controller
      */
     public function store(UserFormRequest $request)
     {
+        // Check if the user has permission to create a new user
+        if (Gate::denies('create', new User())) {
+            return Inertia::render('Error', [
+                'code' => 403,
+                'message' => 'You do not have permission to create a new user.'
+            ]);
+        }
+
         $userDTO = UserDTO::fromArray($request->all());
         $profileDTO = ProfileDTO::fromArray($request->all());
 
@@ -101,6 +109,14 @@ class UserController extends Controller
      */
     public function update(UserFormRequest $request, int $id)
     {
+        // Check if the user has permission to update the user
+        if (Gate::denies('update', new User())) {
+            return Inertia::render('Error', [
+                'code' => 403,
+                'message' => 'You do not have permission to update this user.'
+            ]);
+        }
+
         // Additional validation for profile_id since it's required for updating a user
         $request->validate([
             'profile_id' => 'required|integer|exists:profiles,id',
@@ -140,6 +156,17 @@ class UserController extends Controller
      */
     public function changeAvatar(ChangeAvatarFormRequest $request, ?int $profileId = null)
     {
+        // if a specific profile ID is provided, check if the user has permission to set the avatar for that profile
+        if (!empty($profileId)) {
+            // Check if the user has permission to set the avatar
+            if (Gate::denies('setAvatar', new User())) {
+                return Inertia::render('Error', [
+                    'code' => 403,
+                    'message' => 'You do not have permission to set the avatar.'
+                ]);
+            }
+        }
+
         $file = $request->file('avatar');
 
         // If profileId is not provided, use the authenticated user's profile ID
@@ -160,6 +187,13 @@ class UserController extends Controller
             'avatar_file_type' => $file->getClientMimeType(),
             'avatar_file_size' => $file->getSize(),
         ]);
+
+        // add the profile ID of the user that is being updated
+        if (!empty($profileId)) {
+            $request->merge([
+                'profile_id' => $profileId,
+            ]);
+        }
         $this->activityLogger->addLog($result, $request, 'profiles', 'update');
 
         $this->refreshCache(); // Refresh the cache after changing the avatar
@@ -172,6 +206,17 @@ class UserController extends Controller
      */
     public function removeAvatar(?int $profileId = null)
     {
+        // if a specific profile ID is provided, check if the user has permission to set the avatar for that profile
+        if (!empty($profileId)) {
+            // Check if the user has permission to set the avatar
+            if (Gate::denies('setAvatar', new User())) {
+                return Inertia::render('Error', [
+                    'code' => 403,
+                    'message' => 'You do not have permission to set the avatar.'
+                ]);
+            }
+        }
+
         // If profileId is not provided, use the authenticated user's profile ID
         $profileId = $profileId ?? Auth::user()->profile->id;
         $currentAvatarPath = Auth::user()->profile->avatar; // copy temporary for logging
@@ -190,6 +235,14 @@ class UserController extends Controller
             'removed_avatar_path' => $currentAvatarPath,
             'profile_id' => $profileId,
         ]);
+
+
+        // add the profile ID of the user that is being updated
+        if (!empty($profileId)) {
+            $request->merge([
+                'profile_id' => $profileId,
+            ]);
+        }
         $this->activityLogger->addLog($result, $request, 'profiles', 'update');
 
         $this->refreshCache(); // Refresh the cache after removing the avatar

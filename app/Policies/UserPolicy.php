@@ -70,4 +70,12 @@ class UserPolicy extends BasePolicy
     {
         return $this->canDo($user, Helper::ACTION_TYPE_SET_STATUS, $profile);
     }
+
+    /**
+     * Set user avatar.
+     */
+    public function setAvatar(User $user, User $profile): bool
+    {
+        return $this->canDo($user, Helper::ACTION_TYPE_SET_AVATAR, $profile);
+    }
 }
