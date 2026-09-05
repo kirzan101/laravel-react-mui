@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import {
     Alert,
     Box,
@@ -8,8 +8,10 @@ import {
     FormGroup,
     Grid,
     Typography,
+    InputAdornment
 } from "@mui/material";
-import { CCard, CCardContent } from "@/Components";
+import { CCard, CCardContent, CTextField } from "@/Components";
+import SearchIcon from "@mui/icons-material/Search";
 
 const PERMISSION_TYPE_ORDER = ["view", "create", "update", "delete"];
 
@@ -37,40 +39,43 @@ const SelectRolePermissions = ({
     errors = {},
 }) => {
     const groupedPermissions = useMemo(() => {
-        const modules = moduleLists.map((module) => module.name || module);
-
-        const activePermissions = permissions
-            .filter((permission) => permission.is_active)
-            .slice()
-            .sort((a, b) => {
-                const moduleDiff =
-                    modules.indexOf(a.module) - modules.indexOf(b.module);
-
-                if (moduleDiff !== 0) return moduleDiff;
-
-                return (
-                    PERMISSION_TYPE_ORDER.indexOf(a.type) -
-                    PERMISSION_TYPE_ORDER.indexOf(b.type)
-                );
-            });
+        const moduleOrder = new Map(
+            moduleLists
+                .map((module) => module.name || module)
+                .sort((a, b) => a.localeCompare(b))
+                .map((module, index) => [
+                    module.toLowerCase().replace(/\s+/g, "_"),
+                    index,
+                ]),
+        );
 
         const groups = new Map();
 
-        activePermissions.forEach((permission) => {
-            const moduleKey = permission.module;
+        permissions
+            .filter((permission) => permission.is_active)
+            .forEach((permission) => {
+                if (!groups.has(permission.module)) {
+                    groups.set(permission.module, []);
+                }
 
-            if (!groups.has(moduleKey)) {
-                groups.set(moduleKey, []);
-            }
+                groups.get(permission.module).push(permission);
+            });
 
-            groups.get(moduleKey).push(permission);
-        });
-
-        return Array.from(groups.entries()).map(([module, modulePermissions]) => ({
-            module,
-            label: formatLabel(module),
-            permissions: modulePermissions,
-        }));
+        return Array.from(groups.entries())
+            .sort(
+                ([moduleA], [moduleB]) =>
+                    (moduleOrder.get(moduleA) ?? Infinity) -
+                    (moduleOrder.get(moduleB) ?? Infinity),
+            )
+            .map(([module, modulePermissions]) => ({
+                module,
+                label: formatLabel(module),
+                permissions: modulePermissions.sort(
+                    (a, b) =>
+                        PERMISSION_TYPE_ORDER.indexOf(a.type) -
+                        PERMISSION_TYPE_ORDER.indexOf(b.type),
+                ),
+            }));
     }, [permissions, moduleLists]);
 
     const handleTogglePermission = (permissionId) => (event) => {
@@ -79,9 +84,7 @@ const SelectRolePermissions = ({
         if (checked) {
             onChange([...selectedPermissions, permissionId]);
         } else {
-            onChange(
-                selectedPermissions.filter((id) => id !== permissionId),
-            );
+            onChange(selectedPermissions.filter((id) => id !== permissionId));
         }
     };
 
@@ -107,6 +110,19 @@ const SelectRolePermissions = ({
         }
     };
 
+    // implementation of module search functionality
+    const [moduleSearch, setModuleSearch] = useState("");
+
+    const filteredGroupedPermissions = useMemo(() => {
+        const search = moduleSearch.trim().toLowerCase();
+
+        if (!search) return groupedPermissions;
+
+        return groupedPermissions.filter(({ label, module }) =>
+            `${label} ${module}`.toLowerCase().includes(search),
+        );
+    }, [groupedPermissions, moduleSearch]);
+
     return (
         <Box>
             <Typography variant="h6" sx={{ mb: 2 }}>
@@ -119,83 +135,106 @@ const SelectRolePermissions = ({
                 </Alert>
             )}
 
+            <CTextField
+                fullWidth
+                size="small"
+                placeholder="Search modules..."
+                value={moduleSearch}
+                onChange={(e) => setModuleSearch(e.target.value)}
+                slotProps={{
+                    input: {
+                        startAdornment: (
+                            <InputAdornment position="start">
+                                <SearchIcon fontSize="small" />
+                            </InputAdornment>
+                        ),
+                    },
+                }}
+                sx={{ mb: 2 }}
+            />
+
             <Grid container spacing={2}>
-                {groupedPermissions.map(({ module, label, permissions: modulePermissions }) => {
-                    const modulePermissionIds = modulePermissions.map(
-                        (permission) => permission.id,
-                    );
-                    const selectedCount = modulePermissionIds.filter((id) =>
-                        selectedPermissions.includes(id),
-                    ).length;
-                    const allSelected =
-                        modulePermissionIds.length > 0 &&
-                        selectedCount === modulePermissionIds.length;
-                    const someSelected =
-                        selectedCount > 0 && !allSelected;
+                {filteredGroupedPermissions.map(
+                    ({ module, label, permissions: modulePermissions }) => {
+                        const modulePermissionIds = modulePermissions.map(
+                            (permission) => permission.id,
+                        );
+                        const selectedCount = modulePermissionIds.filter((id) =>
+                            selectedPermissions.includes(id),
+                        ).length;
+                        const allSelected =
+                            modulePermissionIds.length > 0 &&
+                            selectedCount === modulePermissionIds.length;
+                        const someSelected = selectedCount > 0 && !allSelected;
 
-                    return (
-                    <Grid key={module} size={{ xs: 12, sm: 4 }}>
-                        <CCard>
-                            <CCardContent>
-                                <Box
-                                    sx={{
-                                        display: "flex",
-                                        alignItems: "center",
-                                        justifyContent: "space-between",
-                                        mb: 1,
-                                    }}
-                                >
-                                    <Typography
-                                        variant="subtitle1"
-                                        sx={{ fontWeight: "bold" }}
-                                    >
-                                        {label}
-                                    </Typography>
+                        return (
+                            <Grid key={module} size={{ xs: 12, sm: 4 }}>
+                                <CCard>
+                                    <CCardContent>
+                                        <Box
+                                            sx={{
+                                                display: "flex",
+                                                alignItems: "center",
+                                                justifyContent: "space-between",
+                                                mb: 1,
+                                            }}
+                                        >
+                                            <Typography
+                                                variant="subtitle1"
+                                                sx={{ fontWeight: "bold" }}
+                                            >
+                                                {label}
+                                            </Typography>
 
-                                    <FormControlLabel
-                                        sx={{ mr: 0 }}
-                                        control={
-                                            <Checkbox
-                                                size="small"
-                                                checked={allSelected}
-                                                indeterminate={someSelected}
-                                                onChange={handleToggleGroup(
-                                                    modulePermissions,
-                                                )}
+                                            <FormControlLabel
+                                                sx={{ mr: 0 }}
+                                                control={
+                                                    <Checkbox
+                                                        size="small"
+                                                        checked={allSelected}
+                                                        indeterminate={
+                                                            someSelected
+                                                        }
+                                                        onChange={handleToggleGroup(
+                                                            modulePermissions,
+                                                        )}
+                                                    />
+                                                }
+                                                label="Select All"
                                             />
-                                        }
-                                        label="Select All"
-                                    />
-                                </Box>
+                                        </Box>
 
-                                <Divider sx={{ mb: 1 }} />
+                                        <Divider sx={{ mb: 1 }} />
 
-                                <FormGroup>
-                                    {modulePermissions.map((permission) => (
-                                        <FormControlLabel
-                                            key={permission.id}
-                                            control={
-                                                <Checkbox
-                                                    size="small"
-                                                    checked={selectedPermissions.includes(
-                                                        permission.id,
-                                                    )}
-                                                    onChange={handleTogglePermission(
-                                                        permission.id,
-                                                    )}
-                                                />
-                                            }
-                                            label={`${label} - ${formatLabel(
-                                                permission.type,
-                                            )}`}
-                                        />
-                                    ))}
-                                </FormGroup>
-                            </CCardContent>
-                        </CCard>
-                    </Grid>
-                    );
-                })}
+                                        <FormGroup>
+                                            {modulePermissions.map(
+                                                (permission) => (
+                                                    <FormControlLabel
+                                                        key={permission.id}
+                                                        control={
+                                                            <Checkbox
+                                                                size="small"
+                                                                checked={selectedPermissions.includes(
+                                                                    permission.id,
+                                                                )}
+                                                                onChange={handleTogglePermission(
+                                                                    permission.id,
+                                                                )}
+                                                            />
+                                                        }
+                                                        label={`${label} - ${formatLabel(
+                                                            permission.type,
+                                                        )}`}
+                                                    />
+                                                ),
+                                            )}
+                                        </FormGroup>
+                                    </CCardContent>
+                                </CCard>
+                            </Grid>
+                        );
+                    },
+                )}
             </Grid>
 
             {!errors?.permissionIds && (
