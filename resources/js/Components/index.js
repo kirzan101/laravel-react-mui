@@ -62,6 +62,9 @@ export { default as CFabSubmit } from "./Customs/Fabs/CFabSubmit";
 export { default as CFormGrid } from "./Customs/Grids/CFormGrid";
 export { default as CFormRow } from "./Customs/Grids/CFormRow";
 
+// Icon Buttons
+export { default as CIconButton } from "./Customs/IconButtons/CIconButton";
+
 // Modals
 export { default as CModal } from "./Customs/Modals/CModal";
 export { default as CModalFull } from "./Customs/Modals/CModalFull";

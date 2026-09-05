@@ -42,7 +42,7 @@ const Logout = ({ open, onClose }) => {
                     mt: 2,
                 }}
             >
-                <CButtonClose onClick={onClose} />
+                <CButtonClose loading={btnDisabled} onClick={onClose} />
 
                 <CButton
                     startIcon={<LogoutIcon />}

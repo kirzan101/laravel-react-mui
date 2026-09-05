@@ -25,7 +25,7 @@ class User extends Authenticatable
         'password',
         'is_admin',
         'is_first_login',
-        'status',
+        'status', // 'active', 'inactive', etc.
     ];
 
     /**

@@ -1,21 +1,32 @@
 import Button from "@mui/material/Button";
-import SaveIcon from "@mui/icons-material/Save";
+import { iconMap } from "@/Utilities/icons";
 
 const CButtonSubmit = ({
     size = "medium",
     variant = "contained",
     loadingPosition = "start",
-    startIcon = <SaveIcon />,
+    startIcon = "SaveIcon",
     children = "Save",
     sx,
     ...props
 }) => {
+    let IconComponent = iconMap[startIcon];
+
+    if (!IconComponent) {
+        console.warn(
+            `Icon "${startIcon}" does not exist in the iconMap. ` +
+                `Using SaveIcon instead.`,
+        );
+
+        IconComponent = iconMap.SaveIcon;
+    }
+
     return (
         <Button
             type="submit"
             size={size}
             variant={variant}
-            startIcon={startIcon}
+            startIcon={IconComponent ? <IconComponent /> : null}
             loadingPosition={loadingPosition}
             sx={{ m: 1, ...sx }}
             {...props}

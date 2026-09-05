@@ -3,6 +3,7 @@ import { CDataGrid } from "@/Components";
 import { Box } from "@mui/material";
 
 import EditUser from "../Actions/EditUser";
+import ResetPassword from "../Actions/ResetPassword";
 import UserAvatar from "@/Components/Utilities/UserAvatar";
 
 const TableUser = ({
@@ -64,6 +65,23 @@ const TableUser = ({
             { field: "email", headerName: "Email", width: 250 },
             { field: "position", headerName: "Position", width: 200 },
             { field: "user_group_name", headerName: "User Group", width: 200 },
+            {
+                field: "actions",
+                headerName: "Actions",
+                width: 150,
+                renderCell: (params) => {
+                    return (
+                        <ResetPassword
+                            user={params.row}
+                            flash={flash}
+                            errors={errors}
+                            can={can}
+                            sx={{ minHeight: 28, py: 0, m: 0 }}
+                            onSuccess={onRefresh}
+                        />
+                    );
+                },
+            },
         ],
         [flash, errors, userGroups, accountTypes, roles, can, onRefresh],
     );
