@@ -114,7 +114,12 @@ const TableUser = ({
                     );
                 },
             },
-            {field: "last_login_at", headerName: "Last Login At", width: 200 },
+            {
+                field: "last_login_at",
+                headerName: "Last Login At",
+                width: 200,
+                renderCell: (params) => params.value || "—",
+            },
             {
                 field: "actions",
                 headerName: "Actions",
