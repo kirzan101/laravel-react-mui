@@ -80,6 +80,8 @@ class HandleInertiaRequests extends Middleware
                     'avatar' => $avatarUrl,
                     'username' => $auth->username,
                     'name' => $profile?->getFullName(),
+                    'first_name' => $profile?->first_name,
+                    'last_name' => $profile?->last_name,
                     'nickname' => $nickName,
                     'initials' => $profile?->getInitials(),
                     'email' => $auth->email,

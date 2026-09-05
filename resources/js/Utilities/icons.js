@@ -15,6 +15,7 @@ import NoAccountsIcon from '@mui/icons-material/NoAccounts';
 import SaveIcon from "@mui/icons-material/Save";
 import PersonRemoveIcon from '@mui/icons-material/PersonRemove';
 import PersonAddAlt1Icon from '@mui/icons-material/PersonAddAlt1';
+import PreviewIcon from '@mui/icons-material/Preview';
 
 export const iconMap = {
     DashboardIcon,
@@ -34,4 +35,5 @@ export const iconMap = {
     SaveIcon,
     PersonRemoveIcon,
     PersonAddAlt1Icon,
+    PreviewIcon,
 };

@@ -142,7 +142,7 @@ const FirstLogin = ({ flash, errors }) => {
                         />
 
                         <Typography variant="h4" fontWeight="bold">
-                            Welcome {user.nickname || user.name}!
+                            Welcome {user.nickname || user.first_name}!
                         </Typography>
 
                         <Typography

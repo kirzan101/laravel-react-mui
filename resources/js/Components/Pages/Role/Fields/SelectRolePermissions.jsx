@@ -8,7 +8,7 @@ import {
     FormGroup,
     Grid,
     Typography,
-    InputAdornment
+    InputAdornment,
 } from "@mui/material";
 import { CCard, CCardContent, CTextField } from "@/Components";
 import SearchIcon from "@mui/icons-material/Search";
@@ -37,6 +37,7 @@ const SelectRolePermissions = ({
     permissions = [],
     moduleLists = [],
     errors = {},
+    isReadonly = false,
 }) => {
     const groupedPermissions = useMemo(() => {
         const moduleOrder = new Map(
@@ -195,9 +196,13 @@ const SelectRolePermissions = ({
                                                         indeterminate={
                                                             someSelected
                                                         }
-                                                        onChange={handleToggleGroup(
-                                                            modulePermissions,
-                                                        )}
+                                                        onChange={
+                                                            isReadonly
+                                                                ? undefined
+                                                                : handleToggleGroup(
+                                                                      modulePermissions,
+                                                                  )
+                                                        }
                                                     />
                                                 }
                                                 label="Select All"
@@ -217,9 +222,13 @@ const SelectRolePermissions = ({
                                                                 checked={selectedPermissions.includes(
                                                                     permission.id,
                                                                 )}
-                                                                onChange={handleTogglePermission(
-                                                                    permission.id,
-                                                                )}
+                                                                onChange={
+                                                                    isReadonly
+                                                                        ? undefined
+                                                                        : handleTogglePermission(
+                                                                              permission.id,
+                                                                          )
+                                                                }
                                                             />
                                                         }
                                                         label={`${label} - ${formatLabel(

@@ -2,7 +2,14 @@ import { CTextField, CFormGrid, CFormRow, CSwitchLabeled } from "@/Components";
 import { Grid } from "@mui/material";
 import { useState } from "react";
 
-const FormRole = ({ form, setForm, errors = {}, permissions, moduleLists }) => {
+const FormRole = ({
+    form,
+    setForm,
+    errors = {},
+    permissions,
+    moduleLists,
+    isReadonly = false,
+}) => {
     const handleChange = (field) => (e) => {
         setForm((prev) => ({
             ...prev,
@@ -21,6 +28,7 @@ const FormRole = ({ form, setForm, errors = {}, permissions, moduleLists }) => {
                     onChange={handleChange("name")}
                     error={!!errors.name}
                     helperText={errors.name}
+                    isReadonly={isReadonly}
                 />
             </CFormGrid>
 
@@ -35,6 +43,7 @@ const FormRole = ({ form, setForm, errors = {}, permissions, moduleLists }) => {
                     helperText={errors.description}
                     multiline
                     rows={4}
+                    isReadonly={isReadonly}
                 />
             </CFormGrid>
 
@@ -48,6 +57,7 @@ const FormRole = ({ form, setForm, errors = {}, permissions, moduleLists }) => {
                             is_active: e.target.checked,
                         }))
                     }
+                    isReadonly={isReadonly}
                 />
             </CFormGrid>
         </CFormRow>

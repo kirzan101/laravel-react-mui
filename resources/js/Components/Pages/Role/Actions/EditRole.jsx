@@ -67,8 +67,13 @@ const EditRole = ({
         }));
     };
 
+    // check if user has permission to update roles
+    const canUpdateRole = can.includes("update-roles");
+
     const handleSubmit = (event) => {
         event.preventDefault();
+
+        if (!canUpdateRole) return; // User does not have permission to update roles
 
         // submission here
         router.post(
@@ -100,8 +105,8 @@ const EditRole = ({
         );
     };
 
-    // check if user has permission to update roles
-    const canUpdateRole = can.includes("update-roles");
+    const title = `${canUpdateRole ? "Editing" : "Viewing"} ${role.name}`;
+    const icon = canUpdateRole ? "EditIcon" : "PreviewIcon";
 
     return (
         <>
@@ -110,12 +115,12 @@ const EditRole = ({
                     {role.name}
                 </CButtonEdit>
             ) : (
-                <EditLabel label={role.name} />
+                <EditLabel label={role.name} onClick={handleOpen} />
             )}
 
             <CModalFull
-                title="Edit Role"
-                titleIcon="EditIcon"
+                title={title}
+                titleIcon={icon}
                 open={open}
                 onClose={handleClose}
             >
@@ -154,6 +159,7 @@ const EditRole = ({
                                         errors={errors}
                                         permissions={permissions}
                                         moduleLists={moduleLists}
+                                        isReadonly={!canUpdateRole}
                                     />
                                 </CCardContent>
                             </CCard>
@@ -174,22 +180,25 @@ const EditRole = ({
                                 selectedPermissions={form.permissionIds}
                                 onChange={handlePermissionsChange}
                                 errors={errors}
+                                isReadonly={!canUpdateRole}
                             />
                         </Grid>
                     </Grid>
 
-                    <Box
-                        sx={{
-                            position: "absolute",
-                            bottom: 48,
-                            right: 24,
-                        }}
-                    >
-                        <CFabSubmit
-                            onClick={handleSubmit}
-                            loading={btnDisabled}
-                        />
-                    </Box>
+                    {canUpdateRole && (
+                        <Box
+                            sx={{
+                                position: "absolute",
+                                bottom: 48,
+                                right: 24,
+                            }}
+                        >
+                            <CFabSubmit
+                                onClick={handleSubmit}
+                                loading={btnDisabled}
+                            />
+                        </Box>
+                    )}
                 </form>
             </CModalFull>
         </>

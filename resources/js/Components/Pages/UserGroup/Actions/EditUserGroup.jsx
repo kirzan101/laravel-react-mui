@@ -50,9 +50,14 @@ const EditUserGroup = ({
         setOldForm(null);
     };
 
+    // check if user has permission to update user group
+    const canUpdate = can.includes("update-user_groups");
+
     // reset form value to initial state
     const handleSubmit = (event) => {
         event.preventDefault();
+
+        if (!canUpdate) return; // user does not have permission to update user group
 
         // submission here
         router.post(
@@ -84,8 +89,8 @@ const EditUserGroup = ({
         );
     };
 
-    // check if user has permission to update user group
-    const canUpdate = can.includes("update-user_groups");
+    const title = `${canUpdate ? "Editing" : "Viewing"} ${userGroup.name}`;
+    const icon = canUpdate ? "EditIcon" : "PreviewIcon";
 
     return (
         <>
@@ -94,12 +99,12 @@ const EditUserGroup = ({
                     {userGroup.name}
                 </CButtonEdit>
             ) : (
-                <EditLabel label={userGroup.name} />
+                <EditLabel label={userGroup.name} onClick={handleOpen} />
             )}
 
             <CModal
-                title={`Editing ${userGroup.name}`}
-                titleIcon="EditIcon"
+                title={title}
+                titleIcon={icon}
                 width={450}
                 open={open}
                 onClose={handleClose}
@@ -110,6 +115,7 @@ const EditUserGroup = ({
                         setForm={setForm}
                         errors={errors}
                         userGroupTypes={userGroupTypes}
+                        isReadonly={!canUpdate}
                     />
 
                     <Box
@@ -120,10 +126,12 @@ const EditUserGroup = ({
                         }}
                     >
                         <CButtonClose onClick={handleClose} />
-                        <CButtonSubmit
-                            sx={{ ml: 1, mr: 0 }}
-                            loading={btnDisabled}
-                        />
+                        {canUpdate && (
+                            <CButtonSubmit
+                                sx={{ ml: 1, mr: 0 }}
+                                loading={btnDisabled}
+                            />
+                        )}
                     </Box>
                 </form>
             </CModal>

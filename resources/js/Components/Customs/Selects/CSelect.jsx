@@ -1,7 +1,16 @@
 import { MenuItem } from "@mui/material";
 import CTextField from "../TextFields/CTextField";
 
-const CSelect = ({ options, value, onChange, label, error }) => {
+const CSelect = ({
+    options,
+    value,
+    onChange,
+    label,
+    error,
+    isReadonly = false,
+    tabIndex,
+    slotProps = {},
+}) => {
     return (
         <CTextField
             select
@@ -11,6 +20,9 @@ const CSelect = ({ options, value, onChange, label, error }) => {
             onChange={onChange}
             error={!!error}
             helperText={error}
+            isReadonly={isReadonly}
+            tabIndex={tabIndex}
+            slotProps={slotProps}
         >
             {options.map((option) => (
                 <MenuItem key={option.value} value={option.value}>

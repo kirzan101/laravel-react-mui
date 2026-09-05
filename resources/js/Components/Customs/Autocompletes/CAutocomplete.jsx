@@ -11,6 +11,8 @@ const CAutocomplete = ({
     helperText = "",
     getOptionLabel,
     isOptionEqualToValue,
+    isReadonly = false,
+    tabIndex,
     ...props
 }) => {
     const defaultGetOptionLabel = (option) => {
@@ -25,7 +27,9 @@ const CAutocomplete = ({
             return option === value;
         }
 
-        if (!option || !value) return option === value;
+        if (!option || !value) {
+            return option === value;
+        }
 
         if ("id" in option && "id" in value) {
             return option.id === value.id;
@@ -36,9 +40,11 @@ const CAutocomplete = ({
 
     return (
         <Autocomplete
+            {...props}
             size="small"
             options={options}
             value={value}
+            readOnly={isReadonly}
             getOptionLabel={getOptionLabel ?? defaultGetOptionLabel}
             isOptionEqualToValue={
                 isOptionEqualToValue ?? defaultIsOptionEqualToValue
@@ -58,9 +64,18 @@ const CAutocomplete = ({
                     label={label}
                     error={error}
                     helperText={helperText}
+                    slotProps={{
+                        ...params.slotProps,
+                        htmlInput: {
+                            ...params.slotProps?.htmlInput,
+                            readOnly: isReadonly,
+                            ...(tabIndex !== undefined && {
+                                tabIndex: isReadonly ? -1 : tabIndex,
+                            }),
+                        },
+                    }}
                 />
             )}
-            {...props}
         />
     );
 };

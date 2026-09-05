@@ -78,8 +78,13 @@ const EditUser = ({
         setOldForm(null);
     };
 
+    // check if user has permission to update user
+    const canUpdate = can.includes("update-users");
+
     const handleSubmit = (event) => {
         event.preventDefault();
+
+        if (!canUpdate) return; // user does not have permission to update user
 
         // submission here
         router.post(
@@ -112,8 +117,8 @@ const EditUser = ({
         );
     };
 
-    // check if user has permission to update user
-    const canUpdate = can.includes("update-users");
+    const title = `${canUpdate ? "Editing" : "Viewing"} ${user.name}`;
+    const icon = canUpdate ? "EditIcon" : "PreviewIcon";
 
     return (
         <>
@@ -122,12 +127,12 @@ const EditUser = ({
                     {user.name}
                 </CButtonEdit>
             ) : (
-                <EditLabel label={user.name} />
+                <EditLabel label={user.name} onClick={handleOpen} />
             )}
 
             <CModal
-                title={`Editing ${user.name}`}
-                titleIcon="EditIcon"
+                title={title}
+                titleIcon={icon}
                 width={750}
                 open={open}
                 onClose={handleClose}
@@ -141,6 +146,7 @@ const EditUser = ({
                         accountTypes={accountTypes}
                         roles={roles}
                         can={can}
+                        isReadonly={!canUpdate}
                     />
 
                     <Box
@@ -151,10 +157,12 @@ const EditUser = ({
                         }}
                     >
                         <CButtonClose onClick={handleClose} />
-                        <CButtonSubmit
-                            sx={{ ml: 1, mr: 0 }}
-                            loading={btnDisabled}
-                        />
+                        {canUpdate && (
+                            <CButtonSubmit
+                                sx={{ ml: 1, mr: 0 }}
+                                loading={btnDisabled}
+                            />
+                        )}
                     </Box>
                 </form>
             </CModal>

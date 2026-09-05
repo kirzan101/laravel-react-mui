@@ -119,6 +119,8 @@ const TableUser = ({
                 field: "actions",
                 headerName: "Actions",
                 width: 150,
+                sortable: false,
+                disableColumnMenu: true,
                 renderCell: (params) => {
                     return (
                         <>

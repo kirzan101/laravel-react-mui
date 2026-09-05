@@ -2,7 +2,13 @@ import { CTextField, CFormGrid, CFormRow, CSelect } from "@/Components";
 import { Grid } from "@mui/material";
 import { useState } from "react";
 
-const FormUserGroup = ({ form, setForm, errors = {}, userGroupTypes }) => {
+const FormUserGroup = ({
+    form,
+    setForm,
+    errors = {},
+    userGroupTypes,
+    isReadonly = false,
+}) => {
     const handleChange = (field) => (e) => {
         setForm((prev) => ({
             ...prev,
@@ -21,6 +27,7 @@ const FormUserGroup = ({ form, setForm, errors = {}, userGroupTypes }) => {
                     onChange={handleChange("name")}
                     error={!!errors.name}
                     helperText={errors.name}
+                    isReadonly={isReadonly}
                 />
             </CFormGrid>
             <CFormGrid size={{ xs: 12 }}>
@@ -36,6 +43,7 @@ const FormUserGroup = ({ form, setForm, errors = {}, userGroupTypes }) => {
                         value: type,
                         label: type,
                     }))}
+                    isReadonly={isReadonly}
                 />
             </CFormGrid>
             <CFormGrid size={{ xs: 12 }}>
@@ -49,6 +57,7 @@ const FormUserGroup = ({ form, setForm, errors = {}, userGroupTypes }) => {
                     helperText={errors.description}
                     multiline
                     rows={4}
+                    isReadonly={isReadonly}
                 />
             </CFormGrid>
         </CFormRow>

@@ -38,14 +38,34 @@ const normalizeHelperText = (helperText) => {
     return undefined;
 };
 
-const CTextField = ({ children, helperText, ...props }) => (
+const CTextField = ({
+    children,
+    helperText,
+    isReadonly = false,
+    tabIndex,
+    slotProps = {},
+    ...props
+}) => (
     <TextField
+        {...props}
         fullWidth
         size="small"
         variant="outlined"
         color="textField"
         helperText={normalizeHelperText(helperText)}
-        {...props}
+        slotProps={{
+            ...slotProps,
+
+            input: {
+                ...slotProps.input,
+                readOnly: isReadonly,
+            },
+
+            htmlInput: {
+                ...slotProps.htmlInput,
+                tabIndex: isReadonly ? -1 : tabIndex,
+            },
+        }}
     >
         {children}
     </TextField>

@@ -16,6 +16,7 @@ const FormUser = ({
     accountTypes,
     roles,
     can,
+    isReadonly = false,
 }) => {
     const handleChange = (field) => (e) => {
         setForm((prev) => ({
@@ -35,6 +36,7 @@ const FormUser = ({
                     onChange={handleChange("first_name")}
                     error={!!errors.first_name}
                     helperText={errors.first_name}
+                    isReadonly={isReadonly}
                 />
             </CFormGrid>
 
@@ -47,6 +49,7 @@ const FormUser = ({
                     onChange={handleChange("middle_name")}
                     error={!!errors.middle_name}
                     helperText={errors.middle_name}
+                    isReadonly={isReadonly}
                 />
             </CFormGrid>
 
@@ -59,6 +62,7 @@ const FormUser = ({
                     onChange={handleChange("last_name")}
                     error={!!errors.last_name}
                     helperText={errors.last_name}
+                    isReadonly={isReadonly}
                 />
             </CFormGrid>
 
@@ -71,6 +75,7 @@ const FormUser = ({
                     onChange={handleChange("nickname")}
                     error={!!errors.nickname}
                     helperText={errors.nickname}
+                    isReadonly={isReadonly}
                 />
             </CFormGrid>
 
@@ -87,6 +92,7 @@ const FormUser = ({
                         value: type,
                         label: type,
                     }))}
+                    isReadonly={isReadonly}
                 />
             </CFormGrid>
 
@@ -99,6 +105,7 @@ const FormUser = ({
                     onChange={handleChange("position")}
                     error={!!errors.position}
                     helperText={errors.position}
+                    isReadonly={isReadonly}
                 />
             </CFormGrid>
 
@@ -109,6 +116,7 @@ const FormUser = ({
                     size="small"
                     options={[]}
                     value={form.contact_numbers}
+                    readOnly={isReadonly}
                     onChange={(_, value) =>
                         setForm((prev) => ({
                             ...prev,
@@ -124,6 +132,7 @@ const FormUser = ({
                                 errors.contact_numbers ??
                                 "Hit enter after typing a number to add it to the list."
                             }
+                            isReadonly={isReadonly}
                         />
                     )}
                 />
@@ -142,6 +151,7 @@ const FormUser = ({
                         value: group.id,
                         label: group.name,
                     }))}
+                    isReadonly={isReadonly}
                 />
             </CFormGrid>
 
@@ -174,6 +184,7 @@ const FormUser = ({
                     isOptionEqualToValue={(option, value) =>
                         option.value === value.value
                     }
+                    isReadonly={isReadonly}
                 />
             </CFormGrid>
 
@@ -186,6 +197,7 @@ const FormUser = ({
                     onChange={handleChange("username")}
                     error={!!errors.username}
                     helperText={errors.username}
+                    isReadonly={isReadonly}
                 />
             </CFormGrid>
 
@@ -198,6 +210,7 @@ const FormUser = ({
                     onChange={handleChange("email")}
                     error={!!errors.email}
                     helperText={errors.email}
+                    isReadonly={isReadonly}
                 />
             </CFormGrid>
         </CFormRow>
