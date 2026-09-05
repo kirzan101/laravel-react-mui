@@ -10,6 +10,28 @@ use Illuminate\Support\Facades\Cache;
 
 class Role extends Model
 {
+    /**
+     * The "booted" method of the model.
+     *
+     * This method is called when the model is booted and is used to register model event listeners.
+     * In this case, it clears the roles list cache whenever a role is saved or deleted.
+     */
+    protected static function booted()
+    {
+        static::saved(fn($role) => $role->clearRoleListCache());
+        static::deleted(fn($role) => $role->clearRoleListCache());
+    }
+
+    /**
+     * Clear the cached list of roles.
+     *
+     * This method removes the "roles_list" cache entry. It is called whenever a role is saved or deleted.
+     */
+    public function clearRoleListCache()
+    {
+        Cache::forget("roles_list");
+    }
+
     protected $fillable = [
         'name',
         'description',

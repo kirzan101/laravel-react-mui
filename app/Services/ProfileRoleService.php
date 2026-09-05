@@ -196,7 +196,7 @@ class ProfileRoleService implements ProfileRoleInterface
 
                 $deletedRows = $this->base->deleteMultiple(ProfileRole::class, $profileRoles->toArray());
                 if ($deletedRows === 0) {
-                    throw new \Exception('Failed to delete profile roles associated with the role.');
+                    return StandardResponse::success(200, Helper::SUCCESS, 'Successfully deleted role, but no profile roles were deleted.');
                 }
 
                 return StandardResponse::success(200, Helper::SUCCESS, 'Profile roles associated with the role deleted successfully!');

@@ -91,6 +91,7 @@ class ManageRoleService implements ManageRoleInterface
                 $roleDTO = RoleDTO::fromArray([
                     'name' => $manageRoleDTO->name,
                     'description' => $manageRoleDTO->description,
+                    'is_active' => $manageRoleDTO->is_active ?? true,
                 ]);
                 $roleResponse = $this->role->updateRole($roleDTO, $roleId);
                 $this->ensureSuccess($roleResponse->toArray(), 'Failed to update role.');
