@@ -11,7 +11,7 @@ import Typography from "@mui/material/Typography";
 import { useEffect, useState } from "react";
 import { router } from "@inertiajs/react";
 
-const ResetPassword = ({ user, flash, errors, can, onSuccess, sx }) => {
+const SetAccountStatus = ({ user, flash, errors, can, onSuccess, sx }) => {
     const [open, setOpen] = useState(false);
     const [btnDisabled, setBtnDisabled] = useState(false);
 
@@ -19,12 +19,17 @@ const ResetPassword = ({ user, flash, errors, can, onSuccess, sx }) => {
         setOpen(!open);
     };
 
+    const oppositeStatus = user.status === "active" ? "DEACTIVATE" : "ACTIVATE";
+    const iconStatus =
+        user.status === "active" ? "PersonRemoveIcon" : "PersonAddAlt1Icon";
+    const colorStatus = user.status === "active" ? "error" : "accent";
+
     const handleSubmit = (event) => {
         event.preventDefault();
 
         // submission here
         router.post(
-            `/reset-password/${user.id}`,
+            `/set-user-status/${user.id}`,
             {
                 _method: "PUT",
                 forceFormData: true,
@@ -51,30 +56,30 @@ const ResetPassword = ({ user, flash, errors, can, onSuccess, sx }) => {
     };
 
     // check if user has permission to update user
-    const canResetPassword = can.includes("reset-users");
+    const canSetAccountStatus = can.includes("set-status-users");
 
     return (
         <>
             <CIconButton
-                icon="RotateLeftIcon"
-                color="buttonTextColor"
-                tooltip="Reset Password"
+                icon={iconStatus}
+                color={colorStatus}
+                tooltip="Set Account Status"
                 sx={sx}
                 onClick={toggleModal}
-                disabled={!canResetPassword}
+                disabled={!canSetAccountStatus}
             />
 
             <CModal
-                title="Reset Password"
-                titleIcon="RotateLeftIcon"
+                title="Set Account Status"
+                titleIcon={iconStatus}
                 width={450}
                 open={open}
                 onClose={toggleModal}
             >
                 <form onSubmit={handleSubmit}>
                     <Typography gutterBottom>
-                        Are you sure you want to reset the password of{" "}
-                        <b>{user.name}</b>?
+                        Are you sure you want to <b>{oppositeStatus}</b> the
+                        account status of <b>{user.name}</b>?
                     </Typography>
 
                     <Box
@@ -86,8 +91,9 @@ const ResetPassword = ({ user, flash, errors, can, onSuccess, sx }) => {
                     >
                         <CButtonClose onClick={toggleModal} />
                         <CButtonSubmit
-                            startIcon="RotateLeftIcon"
-                            children="Reset"
+                            startIcon={iconStatus}
+                            color={colorStatus}
+                            children={`${oppositeStatus}`}
                             sx={{ ml: 1, mr: 0 }}
                             loading={btnDisabled}
                         />
@@ -98,4 +104,4 @@ const ResetPassword = ({ user, flash, errors, can, onSuccess, sx }) => {
     );
 };
 
-export default ResetPassword;
+export default SetAccountStatus;

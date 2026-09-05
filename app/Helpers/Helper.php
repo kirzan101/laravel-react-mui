@@ -27,12 +27,16 @@ class Helper
         'delete',
         'view',
         'restore',
+        'reset',
+        'set-status'
     ];
     const ACTION_TYPE_CREATE = 'create';
     const ACTION_TYPE_UPDATE = 'update';
     const ACTION_TYPE_DELETE = 'delete';
     const ACTION_TYPE_VIEW = 'view';
     const ACTION_TYPE_RESTORE = 'restore';
+    const ACTION_TYPE_RESET = 'reset';
+    const ACTION_TYPE_SET_STATUS = 'set-status';
 
     /**
      * Normalize name: remove accents and convert ñ to n.

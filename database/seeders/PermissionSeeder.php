@@ -20,7 +20,7 @@ class PermissionSeeder extends Seeder
             [
                 'module' => 'users',
                 'icon' => 'PeopleIcon',
-                'types' => ['create', 'view', 'update'],
+                'types' => ['create', 'view', 'update', 'reset', 'set-status'],
                 'order' => 1,
                 'category' => null,
             ],
@@ -54,7 +54,7 @@ class PermissionSeeder extends Seeder
             // ],
         ];
 
-        $accessTypes = ['create', 'view', 'update', 'delete'];
+        $accessTypes = ['create', 'view', 'update', 'delete', 'reset', 'set-status'];
 
         foreach ($permissions as $permission) {
             foreach ($accessTypes as $type) {

@@ -49,6 +49,9 @@ export { default as CCard } from "./Customs/Cards/CCard";
 export { default as CCardContent } from "./Customs/Cards/CCardContent";
 export { default as CCardActions } from "./Customs/Cards/CCardActions";
 
+// Chips
+export { default as CChip } from "./Customs/Chips/CChip";
+
 // Containers
 export { default as CContainer } from "./Customs/Containers/CContainer";
 

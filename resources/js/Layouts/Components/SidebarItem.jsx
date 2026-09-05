@@ -4,23 +4,18 @@ import {
     ListItemIcon,
     ListItemText,
 } from "@mui/material";
-import { router, usePage } from "@inertiajs/react";
+import { Link, usePage } from "@inertiajs/react";
 
 const SidebarItem = ({ href, icon: Icon, label }) => {
     const { url } = usePage();
 
     const isActive = url.startsWith(href);
 
-    const handleClick = (e) => {
-        e.preventDefault();
-        router.visit(href);
-    };
-
     return (
         <ListItem disablePadding>
             <ListItemButton
+                component={Link}
                 href={href}
-                onClick={handleClick}
                 selected={isActive}
                 sx={{
                     "&.Mui-selected": {

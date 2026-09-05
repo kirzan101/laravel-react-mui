@@ -8,7 +8,7 @@ const buildPalette = (theme) => {
 
         primary: { main: theme.colors.primary },
         secondary: { main: theme.colors.secondary },
-        accent: { main: theme.colors.accent },
+        accent: { main: theme.colors.accent, contrastText: "#fff" },
         error: { main: theme.colors.error },
 
         textField: { main: theme.colors.textField },

@@ -54,4 +54,20 @@ class UserPolicy extends BasePolicy
     {
         return $this->canDo($user, Helper::ACTION_TYPE_DELETE, $profile);
     }
+
+    /**
+     * Reset user password.
+     */
+    public function reset(User $user, User $profile): bool
+    {
+        return $this->canDo($user, Helper::ACTION_TYPE_RESET, $profile);
+    }
+
+    /**
+     * Set user account status.
+     */
+    public function setStatus(User $user, User $profile): bool
+    {
+        return $this->canDo($user, Helper::ACTION_TYPE_SET_STATUS, $profile);
+    }
 }

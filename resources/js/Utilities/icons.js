@@ -13,6 +13,8 @@ import LogoutIcon from "@mui/icons-material/Logout";
 import RotateLeftIcon from '@mui/icons-material/RotateLeft';
 import NoAccountsIcon from '@mui/icons-material/NoAccounts';
 import SaveIcon from "@mui/icons-material/Save";
+import PersonRemoveIcon from '@mui/icons-material/PersonRemove';
+import PersonAddAlt1Icon from '@mui/icons-material/PersonAddAlt1';
 
 export const iconMap = {
     DashboardIcon,
@@ -30,4 +32,6 @@ export const iconMap = {
     RotateLeftIcon,
     NoAccountsIcon,
     SaveIcon,
+    PersonRemoveIcon,
+    PersonAddAlt1Icon,
 };

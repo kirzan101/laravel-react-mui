@@ -33,7 +33,13 @@ const CIconButton = ({
         </IconButton>
     );
 
-    return tooltip ? <Tooltip title={tooltip}>{button}</Tooltip> : button;
+    return tooltip ? (
+        <Tooltip title={tooltip}>
+            <span>{button}</span>
+        </Tooltip>
+    ) : (
+        button
+    );
 };
 
 export default CIconButton;

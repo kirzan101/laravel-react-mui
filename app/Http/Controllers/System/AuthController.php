@@ -46,7 +46,7 @@ class AuthController extends Controller
 
         $loginResult = $this->auth->login($request->toArray());
 
-        if ($loginResult->code == 422) {
+        if ($loginResult->code >= 400 && $loginResult->code < 500) {
             return back()->withErrors([
                 'error' => $loginResult->message,
             ]);
