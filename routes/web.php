@@ -25,14 +25,9 @@ Route::middleware(['auth'])->group(function () {
 
     // Protected routes that require the user to have completed the first login process
     Route::middleware(['first.login'])->group(function () {
-        Route::get('/', function () {
-            return Inertia::render('Home');
-        });
-
-        Route::get('/dashboard', function () {
-            return Inertia::render('Home');
-        })->name('dashboard');
-
+        Route::get('/', [\App\Http\Controllers\HomeController::class, 'index'])->name('home');
+        Route::get('/dashboard', [\App\Http\Controllers\HomeController::class, 'index'])->name('dashboard');
+        Route::get('/profile', [\App\Http\Controllers\HomeController::class, 'profile'])->name('profile');
         Route::get('/settings', [\App\Http\Controllers\System\SettingsController::class, 'index'])->name('settings.index');
 
         Route::resource('users', \App\Http\Controllers\System\UserController::class)->only(['index', 'store', 'update']);
