@@ -84,7 +84,10 @@ const ResetPassword = ({ user, flash, errors, can, onSuccess, sx }) => {
                             mt: 2,
                         }}
                     >
-                        <CButtonClose onClick={toggleModal} />
+                        <CButtonClose
+                            onClick={toggleModal}
+                            disabled={btnDisabled}
+                        />
                         <CButtonSubmit
                             startIcon="RotateLeftIcon"
                             children="Reset"

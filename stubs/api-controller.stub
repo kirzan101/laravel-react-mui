@@ -7,6 +7,7 @@ use App\Http\Resources\IndexResource\{{ base }}IndexResource;
 use App\Http\Resources\{{ base }}Resource;
 use App\Interfaces\FetchInterfaces\{{ base }}FetchInterface;
 use Illuminate\Http\Request;
+use App\Data\ApiResponse;
 
 class {{ base }}ApiController extends Controller
 {
@@ -31,20 +32,23 @@ class {{ base }}ApiController extends Controller
         $status = $result->status;
         $message = $result->message;
 
-        return response()->json([
-            'data' => {{ base }}Resource::collection($data->all()),
-            'additional_data' => [],
-            'per_page' => $data->perPage(),
-            'current_page' => $data->currentPage(),
-            'total' => $data->total(),
-            'last_page' => $data->lastPage(),
-            'search' => $request->input('search'),
-            'sort_by' => $request->input('sort_by'),
-            'sort' => $request->input('sort'),
-            'code' => $code,
-            'status' => $status,
-            'message' => $message
-        ], $code);
+        return new ApiResponse(
+            data: [
+                'data' => {{ base }}Resource::collection($data->all()),
+                'additional_data' => [],
+                'per_page' => $data->perPage(),
+                'current_page' => $data->currentPage(),
+                'total' => $data->total(),
+                'last_page' => $data->lastPage(),
+                'search' => $request->input('search'),
+                'sort_by' => $request->input('sort_by'),
+                'sort' => $request->input('sort'),
+                'code' => $code,
+                'status' => $status,
+                'message' => $message
+            ],
+            code: $code,
+        );
     }
 
     /**
@@ -66,11 +70,14 @@ class {{ base }}ApiController extends Controller
         $status = $result->status;
         $message = $result->message;
 
-        return response()->json([
-            'data' => {{ base }}IndexResource::collection($data->all()),
-            'code' => $code,
-            'status' => $status,
-            'message' => $message
-        ], $code);
+        return new ApiResponse(
+            data: [
+                'data' => {{ base }}IndexResource::collection($data->all()),
+                'code' => $code,
+                'status' => $status,
+                'message' => $message
+            ],
+            code: $code,
+        );
     }
 }

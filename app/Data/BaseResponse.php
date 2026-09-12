@@ -2,6 +2,8 @@
 
 namespace App\Data;
 
+use Illuminate\Http\JsonResponse;
+
 abstract class BaseResponse
 {
     public function __construct(
@@ -10,6 +12,9 @@ abstract class BaseResponse
         public readonly string $message
     ) {}
 
+    /**
+     * Convert the response to an array.
+     */
     public function toArray(): array
     {
         return [
@@ -17,5 +22,13 @@ abstract class BaseResponse
             'status' => $this->status,
             'message' => $this->message,
         ];
+    }
+
+    /**
+     * Convert the response to a JsonResponse.
+     */
+    public function toResponse(): JsonResponse
+    {
+        return response()->json($this->toArray(), $this->code, [], JSON_INVALID_UTF8_SUBSTITUTE);
     }
 }

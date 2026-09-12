@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\ProfileResource;
 use App\Interfaces\FetchInterfaces\ProfileFetchInterface;
 use Illuminate\Http\Request;
+use App\Data\ApiResponse;
 
 class UserApiController extends Controller
 {
@@ -30,18 +31,21 @@ class UserApiController extends Controller
         $status = $results->status;
         $message = $results->message;
 
-        return response()->json([
-            'data' => ProfileResource::collection($data->all()),
-            'per_page' => $data->perPage(),
-            'current_page' => $data->currentPage(),
-            'total' => $data->total(),
-            'last_page' => $data->lastPage(),
-            'search' => $request->input('search'),
-            'sort_by' => $request->input('sort_by'),
-            'sort' => $request->input('sort'),
-            'code' => $code,
-            'status' => $status,
-            'message' => $message
-        ], $code);
+        return new ApiResponse(
+            data: [
+                'data' => ProfileResource::collection($data->all()),
+                'per_page' => $data->perPage(),
+                'current_page' => $data->currentPage(),
+                'total' => $data->total(),
+                'last_page' => $data->lastPage(),
+                'search' => $request->input('search'),
+                'sort_by' => $request->input('sort_by'),
+                'sort' => $request->input('sort'),
+                'code' => $code,
+                'status' => $status,
+                'message' => $message
+            ],
+            code: $code,
+        );
     }
 }
