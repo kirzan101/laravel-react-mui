@@ -15,8 +15,13 @@ const RemoveModulePermission = ({ permission, onSuccess, can, errors }) => {
     const [open, setOpen] = useState(false);
     const [btnDisabled, setBtnDisabled] = useState(false);
 
+    const canDelete = can.includes("delete-permissions");
     const handleDelete = (event) => {
         event.preventDefault();
+
+        if (!canDelete) {
+            return;
+        }
 
         router.delete(`/permissions/${permission.permission_id}`, {
             onSuccess: () => {
@@ -35,19 +40,18 @@ const RemoveModulePermission = ({ permission, onSuccess, can, errors }) => {
         });
     };
 
-    const canDelete = can.includes("delete-permissions");
-
     return (
         <>
-            <CIconButton
-                icon="DeleteIcon"
-                color="error"
-                size="small"
-                tooltip="Remove"
-                sx={{ m: 0 }}
-                onClick={() => setOpen(true)}
-                disabled={!canDelete}
-            />
+            {canDelete && (
+                <CIconButton
+                    icon="DeleteIcon"
+                    color="error"
+                    size="small"
+                    tooltip="Remove"
+                    sx={{ m: 0 }}
+                    onClick={() => setOpen(true)}
+                />
+            )}
 
             <CModal
                 title={`Remove "${permission?.type}" Permission`}

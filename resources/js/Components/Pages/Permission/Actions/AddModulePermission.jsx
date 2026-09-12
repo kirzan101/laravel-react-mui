@@ -40,8 +40,13 @@ const AddModulePermission = ({ module, flash, errors, can, sx, onSuccess }) => {
         });
     };
 
+    const canCreate = can.includes("create-permissions");
     const handleSubmit = (event) => {
         event.preventDefault();
+
+        if (!canCreate) {
+            return;
+        }
 
         // set type to kebab-case before submission
         form.type = toKebabCase(form.type);
@@ -77,8 +82,6 @@ const AddModulePermission = ({ module, flash, errors, can, sx, onSuccess }) => {
             [field]: e.target.value,
         }));
     };
-
-    const canCreate = can.includes("create-permissions");
 
     // convert snake_case to Title Case for display
     const moduleName = module
