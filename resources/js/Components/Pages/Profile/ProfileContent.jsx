@@ -38,9 +38,11 @@ import InfoRow from "./Components/InfoRow";
 
 import { router } from "@inertiajs/react";
 import EditProfile from "./Actions/EditProfile";
+import ChangePassword from "./Actions/ChangePassword";
 
 const ProfileContent = ({ flash, errors = {}, profile = {} }) => {
     const [editOpen, setEditOpen] = useState(false);
+    const [changeOpen, setChangeOpen] = useState(false);
 
     const [form, setForm] = useState({
         first_name: profile.first_name ?? "",
@@ -105,32 +107,6 @@ const ProfileContent = ({ flash, errors = {}, profile = {} }) => {
     return (
         <CBoxContent>
             {flash?.error ? <AlertTransaction flash={flash} /> : null}
-
-            {/* Note: This page is still under development. */}
-            <Snackbar
-                open
-                anchorOrigin={{
-                    vertical: "bottom",
-                    horizontal: "center",
-                }}
-                sx={{
-                    width: "100%",
-                    bottom: 16,
-                    px: 2,
-                }}
-            >
-                <Alert
-                    variant="filled"
-                    severity="info"
-                    color="secondary"
-                    sx={{
-                        width: "100%",
-                    }}
-                >
-                    This page is still under development. No changes can be
-                    saved yet.
-                </Alert>
-            </Snackbar>
 
             <Grid
                 sx={{
@@ -619,27 +595,79 @@ const ProfileContent = ({ flash, errors = {}, profile = {} }) => {
                                         >
                                             <Button
                                                 fullWidth
-                                                variant="outlined"
+                                                variant="contained"
                                                 color="warning"
                                                 startIcon={<LockIcon />}
                                                 onClick={() => {
-                                                    /*
-                                                     * Handle change
-                                                     * password here.
-                                                     *
-                                                     * Intentionally
-                                                     * left empty.
-                                                     */
+                                                    setChangeOpen(true);
                                                 }}
                                                 sx={{
                                                     justifyContent:
                                                         "flex-start",
                                                     textTransform: "none",
-                                                    fontWeight: 600,
+                                                    fontWeight: 700,
+                                                    borderRadius: 2,
+                                                    px: 2,
+                                                    py: 1.1,
+
+                                                    background: (theme) =>
+                                                        `linear-gradient(
+                                                        135deg,
+                                                        ${theme.palette.secondary.main} 0%,
+                                                        #e0b52f 100%
+                                                    )`,
+
+                                                    color: "#fff",
+
+                                                    boxShadow: (theme) =>
+                                                        `0 4px 12px ${theme.palette.secondary.main}35`,
+
+                                                    transition:
+                                                        "transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease",
+
+                                                    "&:hover": {
+                                                        background: (theme) =>
+                                                            `linear-gradient(
+                                                        135deg,
+                                                        #b08521 0%,
+                                                        ${theme.palette.secondary.main} 100%
+                                                    )`,
+
+                                                        transform:
+                                                            "translateY(-2px)",
+
+                                                        boxShadow: (theme) =>
+                                                            `0 7px 18px ${theme.palette.secondary.main}50`,
+
+                                                        "& .MuiButton-startIcon":
+                                                            {
+                                                                transform:
+                                                                    "scale(1.15) rotate(-8deg)",
+                                                            },
+                                                    },
+
+                                                    "&:active": {
+                                                        transform:
+                                                            "translateY(0)",
+                                                        boxShadow: (theme) =>
+                                                            `0 3px 8px ${theme.palette.secondary.main}30`,
+                                                    },
+
+                                                    "& .MuiButton-startIcon": {
+                                                        transition:
+                                                            "transform 0.2s ease",
+                                                    },
                                                 }}
                                             >
                                                 Change Password
                                             </Button>
+                                            <ChangePassword
+                                                flash={flash}
+                                                errors={errors}
+                                                profile={profile}
+                                                changeOpen={changeOpen}
+                                                setChangeOpen={setChangeOpen}
+                                            />
                                         </Box>
 
                                         <Divider />
