@@ -611,33 +611,30 @@ const ProfileContent = ({ flash, errors = {}, profile = {} }) => {
                                                     py: 1.1,
 
                                                     background: (theme) =>
-                                                        `linear-gradient(
-                                                        135deg,
-                                                        ${theme.palette.secondary.main} 0%,
-                                                        #e0b52f 100%
-                                                    )`,
+                                                        theme.palette.gradients
+                                                            .secondary,
 
                                                     color: "#fff",
 
                                                     boxShadow: (theme) =>
-                                                        `0 4px 12px ${theme.palette.secondary.main}35`,
-
+                                                        theme.palette.shadows
+                                                            .secondaryButton,
                                                     transition:
                                                         "transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease",
 
                                                     "&:hover": {
                                                         background: (theme) =>
-                                                            `linear-gradient(
-                                                        135deg,
-                                                        #b08521 0%,
-                                                        ${theme.palette.secondary.main} 100%
-                                                    )`,
+                                                            theme.palette
+                                                                .gradients
+                                                                .secondaryHover,
 
                                                         transform:
                                                             "translateY(-2px)",
 
                                                         boxShadow: (theme) =>
-                                                            `0 7px 18px ${theme.palette.secondary.main}50`,
+                                                            theme.palette
+                                                                .shadows
+                                                                .secondaryButtonHover,
 
                                                         "& .MuiButton-startIcon":
                                                             {
@@ -650,7 +647,9 @@ const ProfileContent = ({ flash, errors = {}, profile = {} }) => {
                                                         transform:
                                                             "translateY(0)",
                                                         boxShadow: (theme) =>
-                                                            `0 3px 8px ${theme.palette.secondary.main}30`,
+                                                            theme.palette
+                                                                .shadows
+                                                                .secondaryButtonActive,
                                                     },
 
                                                     "& .MuiButton-startIcon": {

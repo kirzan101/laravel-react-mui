@@ -34,6 +34,9 @@ const buildPalette = (theme) => {
             primary: "linear-gradient(135deg, #13294B 0%, #245B9E 100%)",
             primaryHover: "linear-gradient(135deg, #0B1C3A 0%, #142C55 100%)",
 
+            secondary: "linear-gradient(135deg, #b08521 0%, #d8ad2c 100%)",
+            secondaryHover: "linear-gradient(135deg, #966f16 0%, #c7960c 100%)",
+
             accent: "linear-gradient(135deg, #185D33 0%, #2E8B57 100%)",
             accentHover: "linear-gradient(135deg, #124726 0%, #236B42 100%)",
 
@@ -56,6 +59,10 @@ const buildPalette = (theme) => {
             accentButton: "0 4px 12px rgba(24, 93, 51, 0.3)",
             accentButtonHover: "0 7px 18px rgba(24, 93, 51, 0.4)",
             accentButtonActive: "0 3px 8px rgba(24, 93, 51, 0.25)",
+
+            secondaryButton: "0 4px 12px rgba(199, 150, 12, 0.3)",
+            secondaryButtonHover: "0 7px 18px rgba(199, 150, 12, 0.4)",
+            secondaryButtonActive: "0 3px 8px rgba(199, 150, 12, 0.25)",
 
             errorButton: "0 4px 12px rgba(183, 28, 28, 0.3)",
             errorButtonHover: "0 7px 18px rgba(183, 28, 28, 0.4)",
