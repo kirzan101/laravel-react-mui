@@ -29,6 +29,38 @@ const buildPalette = (theme) => {
         },
 
         iconColor: { main: theme.colors.iconColor },
+
+        gradients: {
+            primary: "linear-gradient(135deg, #13294B 0%, #245B9E 100%)",
+            primaryHover: "linear-gradient(135deg, #0B1C3A 0%, #142C55 100%)",
+
+            accent: "linear-gradient(135deg, #185D33 0%, #2E8B57 100%)",
+            accentHover: "linear-gradient(135deg, #124726 0%, #236B42 100%)",
+
+            error:
+                theme.mode === "dark"
+                    ? "linear-gradient(135deg, #b71c1c 0%, #F44336 100%)"
+                    : "linear-gradient(135deg, #8B1515 0%, #b71c1c 100%)",
+
+            errorHover:
+                theme.mode === "dark"
+                    ? "linear-gradient(135deg, #c62828 0%, #ff5c5c 100%)"
+                    : "linear-gradient(135deg, #a01919 0%, #d32f2f 100%)",
+        },
+
+        shadows: {
+            primaryButton: "0 4px 12px rgba(19, 41, 75, 0.3)",
+            primaryButtonHover: "0 7px 18px rgba(19, 41, 75, 0.4)",
+            primaryButtonActive: "0 3px 8px rgba(19, 41, 75, 0.25)",
+
+            accentButton: "0 4px 12px rgba(24, 93, 51, 0.3)",
+            accentButtonHover: "0 7px 18px rgba(24, 93, 51, 0.4)",
+            accentButtonActive: "0 3px 8px rgba(24, 93, 51, 0.25)",
+
+            errorButton: "0 4px 12px rgba(183, 28, 28, 0.3)",
+            errorButtonHover: "0 7px 18px rgba(183, 28, 28, 0.4)",
+            errorButtonActive: "0 3px 8px rgba(183, 28, 28, 0.25)",
+        },
     };
 };
 
@@ -40,7 +72,7 @@ export const getTheme = (mode = "light") => {
         palette: buildPalette(themeConfig),
 
         gradients: {
-            primary: "linear-gradient(135deg, #0B1C3A 0%, #142C55 100%)",
+            primary: "linear-gradient(135deg, #0B1C3A 0%, #142C55 100%)", // used in login/first login page
         },
 
         breakpoints: {

@@ -1,66 +1,68 @@
-import { useEffect, useState } from "react";
-import { CModal, CButtonEdit, CButtonClose, CButtonSubmit } from "@/Components";
-
-import EditLabel from "@/Components/Utilities/EditLabel";
-import FormUserGroup from "./Forms/FormUserGroup";
-import { Box } from "@mui/material";
+import { useState, useEffect } from "react";
+import { CModal, CButtonClose, CButtonSubmit } from "@/Components";
+import { Alert } from "@mui/material";
 import { router } from "@inertiajs/react";
 
-const EditUserGroup = ({
-    userGroup,
+import FormBasicProfile from "./Forms/FormBasicProfile";
+import { Box } from "@mui/material";
+
+const EditProfile = ({
     flash,
-    errors,
-    can,
-    sx,
-    userGroupTypes,
+    errors = {},
+    profile = {},
+    editOpen,
+    setEditOpen,
     onSuccess,
 }) => {
-    const [open, setOpen] = useState(false);
     const [btnDisabled, setBtnDisabled] = useState(false);
 
-    const getFormData = (userGroup) => ({
-        id: userGroup?.id ?? null,
-        name: userGroup?.name ?? "",
-        code: userGroup?.code ?? "",
-        description: userGroup?.description ?? "",
+    const getFormData = (profile) => ({
+        id: profile?.id ?? null,
+        user_id: profile?.user_id ?? null,
+        nickname: profile?.nickname ?? "",
+        position: profile?.position ?? "",
+        contact_numbers: profile?.contact_numbers ?? [],
+        email: profile?.email ?? "",
     });
 
-    const [form, setForm] = useState(getFormData(userGroup));
+    const [form, setForm] = useState(getFormData(profile));
 
     // Store the original form value for logging purposes
     const [oldForm, setOldForm] = useState(null);
 
     // update form value when userGroup props change
     useEffect(() => {
-        setForm(getFormData(userGroup));
-    }, [userGroup]);
+        setForm(getFormData(profile));
+    }, [profile]);
 
     // Open modal
     const handleOpen = () => {
-        const initialForm = getFormData(userGroup);
+        const initialForm = getFormData(profile);
 
         setForm(initialForm);
         setOldForm({ ...initialForm });
-        setOpen(true);
+        setEditOpen(true);
     };
 
+    // Automatically open the modal when editOpen changes to true
+    useEffect(() => {
+        if (editOpen) {
+            handleOpen();
+        }
+    }, [editOpen]);
+
     const handleClose = () => {
-        setOpen(false);
+        setEditOpen(false);
         setForm(getFormData(null));
         setOldForm(null);
     };
 
-    // check if user has permission to update user group
-    const canUpdate = can.includes("update-user_groups");
-
     const handleSubmit = (event) => {
         event.preventDefault();
 
-        if (!canUpdate) return; // user does not have permission to update user group
-
         // submission here
         router.post(
-            `/user-groups/${userGroup.id}`,
+            `/update-basic-profile`,
             {
                 _method: "PUT",
                 forceFormData: true,
@@ -88,33 +90,31 @@ const EditUserGroup = ({
         );
     };
 
-    const title = `${canUpdate ? "Editing" : "Viewing"} ${userGroup.name}`;
-    const icon = canUpdate ? "EditIcon" : "PreviewIcon";
-
     return (
         <>
-            {canUpdate ? (
-                <CButtonEdit sx={sx} onClick={handleOpen}>
-                    {userGroup.name}
-                </CButtonEdit>
-            ) : (
-                <EditLabel label={userGroup.name} onClick={handleOpen} />
-            )}
-
             <CModal
-                title={title}
-                titleIcon={icon}
-                width={450}
-                open={open}
+                title="Edit Profile"
+                titleIcon="EditIcon"
+                width={650}
+                open={editOpen}
                 onClose={handleClose}
             >
+                <Alert
+                    variant="filled"
+                    severity="info"
+                    color="secondary"
+                    icon={false}
+                    sx={{ mb: 2 }}
+                >
+                    🔒 Some profile fields are locked. Contact your
+                    administrator to update them.
+                </Alert>
                 <form onSubmit={handleSubmit}>
-                    <FormUserGroup
+                    <FormBasicProfile
                         form={form}
                         setForm={setForm}
                         errors={errors}
-                        userGroupTypes={userGroupTypes}
-                        isReadonly={!canUpdate}
+                        profile={profile}
                     />
 
                     <Box
@@ -125,12 +125,10 @@ const EditUserGroup = ({
                         }}
                     >
                         <CButtonClose onClick={handleClose} />
-                        {canUpdate && (
-                            <CButtonSubmit
-                                sx={{ ml: 1, mr: 0 }}
-                                loading={btnDisabled}
-                            />
-                        )}
+                        <CButtonSubmit
+                            sx={{ ml: 1, mr: 0 }}
+                            loading={btnDisabled}
+                        />
                     </Box>
                 </form>
             </CModal>
@@ -138,4 +136,4 @@ const EditUserGroup = ({
     );
 };
 
-export default EditUserGroup;
+export default EditProfile;

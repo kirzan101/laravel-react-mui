@@ -24,8 +24,40 @@ const CIconButton = ({
     const button = (
         <IconButton
             size={size}
-            sx={{ m: 1, ...sx }}
             aria-label={props["aria-label"] ?? tooltip}
+            sx={{
+                m: 1,
+                borderRadius: 2,
+                transition: "all 0.2s ease",
+
+                "& .MuiSvgIcon-root": {
+                    transition: "transform 0.2s ease",
+                },
+
+                "&:hover": {
+                    transform: "translateY(-2px)",
+                    backgroundColor: "action.hover",
+                    boxShadow: (theme) =>
+                        `0 5px 14px ${theme.palette.primary.main}20`,
+                },
+
+                "&:hover .MuiSvgIcon-root": {
+                    transform: "scale(1.12) rotate(-5deg)",
+                },
+
+                "&:active": {
+                    transform: "translateY(0)",
+                    boxShadow: "none",
+                },
+
+                "&:focus-visible": {
+                    outline: "2px solid",
+                    outlineColor: "primary.main",
+                    outlineOffset: 2,
+                },
+
+                ...sx,
+            }}
             {...props}
         >
             <IconComponent fontSize="inherit" />
@@ -34,7 +66,7 @@ const CIconButton = ({
     );
 
     return tooltip ? (
-        <Tooltip title={tooltip}>
+        <Tooltip title={tooltip} arrow>
             <span>{button}</span>
         </Tooltip>
     ) : (

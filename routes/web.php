@@ -28,6 +28,7 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/', [\App\Http\Controllers\HomeController::class, 'index'])->name('home');
         Route::get('/dashboard', [\App\Http\Controllers\HomeController::class, 'index'])->name('dashboard');
         Route::get('/profile', [\App\Http\Controllers\HomeController::class, 'profile'])->name('profile');
+        Route::put('/update-basic-profile/{profileId?}', [\App\Http\Controllers\System\UserController::class, 'updateBasicProfile'])->name('update-basic-profile');
         Route::get('/settings', [\App\Http\Controllers\System\SettingsController::class, 'index'])->name('settings.index');
 
         Route::resource('users', \App\Http\Controllers\System\UserController::class)->only(['index', 'store', 'update']);

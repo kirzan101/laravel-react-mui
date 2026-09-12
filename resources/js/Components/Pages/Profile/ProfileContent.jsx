@@ -28,10 +28,16 @@ import {
     Lock as LockIcon,
     Person as PersonIcon,
     Phone as PhoneIcon,
+    Work as WorkIcon,
+    Dashboard as DashboardIcon,
 } from "@mui/icons-material";
 
-import { CBoxContent, CAlertMessage } from "@/Components";
+import { CBoxContent, AvatarUpload } from "@/Components";
 import AlertTransaction from "@/Components/Utilities/AlertTransaction";
+import InfoRow from "./Components/InfoRow";
+
+import { router } from "@inertiajs/react";
+import EditProfile from "./Actions/EditProfile";
 
 const ProfileContent = ({ flash, errors = {}, profile = {} }) => {
     const [editOpen, setEditOpen] = useState(false);
@@ -79,10 +85,28 @@ const ProfileContent = ({ flash, errors = {}, profile = {} }) => {
         console.log("Updated profile:", form);
     };
 
+    const handleAvatarChange = (blob) => {
+        router.post(
+            "/change-avatar",
+            {
+                _method: "PUT",
+                avatar: blob,
+            },
+            {
+                forceFormData: true,
+                onSuccess: () => {},
+                onError: (errors) => {
+                    console.error("Error changing avatar", errors);
+                },
+            },
+        );
+    };
+
     return (
         <CBoxContent>
             {flash?.error ? <AlertTransaction flash={flash} /> : null}
 
+            {/* Note: This page is still under development. */}
             <Snackbar
                 open
                 anchorOrigin={{
@@ -107,6 +131,67 @@ const ProfileContent = ({ flash, errors = {}, profile = {} }) => {
                     saved yet.
                 </Alert>
             </Snackbar>
+
+            <Grid
+                sx={{
+                    display: "flex",
+                    justifyContent: "flex-end",
+                    overflow: "hidden",
+                    border: 1,
+                    borderColor: "divider",
+                    borderRadius: 3,
+                    bgcolor: "background.paper",
+                    boxShadow: "0 4px 20px rgba(0, 0, 0, 0.08)",
+                    width: "100%",
+                    maxWidth: 1000,
+                    mx: "auto",
+                    p: 1,
+                    mb: 2,
+                }}
+            >
+                <Button
+                    startIcon={<DashboardIcon />}
+                    variant="contained"
+                    sx={{
+                        px: 2.5,
+                        py: 1.1,
+                        borderRadius: 2.5,
+                        fontWeight: 700,
+                        textTransform: "none",
+                        letterSpacing: 0.2,
+                        background: (theme) => theme.palette.gradients.primary,
+                        boxShadow: (theme) =>
+                            theme.palette.shadows.primaryButton,
+                        transition: "all 0.2s ease",
+
+                        "&:hover": {
+                            background: (theme) =>
+                                theme.palette.gradients.primary,
+                            transform: "translateY(-2px)",
+                            boxShadow: (theme) =>
+                                theme.palette.shadows.primaryButtonHover,
+                        },
+
+                        "&:active": {
+                            transform: "translateY(0)",
+                            boxShadow: (theme) =>
+                                theme.palette.shadows.primaryButtonActive,
+                        },
+
+                        "& .MuiButton-startIcon": {
+                            transition: "transform 0.2s ease",
+                        },
+
+                        "&:hover .MuiButton-startIcon": {
+                            transform: "scale(1.15) rotate(-5deg)",
+                        },
+                    }}
+                    onClick={() => router.visit("/dashboard")}
+                >
+                    Go to Dashboard
+                </Button>
+            </Grid>
+
             <Box
                 sx={{
                     width: "100%",
@@ -230,7 +315,7 @@ const ProfileContent = ({ flash, errors = {}, profile = {} }) => {
                                     mt: -7,
                                 }}
                             >
-                                <Avatar
+                                {/* <Avatar
                                     src={profile.avatar || undefined}
                                     alt={profile.full_name || "Profile avatar"}
                                     sx={{
@@ -250,7 +335,54 @@ const ProfileContent = ({ flash, errors = {}, profile = {} }) => {
                                     }}
                                 >
                                     {initials}
-                                </Avatar>
+                                </Avatar> */}
+                                <AvatarUpload
+                                    avatarUrl={profile.avatar}
+                                    initials={initials}
+                                    size={150}
+                                    onChange={handleAvatarChange}
+                                    avatarSx={{
+                                        bgcolor: "primary.main",
+                                        fontSize: 40,
+                                        fontWeight: 700,
+
+                                        // Separation from the page
+                                        border: "4px solid",
+                                        borderColor: "background.paper",
+
+                                        // Role ring
+                                        outline: "3px solid",
+                                        outlineColor: profile.is_admin
+                                            ? "secondary.main"
+                                            : "primary.main",
+
+                                        outlineOffset: 2,
+
+                                        boxShadow: (theme) =>
+                                            profile.is_admin
+                                                ? `0 0 0 5px ${theme.palette.secondary.main}20,
+                                                   0 0 20px ${theme.palette.secondary.main}45,
+                                                   0 8px 24px ${theme.palette.primary.main}30`
+                                                : `0 0 0 5px ${theme.palette.primary.main}15,
+                                                   0 0 16px ${theme.palette.primary.main}30,
+                                                   0 8px 24px ${theme.palette.primary.main}25`,
+
+                                        transition: "all 0.25s ease",
+
+                                        "&:hover": {
+                                            transform: "scale(1.03)",
+
+                                            boxShadow: (theme) =>
+                                                profile.is_admin
+                                                    ? `0 0 0 4px ${theme.palette.secondary.main},
+                                                       0 0 28px ${theme.palette.secondary.main}60,
+                                                       0 10px 28px ${theme.palette.primary.main}40`
+                                                    : `0 0 0 4px ${theme.palette.primary.main},
+                                                       0 0 24px ${theme.palette.primary.main}50,
+                                                       0 10px 28px ${theme.palette.primary.main}35`,
+                                        },
+                                    }}
+                                />
 
                                 {/* Online status */}
                                 <Box
@@ -359,21 +491,9 @@ const ProfileContent = ({ flash, errors = {}, profile = {} }) => {
                                 >
                                     <Stack spacing={2}>
                                         <InfoRow
-                                            icon={<PersonIcon />}
-                                            label="Full Name"
-                                            value={profile.full_name}
-                                        />
-
-                                        <InfoRow
-                                            icon={<BadgeIcon />}
+                                            icon={<WorkIcon />}
                                             label="Position"
                                             value={profile.position}
-                                        />
-
-                                        <InfoRow
-                                            icon={<PersonIcon />}
-                                            label="User Group"
-                                            value={profile.user_group_name}
                                         />
 
                                         <InfoRow
@@ -390,7 +510,7 @@ const ProfileContent = ({ flash, errors = {}, profile = {} }) => {
                                                     ? profile.contact_numbers.join(
                                                           ", ",
                                                       )
-                                                    : null
+                                                    : "—"
                                             }
                                         />
                                     </Stack>
@@ -420,12 +540,6 @@ const ProfileContent = ({ flash, errors = {}, profile = {} }) => {
                                     }}
                                 >
                                     <Stack spacing={2}>
-                                        <InfoRow
-                                            icon={<BadgeIcon />}
-                                            label="Account Type"
-                                            value={profile.type}
-                                        />
-
                                         {/* STATUS */}
                                         <Box>
                                             <Stack
@@ -558,198 +672,14 @@ const ProfileContent = ({ flash, errors = {}, profile = {} }) => {
             {/* =========================================================
                 EDIT PROFILE DIALOG
             ========================================================== */}
-            <Dialog
-                open={editOpen}
-                onClose={() => setEditOpen(false)}
-                fullWidth
-                maxWidth="md"
-            >
-                <DialogTitle
-                    sx={{
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "space-between",
-                    }}
-                >
-                    Edit Profile
-                    <IconButton
-                        onClick={() => setEditOpen(false)}
-                        aria-label="Close edit profile"
-                    >
-                        <CloseIcon />
-                    </IconButton>
-                </DialogTitle>
-
-                <DialogContent dividers>
-                    <Grid container spacing={2.5} sx={{ pt: 1 }}>
-                        <Grid size={{ xs: 12, sm: 6 }}>
-                            <TextField
-                                fullWidth
-                                label="First Name"
-                                value={form.first_name}
-                                onChange={handleChange("first_name")}
-                                error={Boolean(errors.first_name)}
-                                helperText={errors.first_name || ""}
-                            />
-                        </Grid>
-
-                        <Grid size={{ xs: 12, sm: 6 }}>
-                            <TextField
-                                fullWidth
-                                label="Middle Name"
-                                value={form.middle_name}
-                                onChange={handleChange("middle_name")}
-                                error={Boolean(errors.middle_name)}
-                                helperText={errors.middle_name || ""}
-                            />
-                        </Grid>
-
-                        <Grid size={{ xs: 12, sm: 6 }}>
-                            <TextField
-                                fullWidth
-                                label="Last Name"
-                                value={form.last_name}
-                                onChange={handleChange("last_name")}
-                                error={Boolean(errors.last_name)}
-                                helperText={errors.last_name || ""}
-                            />
-                        </Grid>
-
-                        <Grid size={{ xs: 12, sm: 6 }}>
-                            <TextField
-                                fullWidth
-                                label="Nickname"
-                                value={form.nickname}
-                                onChange={handleChange("nickname")}
-                                error={Boolean(errors.nickname)}
-                                helperText={errors.nickname || ""}
-                            />
-                        </Grid>
-
-                        <Grid size={{ xs: 12, sm: 6 }}>
-                            <TextField
-                                fullWidth
-                                label="Username"
-                                value={form.username}
-                                onChange={handleChange("username")}
-                                error={Boolean(errors.username)}
-                                helperText={errors.username || ""}
-                            />
-                        </Grid>
-
-                        <Grid size={{ xs: 12, sm: 6 }}>
-                            <TextField
-                                fullWidth
-                                label="Email"
-                                type="email"
-                                value={form.email}
-                                onChange={handleChange("email")}
-                                error={Boolean(errors.email)}
-                                helperText={errors.email || ""}
-                            />
-                        </Grid>
-
-                        <Grid size={{ xs: 12 }}>
-                            <TextField
-                                fullWidth
-                                label="Contact Number"
-                                value={form.contact_number}
-                                onChange={handleChange("contact_number")}
-                                error={Boolean(errors.contact_numbers)}
-                                helperText={errors.contact_numbers || ""}
-                            />
-                        </Grid>
-                    </Grid>
-                </DialogContent>
-
-                <DialogActions sx={{ p: 2 }}>
-                    <Button onClick={() => setEditOpen(false)}>Cancel</Button>
-
-                    <Button
-                        variant="contained"
-                        startIcon={<EditIcon />}
-                        onClick={handleSave}
-                    >
-                        Save Changes
-                    </Button>
-                </DialogActions>
-            </Dialog>
+            <EditProfile
+                flash={flash}
+                errors={errors}
+                profile={profile}
+                editOpen={editOpen}
+                setEditOpen={setEditOpen}
+            />
         </CBoxContent>
-    );
-};
-
-/**
- * Text-only information row.
- *
- * `value` must contain text/string data only.
- * This prevents invalid DOM nesting such as:
- *
- * <p>
- *     <div>...</div>
- * </p>
- */
-const InfoRow = ({ icon, label, value }) => {
-    const displayValue =
-        value !== null && value !== undefined && String(value).trim() !== ""
-            ? String(value)
-            : "Not provided";
-
-    return (
-        <Stack
-            direction="row"
-            spacing={1.5}
-            sx={{
-                alignItems: "center",
-                minWidth: 0,
-            }}
-        >
-            <Box
-                sx={{
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    flexShrink: 0,
-                    color: "text.secondary",
-                    "& svg": {
-                        fontSize: 21,
-                    },
-                }}
-            >
-                {icon}
-            </Box>
-
-            <Box
-                sx={{
-                    minWidth: 0,
-                    flex: 1,
-                }}
-            >
-                <Typography
-                    variant="caption"
-                    color="text.secondary"
-                    display="block"
-                    sx={{
-                        fontWeight: 600,
-                    }}
-                >
-                    {label}
-                </Typography>
-
-                <Typography
-                    component="span"
-                    variant="body2"
-                    sx={{
-                        display: "block",
-                        overflow: "hidden",
-                        textOverflow: "ellipsis",
-                        whiteSpace: "nowrap",
-                        fontWeight: 600,
-                    }}
-                >
-                    {displayValue}
-                </Typography>
-            </Box>
-        </Stack>
     );
 };
 

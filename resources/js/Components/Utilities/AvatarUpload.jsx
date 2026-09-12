@@ -12,7 +12,7 @@ import {
     Typography,
 } from "@mui/material";
 import PhotoCameraIcon from "@mui/icons-material/PhotoCamera";
-import VisibilityIcon from "@mui/icons-material/Visibility";
+import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { router } from "@inertiajs/react";
 
@@ -41,6 +41,7 @@ const AvatarUpload = ({
     disabled = false,
     profileId = null,
     onSuccess = () => {},
+    avatarSx,
 }) => {
     const [open, setOpen] = useState(false);
     const [viewOpen, setViewOpen] = useState(false);
@@ -353,6 +354,8 @@ const AvatarUpload = ({
                             fontSize: size * 0.4,
                             fontWeight: 600,
                         }),
+
+                        ...avatarSx,
                     })}
                 >
                     {!avatarUrl && initials ? initials : null}
@@ -373,7 +376,7 @@ const AvatarUpload = ({
                     }}
                 >
                     {avatarUrl ? (
-                        <VisibilityIcon
+                        <EditIcon
                             sx={{ color: "#fff", fontSize: size / 2.8 }}
                         />
                     ) : (
@@ -422,10 +425,41 @@ const AvatarUpload = ({
                         >
                             <Button
                                 startIcon={<DeleteIcon />}
-                                variant="text"
                                 color="error"
                                 size="small"
                                 onClick={handleRemovePhoto}
+                                sx={{
+                                    m: 1,
+                                    background: (theme) =>
+                                        theme.palette.gradients.error,
+                                    boxShadow: (theme) =>
+                                        theme.palette.shadows.errorButton,
+                                    transition: "all 0.2s ease",
+
+                                    "&:hover": {
+                                        background: (theme) =>
+                                            theme.palette.gradients.errorHover,
+                                        transform: "translateY(-2px)",
+                                        boxShadow: (theme) =>
+                                            theme.palette.shadows
+                                                .errorButtonHover,
+                                    },
+
+                                    "&:active": {
+                                        transform: "translateY(0)",
+                                        boxShadow: (theme) =>
+                                            theme.palette.shadows
+                                                .errorButtonActive,
+                                    },
+
+                                    "& .MuiButton-startIcon": {
+                                        transition: "transform 0.2s ease",
+                                    },
+
+                                    "&:hover .MuiButton-startIcon": {
+                                        transform: "scale(1.15) rotate(-5deg)",
+                                    },
+                                }}
                             >
                                 Remove Photo
                             </Button>
@@ -441,12 +475,54 @@ const AvatarUpload = ({
                                 theme.palette.mode === "dark"
                                     ? "#fff"
                                     : theme.palette.primary.main,
+                            transition: "all 0.2s ease",
+                            "& .MuiButton-startIcon": {
+                                transition: "transform 0.2s ease",
+                            },
+
+                            "&:hover .MuiButton-startIcon": {
+                                transform: "scale(1.15) rotate(-5deg)",
+                            },
                         })}
                     >
                         Close
                     </Button>
                     {!disabled && (
-                        <Button variant="contained" onClick={handleChangePhoto}>
+                        <Button
+                            sx={{
+                                background: (theme) =>
+                                    theme.palette.gradients.primary,
+                                boxShadow: (theme) =>
+                                    theme.palette.shadows.primaryButton,
+                                transition: "all 0.2s ease",
+
+                                "&:hover": {
+                                    background: (theme) =>
+                                        theme.palette.gradients.primaryHover,
+                                    transform: "translateY(-2px)",
+                                    boxShadow: (theme) =>
+                                        theme.palette.shadows
+                                            .primaryButtonHover,
+                                },
+
+                                "&:active": {
+                                    transform: "translateY(0)",
+                                    boxShadow: (theme) =>
+                                        theme.palette.shadows
+                                            .primaryButtonActive,
+                                },
+
+                                "& .MuiButton-startIcon": {
+                                    transition: "transform 0.2s ease",
+                                },
+
+                                "&:hover .MuiButton-startIcon": {
+                                    transform: "scale(1.15) rotate(-5deg)",
+                                },
+                            }}
+                            variant="contained"
+                            onClick={handleChangePhoto}
+                        >
                             Change Photo
                         </Button>
                     )}

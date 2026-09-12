@@ -7,6 +7,7 @@ use App\DTOs\AccountDTO;
 use App\DTOs\ChangePasswordDTO;
 use App\DTOs\FirstLoginChangePasswordDTO;
 use App\DTOs\UserDTO;
+use App\DTOs\BasicProfileDTO;
 use Illuminate\Http\UploadedFile;
 
 interface ManageAccountInterface
@@ -28,6 +29,14 @@ interface ManageAccountInterface
      * @return ModelResponse
      */
     public function updateUserProfile(AccountDTO $accountDTO, int $profileId): ModelResponse;
+
+    /**
+     * Update the basic profile information for a user.
+     *
+     * @param BasicProfileDTO $basicProfileDTO
+     * @return ModelResponse
+     */
+    public function updateBasicProfile(BasicProfileDTO $basicProfileDTO): ModelResponse;
 
     /**
      * Change the password for the authenticated user's profile.

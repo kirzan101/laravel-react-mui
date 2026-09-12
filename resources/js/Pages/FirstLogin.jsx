@@ -189,7 +189,40 @@ const FirstLogin = ({ flash, errors }) => {
 
                             <CButton
                                 fullWidth
-                                sx={{ mt: 2, mx: 0 }}
+                                sx={{
+                                    mt: 2,
+                                    mx: 0,
+                                    background: (theme) =>
+                                        theme.palette.gradients.primary,
+                                    boxShadow: (theme) =>
+                                        theme.palette.shadows.primaryButton,
+                                    transition: "all 0.2s ease",
+
+                                    "&:hover": {
+                                        background: (theme) =>
+                                            theme.palette.gradients
+                                                .primaryHover,
+                                        transform: "translateY(-2px)",
+                                        boxShadow: (theme) =>
+                                            theme.palette.shadows
+                                                .primaryButtonHover,
+                                    },
+
+                                    "&:active": {
+                                        transform: "translateY(0)",
+                                        boxShadow: (theme) =>
+                                            theme.palette.shadows
+                                                .primaryButtonActive,
+                                    },
+
+                                    "& .MuiButton-startIcon": {
+                                        transition: "transform 0.2s ease",
+                                    },
+
+                                    "&:hover .MuiButton-startIcon": {
+                                        transform: "scale(1.15) rotate(-5deg)",
+                                    },
+                                }}
                                 loading={btnDisabled}
                                 loadingPosition="start"
                                 type="submit"
@@ -199,7 +232,39 @@ const FirstLogin = ({ flash, errors }) => {
 
                             <CButton
                                 fullWidth
-                                sx={{ mt: 2, mx: 0 }}
+                                sx={{
+                                    mt: 2,
+                                    mx: 0,
+                                    background: (theme) =>
+                                        theme.palette.gradients.error,
+                                    boxShadow: (theme) =>
+                                        theme.palette.shadows.errorButton,
+                                    transition: "all 0.2s ease",
+
+                                    "&:hover": {
+                                        background: (theme) =>
+                                            theme.palette.gradients.errorHover,
+                                        transform: "translateY(-2px)",
+                                        boxShadow: (theme) =>
+                                            theme.palette.shadows
+                                                .errorButtonHover,
+                                    },
+
+                                    "&:active": {
+                                        transform: "translateY(0)",
+                                        boxShadow: (theme) =>
+                                            theme.palette.shadows
+                                                .errorButtonActive,
+                                    },
+
+                                    "& .MuiButton-startIcon": {
+                                        transition: "transform 0.2s ease",
+                                    },
+
+                                    "&:hover .MuiButton-startIcon": {
+                                        transform: "scale(1.15) rotate(-5deg)",
+                                    },
+                                }}
                                 loading={btnDisabled}
                                 loadingPosition="start"
                                 color="error"

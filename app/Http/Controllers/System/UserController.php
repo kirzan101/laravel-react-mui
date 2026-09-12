@@ -4,6 +4,7 @@ namespace App\Http\Controllers\System;
 
 use App\DTOs\AccountDTO;
 use App\DTOs\ActivityLogDTO;
+use App\DTOs\BasicProfileDTO;
 use App\DTOs\ProfileDTO;
 use App\DTOs\UserDTO;
 use App\Helpers\Helper;
@@ -19,7 +20,9 @@ use Illuminate\Support\Facades\Gate;
 use Inertia\Inertia;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\System\ChangeAvatarFormRequest;
+use App\Interfaces\CurrentUserInterface;
 use App\Interfaces\UserModuleInterface;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class UserController extends Controller
@@ -29,7 +32,8 @@ class UserController extends Controller
         private UserGroupFetchInterface $userGroupFetch,
         private RoleFetchInterface $roleFetch,
         private ManageAccountInterface $manageAccount,
-        private ActivityLoggerInterface $activityLogger
+        private ActivityLoggerInterface $activityLogger,
+        private CurrentUserInterface $currentUser
     ) {}
 
     /**
@@ -248,6 +252,49 @@ class UserController extends Controller
         $this->refreshCache(); // Refresh the cache after removing the avatar
 
         return redirect()->back()->with($result->status, $result->message);
+    }
+
+    /**
+     * Update the basic profile information for the authenticated user.
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\RedirectResponse|\Inertia\Response
+     */
+    public function updateBasicProfile(Request $request, ?int $profileId = null)
+    {
+        // validate the incoming request data
+        $request->validate([
+            'nickname' => 'nullable|string|max:30',
+            'position' => 'nullable|string|max:100',
+            'contact_numbers' => 'nullable|array',
+            'contact_numbers.*' => 'nullable|string|max:15',
+            'email' => 'required|string|email|max:255|unique:users,email,' . $this->currentUser->getUserId(),
+        ]);
+
+        $basicProfileDTO = BasicProfileDTO::fromArray([
+            'nickname' => $request->input('nickname'),
+            'position' => $request->input('position'),
+            'contact_numbers' => $request->input('contact_numbers') ?? [],
+            'email' => $request->input('email') ?? Auth::user()->email,
+            'user_id' => $request->input('user_id') ?? $this->currentUser->getUserId(),
+            'profile_id' => $profileId ?? $this->currentUser->getProfileId(),
+        ]);
+
+        $updateResult = $this->manageAccount->updateBasicProfile($basicProfileDTO);
+
+        if ($updateResult->status === Helper::ERROR) {
+            return Inertia::render('Error', [
+                'code' => $updateResult->code,
+                'message' => $updateResult->message
+            ]);
+        }
+
+        // Log the activity
+        $this->activityLogger->addLog($updateResult, $request, 'profiles', 'update');
+
+        $this->refreshCache(); // Refresh the cache after updating the user
+
+        return redirect()->back()->with($updateResult->status, $updateResult->message);
     }
 
     /**

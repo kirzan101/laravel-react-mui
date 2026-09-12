@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Data\ModelResponse;
 use App\DTOs\AccountDTO;
+use App\DTOs\BasicProfileDTO;
 use App\DTOs\ChangePasswordDTO;
 use App\DTOs\FirstLoginChangePasswordDTO;
 use App\DTOs\ProfileDTO;
@@ -186,6 +187,53 @@ class ManageAccountService implements ManageAccountInterface
 
                 return ModelResponse::success(200, Helper::SUCCESS, 'Profile updated successfully!', $profile, $profile->id);
             });
+        } catch (\Throwable $th) {
+            $code = $this->httpCode($th);
+            return ModelResponse::error($code, Helper::ERROR, $th->getMessage());
+        }
+    }
+
+    /**
+     * Update the basic profile information for a user.
+     *
+     * @param BasicProfileDTO $basicProfileDTO
+     * @return ModelResponse
+     */
+    public function updateBasicProfile(BasicProfileDTO $basicProfileDTO): ModelResponse
+    {
+        try {
+            // Fetch the profile by email
+            $profile = $this->fetch
+                ->showQuery(Profile::class, $basicProfileDTO->profile_id)
+                ->firstOrFail();
+
+            // Update the profile with the basic profile data
+            $profile = $this->base->update($profile, [
+                'nickname' => $basicProfileDTO->nickname,
+                'position' => $basicProfileDTO->position,
+                'contact_numbers' => $basicProfileDTO->contact_numbers,
+                'updated_at' => now(),
+                'updated_by' => $this->currentUser->getProfileId(),
+            ]);
+
+            if (!$profile) {
+                throw new RuntimeException('Profile update failed!', 500);
+            }
+
+            $user = $this->fetch
+                ->showQuery(User::class, $basicProfileDTO->user_id)
+                ->firstOrFail();
+
+            $user = $this->base->update($user, [
+                'email' => $basicProfileDTO->email,
+                'updated_at' => now()
+            ]);
+
+            if (!$user) {
+                throw new RuntimeException('User update failed!', 500);
+            }
+
+            return ModelResponse::success(200, Helper::SUCCESS, 'Basic profile updated successfully!', $profile, $profile->id);
         } catch (\Throwable $th) {
             $code = $this->httpCode($th);
             return ModelResponse::error($code, Helper::ERROR, $th->getMessage());

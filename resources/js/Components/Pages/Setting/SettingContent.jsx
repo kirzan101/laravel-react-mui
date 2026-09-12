@@ -187,21 +187,28 @@ const SettingContent = ({
                                                 sx={{
                                                     display: "flex",
                                                     alignItems: "center",
+                                                    justifyContent:
+                                                        "flex-start",
+                                                    gap: 1.25,
                                                     width: "100%",
-                                                    gap: 1.5,
                                                 }}
                                             >
                                                 <Icon
                                                     fontSize="small"
                                                     sx={{
+                                                        flexShrink: 0,
                                                         color: "inherit",
+                                                        transition:
+                                                            "transform 0.2s ease",
                                                     }}
                                                 />
+
                                                 <Box
                                                     component="span"
                                                     sx={{
                                                         fontSize: 14,
-                                                        fontWeight: 500,
+                                                        fontWeight: 600,
+                                                        lineHeight: 1,
                                                     }}
                                                 >
                                                     {tab.label}
@@ -209,24 +216,55 @@ const SettingContent = ({
                                             </Box>
                                         }
                                         sx={{
-                                            color: "text.primary",
+                                            minHeight: 42,
+                                            px: 2,
+                                            py: 1,
+                                            alignItems: "flex-start",
+                                            textAlign: "left",
+
                                             borderRadius: 2,
-                                            transition: "all 0.2s ease",
+                                            color: "text.primary",
+                                            fontWeight: 600,
+                                            textTransform: "none",
+
+                                            transition:
+                                                "color 0.2s ease, background-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease",
 
                                             "&:hover": {
                                                 color: "#fff",
                                                 backgroundColor: "primary.main",
+                                                transform: "translateY(-2px)",
+                                                boxShadow: (theme) =>
+                                                    `0 5px 14px ${theme.palette.primary.main}30`,
+
+                                                "& .MuiSvgIcon-root": {
+                                                    transform:
+                                                        "scale(1.12) rotate(-4deg)",
+                                                },
                                             },
 
                                             "&.Mui-selected": {
                                                 color: "#fff",
-                                                backgroundColor: "primary.main",
+                                                background: (theme) =>
+                                                    theme.palette.gradients
+                                                        .primary,
+                                                boxShadow: (theme) =>
+                                                    `0 4px 12px ${theme.palette.primary.main}35`,
                                             },
 
                                             "&.Mui-selected:hover": {
-                                                color: "#fff",
-                                                backgroundColor:
-                                                    "primaryAlt1.main",
+                                                background: (theme) =>
+                                                    theme.palette.gradients
+                                                        .primaryHover,
+                                                transform: "translateY(-2px)",
+                                                boxShadow: (theme) =>
+                                                    `0 7px 18px ${theme.palette.primary.main}45`,
+                                            },
+
+                                            "&:focus-visible": {
+                                                outline: "2px solid",
+                                                outlineColor: "primary.main",
+                                                outlineOffset: 2,
                                             },
                                         }}
                                     />

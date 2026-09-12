@@ -1,6 +1,7 @@
 import { CBox } from "@/Components";
 import { Head, usePage } from "@inertiajs/react";
 import { Typography, Breadcrumbs } from "@mui/material";
+import DefaultLayout from "@/Layouts/DefaultLayout";
 
 import ProfileContent from "@/Components/Pages/Profile/ProfileContent";
 
@@ -35,5 +36,7 @@ const Profile = ({ flash, errors, profile }) => {
         </>
     );
 };
+
+Profile.layout = (page) => <DefaultLayout>{page}</DefaultLayout>;
 
 export default Profile;

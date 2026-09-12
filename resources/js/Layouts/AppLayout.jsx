@@ -34,6 +34,7 @@ import ProfileNav from "./Components/ProfileNav";
 import SidebarItem from "./Components/SidebarItem";
 import GlobalSnackbar from "../Components/Utilities/GlobalSnackbar";
 import Logout from "../Components/Pages/Auth/Logout";
+import { CIconButton } from "@/Components";
 
 const drawerWidth = 245;
 
@@ -206,7 +207,7 @@ const AppLayout = ({ children }) => {
                 position="fixed"
                 open={open}
                 isMobile={isMobile}
-                sx={{ backgroundColor: "#13294B" }}
+                sx={{ backgroundColor: "primary.main" }}
             >
                 <Toolbar variant="dense">
                     {/* OPEN BUTTON */}
@@ -230,6 +231,16 @@ const AppLayout = ({ children }) => {
                         variant="text"
                         onClick={() => setLogoutOpen(true)}
                         startIcon={<LogoutIcon />}
+                        sx={{
+                            transition: "all 0.2s ease",
+                            "& .MuiButton-startIcon": {
+                                transition: "transform 0.2s ease",
+                            },
+
+                            "&:hover .MuiButton-startIcon": {
+                                transform: "scale(1.15) rotate(-5deg)",
+                            },
+                        }}
                     >
                         Logout
                     </Button>
@@ -256,17 +267,6 @@ const AppLayout = ({ children }) => {
                     </Box>
                 )}
             </AppBar>
-
-            {/* <AppBar
-                position="fixed"
-                open={open}
-                isMobile={isMobile}
-                sx={{ backgroundColor: "#f00e06" }}
-            >
-                <Toolbar variant="dense">
-                    production mode
-                </Toolbar>
-            </AppBar> */}
 
             {/* ================= DRAWER ================= */}
             <Drawer
