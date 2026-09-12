@@ -325,6 +325,13 @@ const AppLayout = ({ children }) => {
                             label="Settings"
                         />
                     )}
+
+                    {/* UNDER DEVELOPMENT */}
+                    {/* <SidebarItem
+                        href="/profile"
+                        icon={iconMap.AccountCircleIcon}
+                        label="Profile"
+                    /> */}
                 </List>
             </Drawer>
 

@@ -1,6 +1,6 @@
 import { useMemo } from "react";
 import { CDataGrid, CChip } from "@/Components";
-import { Box } from "@mui/material";
+import { Box, Stack } from "@mui/material";
 import { router } from "@inertiajs/react";
 
 import EditUser from "../Actions/EditUser";
@@ -93,12 +93,52 @@ const TableUser = ({
             },
             { field: "username", headerName: "Username", width: 200 },
             { field: "email", headerName: "Email", width: 250 },
-            { field: "position", headerName: "Position", width: 200 },
+            // { field: "position", headerName: "Position", width: 200 },
+            {
+                field: "role_names",
+                headerName: "Roles",
+                width: 200,
+                sortable: false,
+                disableColumnMenu: true,
+                renderCell: (params) => {
+                    return (
+                        <Stack
+                            direction="row"
+                            spacing={1}
+                            sx={{
+                                width: "100%",
+                                height: "100%",
+                                alignItems: "center",
+                                flexWrap: "wrap",
+                                gap: 1,
+                            }}
+                        >
+                            {Object.values(params.row.role_names).map(
+                                (roleName, index) => (
+                                    <CChip
+                                        key={index}
+                                        label={roleName}
+                                        size="small"
+                                        color="primary"
+                                        sx={{
+                                            minHeight: 28,
+                                            py: 0,
+                                            m: 0,
+                                        }}
+                                    />
+                                ),
+                            )}
+                        </Stack>
+                    );
+                },
+            },
             { field: "user_group_name", headerName: "User Group", width: 200 },
             {
                 field: "status",
                 headerName: "Status",
                 width: 100,
+                sortable: false,
+                disableColumnMenu: true,
                 renderCell: (params) => {
                     return (
                         <CChip

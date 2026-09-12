@@ -13,7 +13,14 @@ class ProfileResource extends JsonResource
     /**
      * Define relationships this resource may need.
      */
-    public static array $relations = ['createdBy', 'updatedBy', 'user', 'profileUserGroup'];
+    public static array $relations = [
+        'createdBy',
+        'updatedBy',
+        'user',
+        'profileUserGroup',
+        'profileRoles',
+        'profileRoles.role'
+    ];
 
     /**
      * Transform the resource into an array.
@@ -45,6 +52,7 @@ class ProfileResource extends JsonResource
             'user_group_id' => $this->profileUserGroup->user_group_id ?? null,
             'user_group_name' => $this->profileUserGroup->userGroup->name ?? null,
             'role_ids' => $this->getRoleIds(),
+            'role_names' => $this->getRoleNames(),
             'last_login_at' => $this->returnShortDateTime($this->user->last_login_at),
             'created_at' => $this->returnShortDateTime($this->created_at),
             'updated_at' => $this->returnShortDateTime($this->updated_at),
@@ -61,5 +69,15 @@ class ProfileResource extends JsonResource
     protected function getRoleIds(): array
     {
         return $this->profileRoles->pluck('role_id')->toArray();
+    }
+
+    /**
+     * Get the profile role names
+     *
+     * @return array
+     */
+    protected function getRoleNames(): array
+    {
+        return $this->profileRoles->pluck('role.name')->toArray();
     }
 }

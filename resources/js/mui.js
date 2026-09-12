@@ -8,7 +8,7 @@ const buildPalette = (theme) => {
 
         primary: { main: theme.colors.primary, contrastText: "#fff" },
         primaryAlt1: { main: theme.colors.primaryAlt1, contrastText: "#fff" },
-        secondary: { main: theme.colors.secondary },
+        secondary: { main: theme.colors.secondary, contrastText: "#fff" },
         accent: { main: theme.colors.accent, contrastText: "#fff" },
         error: { main: theme.colors.error },
 

@@ -1,6 +1,7 @@
 import { useState } from "react";
 
 import {
+    Alert,
     Avatar,
     Box,
     Button,
@@ -12,6 +13,7 @@ import {
     Divider,
     Grid,
     IconButton,
+    Snackbar,
     Stack,
     TextField,
     Typography,
@@ -28,7 +30,7 @@ import {
     Phone as PhoneIcon,
 } from "@mui/icons-material";
 
-import { CBoxContent } from "@/Components";
+import { CBoxContent, CAlertMessage } from "@/Components";
 import AlertTransaction from "@/Components/Utilities/AlertTransaction";
 
 const ProfileContent = ({ flash, errors = {}, profile = {} }) => {
@@ -81,6 +83,30 @@ const ProfileContent = ({ flash, errors = {}, profile = {} }) => {
         <CBoxContent>
             {flash?.error ? <AlertTransaction flash={flash} /> : null}
 
+            <Snackbar
+                open
+                anchorOrigin={{
+                    vertical: "bottom",
+                    horizontal: "center",
+                }}
+                sx={{
+                    width: "100%",
+                    bottom: 16,
+                    px: 2,
+                }}
+            >
+                <Alert
+                    variant="filled"
+                    severity="info"
+                    color="secondary"
+                    sx={{
+                        width: "100%",
+                    }}
+                >
+                    This page is still under development. No changes can be
+                    saved yet.
+                </Alert>
+            </Snackbar>
             <Box
                 sx={{
                     width: "100%",
