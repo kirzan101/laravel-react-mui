@@ -37,9 +37,13 @@ class SettingsController extends Controller
             ]);
         }
 
+        $fetchResult = $this->permissionFetch->permissionsByModule();
+        $permissionsByModule = $fetchResult->data ?? [];
+
         return Inertia::render('System/Settings', [
             'userGroupTypes' => Helper::USER_GROUP_CODE_TYPES,      // user group props
             'permissions' => $permissions,                          // role props
+            'permissionsByModule' => $permissionsByModule,          // permissions by module props
             'moduleLists' => $moduleLists,                          // role props
             'categories' => Helper::MODULE_CATEGORIES,              // module props
         ]);

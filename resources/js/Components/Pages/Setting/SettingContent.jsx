@@ -3,6 +3,7 @@ import { iconMap } from "@/Utilities/icons";
 
 import UserGroupContent from "@/Components/Pages/UserGroup/UserGroupContent";
 import RoleContent from "@/Components/Pages/Role/RoleContent";
+import PermissionContent from "@/Components/Pages/Permission/PermissionContent";
 import ModuleContent from "@/Components/Pages/Module/ModuleContent";
 
 import {
@@ -38,6 +39,7 @@ const SettingContent = ({
     accessibleRoutes,
     settingsModules,
     categories,
+    permissionsByModule,
 }) => {
     const [value, setValue] = useState(0);
     const [showMessages, setShowMessages] = useState(true);
@@ -75,6 +77,17 @@ const SettingContent = ({
                     errors={showMessages ? errors : DEFAULT_ERRORS}
                     permissions={permissions}
                     moduleLists={moduleLists}
+                    can={can}
+                />
+            ),
+        },
+        {
+            base_name: "permissions",
+            component: (
+                <PermissionContent
+                    flash={showMessages ? flash : DEFAULT_FLASH}
+                    errors={showMessages ? errors : DEFAULT_ERRORS}
+                    permissionsByModule={permissionsByModule}
                     can={can}
                 />
             ),
@@ -178,7 +191,12 @@ const SettingContent = ({
                                                     gap: 1.5,
                                                 }}
                                             >
-                                                <Icon fontSize="small" />
+                                                <Icon
+                                                    fontSize="small"
+                                                    sx={{
+                                                        color: "inherit",
+                                                    }}
+                                                />
                                                 <Box
                                                     component="span"
                                                     sx={{
@@ -190,6 +208,27 @@ const SettingContent = ({
                                                 </Box>
                                             </Box>
                                         }
+                                        sx={{
+                                            color: "text.primary",
+                                            borderRadius: 2,
+                                            transition: "all 0.2s ease",
+
+                                            "&:hover": {
+                                                color: "#fff",
+                                                backgroundColor: "primary.main",
+                                            },
+
+                                            "&.Mui-selected": {
+                                                color: "#fff",
+                                                backgroundColor: "primary.main",
+                                            },
+
+                                            "&.Mui-selected:hover": {
+                                                color: "#fff",
+                                                backgroundColor:
+                                                    "primaryAlt1.main",
+                                            },
+                                        }}
                                     />
                                 );
                             })}

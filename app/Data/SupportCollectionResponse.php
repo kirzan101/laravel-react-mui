@@ -3,27 +3,27 @@
 namespace App\Data;
 
 use App\Helpers\Helper;
-use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Collection;
 
 /**
- * Class CollectionResponse
+ * Class SupportCollectionResponse
  *
- * A response class that encapsulates a collection of data.
- *
+ * A response class that encapsulates a collection of support data.
+ * 
  * @package App\Data
- * @property-read ?Collection $data The collection of data.
+ * @property-read ?Collection $data The collection of support data.
  * @method static self success(int $code = 200, string $status = Helper::SUCCESS, string $message = 'Success', ?Collection $data = null)
  * @method static self error(int $code = 400, string $status = Helper::ERROR, string $message = 'Error', ?Collection $data = null)
- *
+ * 
  * @param int $code The HTTP status code.
  * @param string $status The status of the response.
  * @param string $message The message associated with the response.
- * @param Collection|null $data  The collection of data, instance of Illuminate\Database\Eloquent\Collection.
+ * @param Collection|null $data  The collection of support data, instance of Illuminate\Support\Collection.
  */
-class CollectionResponse extends BaseResponse
+class SupportCollectionResponse extends BaseResponse
 {
     /**
-     * Constructor for CollectionResponse.
+     * Constructor for SupportCollectionResponse.
      */
     public function __construct(
         int $code,

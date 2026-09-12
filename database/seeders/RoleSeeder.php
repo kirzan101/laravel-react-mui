@@ -45,6 +45,12 @@ class RoleSeeder extends Seeder
                     'activity_logs' => [
                         'view',
                     ],
+                    'permissions' => [
+                        'create',
+                        'view',
+                        'update',
+                        'delete'
+                    ]
                     // 'modules' => [
                     //     'create',
                     //     'view',

@@ -24,7 +24,7 @@ const CButtonEdit = ({
             }}
             {...props}
         >
-            {children}
+            <b>{children}</b>
         </Button>
     );
 };

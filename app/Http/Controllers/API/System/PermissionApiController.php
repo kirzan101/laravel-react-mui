@@ -1,16 +1,16 @@
 <?php
 
-namespace App\Http\Controllers\API;
+namespace App\Http\Controllers\API\System;
 
 use App\Http\Controllers\Controller;
-use App\Http\Resources\IndexResource\ActivityLogIndexResource;
-use App\Http\Resources\ActivityLogResource;
-use App\Interfaces\FetchInterfaces\ActivityLogFetchInterface;
+use App\Http\Resources\IndexResource\PermissionIndexResource;
+use App\Http\Resources\PermissionResource;
+use App\Interfaces\FetchInterfaces\PermissionFetchInterface;
 use Illuminate\Http\Request;
 
-class ActivityLogApiController extends Controller
+class PermissionApiController extends Controller
 {
-    public function __construct(private ActivityLogFetchInterface $activityLogFetch) {}
+    public function __construct(private PermissionFetchInterface $permissionFetch) {}
 
     /**
      * Display a listing of the resource.
@@ -24,7 +24,7 @@ class ActivityLogApiController extends Controller
             'sort' => $request->input('sort', 'desc'),
         ]);
 
-        $result = $this->activityLogFetch->indexActivityLogs($request->toArray(), true, ActivityLogResource::class);
+        $result = $this->permissionFetch->indexPermissions($request->toArray(), true, PermissionResource::class);
 
         $data = $result->data;
         $code = $result->code;
@@ -32,7 +32,7 @@ class ActivityLogApiController extends Controller
         $message = $result->message;
 
         return response()->json([
-            'data' => ActivityLogResource::collection($data->all()),
+            'data' => PermissionResource::collection($data->all()),
             'additional_data' => [],
             'per_page' => $data->perPage(),
             'current_page' => $data->currentPage(),
@@ -59,7 +59,7 @@ class ActivityLogApiController extends Controller
             'sort' => $request->input('sort', 'asc'),
         ]);
 
-        $result = $this->activityLogFetch->indexActivityLogs($request->toArray(), true, ActivityLogIndexResource::class);
+        $result = $this->permissionFetch->indexPermissions($request->toArray(), true, PermissionIndexResource::class);
 
         $data = $result->data;
         $code = $result->code;
@@ -67,7 +67,7 @@ class ActivityLogApiController extends Controller
         $message = $result->message;
 
         return response()->json([
-            'data' => ActivityLogIndexResource::collection($data->all()),
+            'data' => PermissionIndexResource::collection($data->all()),
             'code' => $code,
             'status' => $status,
             'message' => $message

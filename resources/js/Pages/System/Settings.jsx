@@ -14,6 +14,7 @@ const Settings = ({
     auth,
     modules,
     categories,
+    permissionsByModule,
 }) => {
     const page = usePage();
     const appName = page.props.appName || "Laravel React App";
@@ -53,6 +54,7 @@ const Settings = ({
                     accessibleRoutes={accessibleRoutes}
                     settingsModules={settingsModules}
                     categories={categories}
+                    permissionsByModule={permissionsByModule}
                 />
             </CBox>
         </>

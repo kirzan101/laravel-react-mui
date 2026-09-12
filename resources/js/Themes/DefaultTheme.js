@@ -14,7 +14,9 @@ const light = {
             primary: "#111",
             secondary: "rgba(0,0,0,0.6)",
         },
+        primaryAlt1: "#3A659F",
         buttonTextColor: "#13294B",
+        iconColor: "#13294B",
     },
 };
 
@@ -33,7 +35,9 @@ const dark = {
             primary: "#fff",
             secondary: "rgba(255,255,255,0.7)",
         },
-        buttonTextColor: "#66B3FF",
+        primaryAlt1: "#3A659F",
+        buttonTextColor: "#3A659F",
+        iconColor: "#3A659F",
     },
 };
 

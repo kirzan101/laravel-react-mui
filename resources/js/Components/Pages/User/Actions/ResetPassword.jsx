@@ -57,7 +57,7 @@ const ResetPassword = ({ user, flash, errors, can, onSuccess, sx }) => {
         <>
             <CIconButton
                 icon="RotateLeftIcon"
-                color="buttonTextColor"
+                color="iconColor"
                 tooltip="Reset Password"
                 sx={sx}
                 onClick={toggleModal}

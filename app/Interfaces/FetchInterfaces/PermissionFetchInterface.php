@@ -3,6 +3,7 @@
 namespace App\Interfaces\FetchInterfaces;
 
 use App\Data\CollectionResponse;
+use App\Data\SupportCollectionResponse;
 use App\Data\ModelResponse;
 use App\Data\PaginateResponse;
 
@@ -19,11 +20,19 @@ interface PermissionFetchInterface
     public function indexPermissions(array $request = [], bool $isPaginated = false, ?string $resourceClass = null): PaginateResponse|CollectionResponse;
 
     /**
-     * Fetch a specific permission by their ID.
+     * Fetch a specific permission by its ID.
      *
-     * @param integer $userGroupId
+     * @param integer $permissionId
      * @param class-string<\Illuminate\Http\Resources\Json\JsonResource>|null $resourceClass
      * @return ModelResponse
      */
-    public function showPermission(int $userGroupId, ?string $resourceClass = null): ModelResponse;
+    public function showPermission(int $permissionId, ?string $resourceClass = null): ModelResponse;
+
+    /**
+     * Fetch permissions grouped by module.
+     *
+     * @param string|null $moduleName
+     * @return SupportCollectionResponse
+     */
+    public function permissionsByModule(?string $moduleName = null): SupportCollectionResponse;
 }

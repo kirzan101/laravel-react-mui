@@ -6,7 +6,8 @@ const buildPalette = (theme) => {
     return {
         mode: theme.mode,
 
-        primary: { main: theme.colors.primary },
+        primary: { main: theme.colors.primary, contrastText: "#fff" },
+        primaryAlt1: { main: theme.colors.primaryAlt1, contrastText: "#fff" },
         secondary: { main: theme.colors.secondary },
         accent: { main: theme.colors.accent, contrastText: "#fff" },
         error: { main: theme.colors.error },
@@ -26,6 +27,8 @@ const buildPalette = (theme) => {
         buttonTextColor: {
             main: theme.colors.buttonTextColor,
         },
+
+        iconColor: { main: theme.colors.iconColor },
     };
 };
 

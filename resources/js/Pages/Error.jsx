@@ -32,10 +32,7 @@ const Error = ({ code = 500, message = "Something went wrong" }) => {
                 headline={`Whoops, ${code}`}
                 title={titles[code] || "Error"}
                 text={message}
-                image={
-                    imageUrls[code] ||
-                    "https://vuetifyjs.b-cdn.net/docs/images/logos/v.png"
-                }
+                image={imageUrls[code] || "/images/errors/error_500_light.svg"}
             />
             <CButton
                 sx={{ display: "block", mx: "auto" }}

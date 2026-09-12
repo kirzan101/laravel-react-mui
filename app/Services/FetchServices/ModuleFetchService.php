@@ -38,6 +38,11 @@ class ModuleFetchService extends BaseFetchService implements ModuleFetchInterfac
                 $query->with($resourceClass::$relations ?? []);
             }
 
+            if (isset($request['is_active'])) {
+                $isActive = (bool) $request['is_active'];
+                $query->where('is_active', $isActive);
+            }
+
             //Uncomment this code if query has a seach functionality
             //Search filter
             if (isset($request['search']) && !empty($request['search'])) {

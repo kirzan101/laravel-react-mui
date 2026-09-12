@@ -20,7 +20,7 @@ class PermissionSeeder extends Seeder
             [
                 'module' => 'users',
                 'icon' => 'PeopleIcon',
-                'types' => ['create', 'view', 'update', 'reset', 'set-status', 'set-avatar'],
+                'types' => ['create', 'view', 'update', 'delete', 'reset', 'set-status', 'set-avatar'],
                 'order' => 1,
                 'category' => null,
             ],
@@ -34,22 +34,29 @@ class PermissionSeeder extends Seeder
             [
                 'module' => 'user_groups',
                 'icon' => 'GroupsIcon',
-                'types' => ['create', 'view', 'update'],
+                'types' => ['create', 'view', 'update', 'delete'],
                 'order' => 3,
                 'category' => Helper::MODULE_CATEGORY_SETTINGS,
             ],
             [
                 'module' => 'roles',
                 'icon' => 'RoleIcon',
-                'types' => ['create', 'view', 'update'],
+                'types' => ['create', 'view', 'update', 'delete'],
                 'order' => 4,
+                'category' => Helper::MODULE_CATEGORY_SETTINGS,
+            ],
+            [
+                'module' => 'permissions',
+                'icon' => 'SecurityIcon',
+                'types' => ['create', 'view', 'update', 'delete'],
+                'order' => 5,
                 'category' => Helper::MODULE_CATEGORY_SETTINGS,
             ],
             // [
             //     'module' => 'modules',
             //     'icon' => 'ViewModuleIcon',
-            //     'types' => ['create', 'view', 'update'],
-            //     'order' => 5,
+            //     'types' => ['create', 'view', 'update', 'delete'],
+            //     'order' => 6,
             //     'category' => Helper::MODULE_CATEGORY_SETTINGS,
             // ],
         ];
@@ -58,10 +65,16 @@ class PermissionSeeder extends Seeder
 
         foreach ($permissions as $permission) {
             foreach ($accessTypes as $type) {
+                // skip if the current access type is not defined for this permission module
+                if (!in_array($type, $permission['types'], true)) {
+                    continue;
+                }
+
                 $exists = Permission::where('module', $permission['module'])
                     ->where('type', $type)
                     ->exists();
 
+                // skip if the permission already exists in the database
                 if ($exists) {
                     continue;
                 }

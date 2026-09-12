@@ -3,6 +3,7 @@
 namespace App\Services\FetchServices;
 
 use App\Data\CollectionResponse;
+use App\Data\SupportCollectionResponse;
 use App\Data\ModelResponse;
 use App\Data\PaginateResponse;
 use App\Helpers\Helper;
@@ -74,8 +75,8 @@ class PermissionFetchService implements PermissionFetchInterface
 
     /**
      * Fetch a single permission by ID.
-     *
-     * @param integer $id
+     * Query a specific permission by its ID.
+     * @param integer $permissionId
      * @param class-string<\Illuminate\Http\Resources\Json\JsonResource>|null $resourceClass
      * @return ModelResponse
      */
@@ -95,6 +96,62 @@ class PermissionFetchService implements PermissionFetchInterface
             $code = $this->httpCode($th);
 
             return ModelResponse::error($code, Helper::ERROR, $th->getMessage());
+        }
+    }
+
+    /**
+     * Fetch permissions grouped by module.
+     *
+     * @param string|null $moduleName
+     * @return SupportCollectionResponse
+     */
+    public function permissionsByModule(?string $moduleName = null): SupportCollectionResponse
+    {
+        try {
+            $query = $this->fetch->indexQuery(Permission::class)
+                ->join('modules', 'modules.base_name', '=', 'permissions.module')
+                ->where('permissions.is_active', true)
+                ->where('modules.is_active', true)
+                ->orderBy('modules.base_name', 'asc')
+                ->select([
+                    'permissions.id as permission_id',
+                    'permissions.type',
+                    'permissions.is_active',
+                    'modules.base_name as module',
+                ]);
+
+            if ($moduleName !== null) {
+                $query->where('permissions.module', $moduleName);
+            }
+
+            $permissions = $query
+                ->get()
+                ->groupBy('module')
+                ->map(fn($items) => $items->map(fn($item) => [
+                    'permission_id' => $item->permission_id,
+                    'type' => $item->type,
+                    'is_active' => (bool) $item->is_active,
+                ]));
+
+            // results sample structure:
+            // [
+            //     'module_name' => [
+            //         [
+            //             'permission_id' => 1,
+            //             'type' => 'view',
+            //         ],
+            //         [
+            //             'permission_id' => 2,
+            //             'type' => 'edit',
+            //         ],
+            //     ],
+            // ]
+
+            return SupportCollectionResponse::success(200, Helper::SUCCESS, 'Successfully fetched!', $permissions);
+        } catch (\Throwable $th) {
+            $code = $this->httpCode($th);
+
+            return SupportCollectionResponse::error($code, Helper::ERROR, $th->getMessage());
         }
     }
 }

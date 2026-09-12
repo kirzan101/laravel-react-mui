@@ -13,6 +13,8 @@ use App\Traits\ReturnModelTrait;
 use App\Interfaces\ModuleNameResolverInterface;
 use App\Interfaces\PermissionInterface;
 use App\Models\Permission;
+use App\Models\Role;
+use App\Models\RolePermission;
 use App\Traits\CheckIfColumnExistsTrait;
 use App\Traits\DetectsSoftDeletesTrait;
 use Illuminate\Support\Facades\DB;
@@ -45,6 +47,9 @@ class PermissionService implements PermissionInterface
 
                 $permissionData = $permissionDTO->toArray();
                 $permission = $this->base->store(Permission::class, $permissionData);
+
+                // automatically add the permission to the admin role
+                $this->addPermissionToAdminRole($permission);
 
                 return ModelResponse::success(201, 'success', 'Permission created successfully!', $permission, $permission->id);
             });
@@ -99,6 +104,9 @@ class PermissionService implements PermissionInterface
                     }
                 }
 
+                // automatically remove the permission from the admin role
+                $this->removePermissionFromAdminRole($permission);
+
                 $this->base->delete($permission);
 
                 return ModelResponse::success(204, 'success', 'Permission deleted successfully!', null, $permissionId);
@@ -107,5 +115,39 @@ class PermissionService implements PermissionInterface
             $code = $this->httpCode($th);
             return ModelResponse::error($code, 'error', $th->getMessage());
         }
+    }
+
+    /**
+     * Add a permission to the admin role.
+     *
+     * @param Permission $permission
+     * @return void
+     */
+    private function addPermissionToAdminRole(Permission $permission)
+    {
+        $adminRoleId = $this->fetch->showQuery(Role::class, 1)->pluck('id')->first();
+
+        $this->base->store(RolePermission::class, [
+            'role_id' => $adminRoleId,
+            'permission_id' => $permission->id,
+        ]);
+    }
+
+    /**
+     * Remove a permission from the admin role.
+     *
+     * @param Permission $permission
+     * @return void
+     */
+    private function removePermissionFromAdminRole(Permission $permission)
+    {
+        $adminRoleId = $this->fetch->showQuery(Role::class, 1)->pluck('id')->first();
+
+        $rolePermission = $this->fetch->indexQuery(RolePermission::class)
+            ->where('role_id', $adminRoleId)
+            ->where('permission_id', $permission->id)
+            ->firstOrFail();
+
+        $this->base->delete($rolePermission);
     }
 }

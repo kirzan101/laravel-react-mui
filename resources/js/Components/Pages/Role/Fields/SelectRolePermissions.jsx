@@ -170,7 +170,23 @@ const SelectRolePermissions = ({
 
                         return (
                             <Grid key={module} size={{ xs: 12, sm: 4 }}>
-                                <CCard>
+                                <CCard
+                                    elevation={0}
+                                    sx={{
+                                        height: "100%",
+                                        border: "1px solid",
+                                        borderColor: "divider",
+                                        backgroundColor: "background.paper",
+                                        overflow: "hidden",
+                                        transition: "all 0.2s ease",
+                                        "&:hover": {
+                                            borderColor: "primary.main",
+                                            boxShadow: (theme) =>
+                                                `0 8px 30px ${theme.palette.primary.main}14`,
+                                            transform: "translateY(-2px)",
+                                        },
+                                    }}
+                                >
                                     <CCardContent>
                                         <Box
                                             sx={{

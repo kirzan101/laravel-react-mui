@@ -27,6 +27,7 @@ class Module extends Model
     {
         Cache::forget('active_modules');
         Cache::forget('module_lists');
+        Cache::forget('active_modules');
     }
 
     protected $fillable = [
